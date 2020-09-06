@@ -1,0 +1,228 @@
+[
+    {
+        "type" : "blockGroup",
+        "hash" : "2b098db704e02d03aed81ca0c38dd2a3",
+        "properties" : {},
+        "children" : [
+            {
+                "type" : "block",
+                "hash" : "c56865adc0b6456a3d496960df437f0c",
+                "properties" : {},
+                "children" : [
+                    {
+                        "type" : "column",
+                        "hash" : "4a70f7fb06935189e85ac99bc4bcb6f8",
+                        "properties" : {},
+                        "children" : [
+                            {
+                                "type" : "widget",
+                                "widgetType" : "button",
+                                "hash" : "b0706f7b9bbc42b4ace5aff1cd679494",
+                                "properties" : {
+                                    "foo" : "bar"
+                                }
+                            },
+                            {
+                                "type" : "widget",
+                                "widgetType" : "button",
+                                "hash" : "b0706f7b9bbc42b4ace5aff1cd679494",
+                                "properties" : {
+                                    "foo" : "bar"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "type" : "column",
+                        "hash" : "4a70f7fb06935189e85ac99bc4bcb6f8",
+                        "properties" : {},
+                        "children" : [
+                            {
+                                "type" : "widget",
+                                "widgetType" : "button",
+                                "hash" : "b0706f7b9bbc42b4ace5aff1cd679494",
+                                "properties" : {
+                                    "foo" : "bar"
+                                }
+                            },
+                            {
+                                "type" : "widget",
+                                "widgetType" : "button",
+                                "hash" : "b0706f7b9bbc42b4ace5aff1cd679494",
+                                "properties" : {
+                                    "foo" : "bar"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type" : "block",
+                "hash" : "c56865adc0b6456a3d496960df437f0c",
+                "properties" : {},
+                "children" : [
+                    {
+                        "type" : "column",
+                        "hash" : "4a70f7fb06935189e85ac99bc4bcb6f8",
+                        "properties" : {},
+                        "children" : [
+                            {
+                                "type" : "widget",
+                                "widgetType" : "button",
+                                "hash" : "b0706f7b9bbc42b4ace5aff1cd679494",
+                                "properties" : {
+                                    "foo" : "bar"
+                                }
+                            },
+                            {
+                                "type" : "widget",
+                                "widgetType" : "button",
+                                "hash" : "b0706f7b9bbc42b4ace5aff1cd679494",
+                                "properties" : {
+                                    "foo" : "bar"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "type" : "column",
+                        "hash" : "4a70f7fb06935189e85ac99bc4bcb6f8",
+                        "properties" : {},
+                        "children" : [
+                            {
+                                "type" : "widget",
+                                "widgetType" : "button",
+                                "hash" : "b0706f7b9bbc42b4ace5aff1cd679494",
+                                "properties" : {
+                                    "foo" : "bar"
+                                }
+                            },
+                            {
+                                "type" : "widget",
+                                "widgetType" : "button",
+                                "hash" : "b0706f7b9bbc42b4ace5aff1cd679494",
+                                "properties" : {
+                                    "foo" : "bar"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "type" : "blockGroup",
+        "hash" : "2b098db704e02d03aed81ca0c38dd2a3",
+        "properties" : {},
+        "children" : [
+            {
+                "type" : "block",
+                "hash" : "c56865adc0b6456a3d496960df437f0c",
+                "properties" : {},
+                "children" : [
+                    {
+                        "type" : "column",
+                        "hash" : "4a70f7fb06935189e85ac99bc4bcb6f8",
+                        "properties" : {},
+                        "children" : [
+                            {
+                                "type" : "widget",
+                                "widgetType" : "button",
+                                "hash" : "b0706f7b9bbc42b4ace5aff1cd679494",
+                                "properties" : {
+                                    "foo" : "bar"
+                                }
+                            },
+                            {
+                                "type" : "widget",
+                                "widgetType" : "button",
+                                "hash" : "b0706f7b9bbc42b4ace5aff1cd679494",
+                                "properties" : {
+                                    "foo" : "bar"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "type" : "column",
+                        "hash" : "4a70f7fb06935189e85ac99bc4bcb6f8",
+                        "properties" : {},
+                        "children" : [
+                            {
+                                "type" : "widget",
+                                "widgetType" : "button",
+                                "hash" : "b0706f7b9bbc42b4ace5aff1cd679494",
+                                "properties" : {
+                                    "foo" : "bar"
+                                }
+                            },
+                            {
+                                "type" : "widget",
+                                "widgetType" : "button",
+                                "hash" : "b0706f7b9bbc42b4ace5aff1cd679494",
+                                "properties" : {
+                                    "foo" : "bar"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type" : "block",
+                "hash" : "c56865adc0b6456a3d496960df437f0c",
+                "properties" : {},
+                "children" : [
+                    {
+                        "type" : "column",
+                        "hash" : "4a70f7fb06935189e85ac99bc4bcb6f8",
+                        "properties" : {},
+                        "children" : [
+                            {
+                                "type" : "widget",
+                                "widgetType" : "button",
+                                "hash" : "b0706f7b9bbc42b4ace5aff1cd679494",
+                                "properties" : {
+                                    "foo" : "bar"
+                                }
+                            },
+                            {
+                                "type" : "widget",
+                                "widgetType" : "button",
+                                "hash" : "b0706f7b9bbc42b4ace5aff1cd679494",
+                                "properties" : {
+                                    "foo" : "bar"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "type" : "column",
+                        "hash" : "4a70f7fb06935189e85ac99bc4bcb6f8",
+                        "properties" : {},
+                        "children" : [
+                            {
+                                "type" : "widget",
+                                "widgetType" : "button",
+                                "hash" : "b0706f7b9bbc42b4ace5aff1cd679494",
+                                "properties" : {
+                                    "foo" : "bar"
+                                }
+                            },
+                            {
+                                "type" : "widget",
+                                "widgetType" : "button",
+                                "hash" : "b0706f7b9bbc42b4ace5aff1cd679494",
+                                "properties" : {
+                                    "foo" : "bar"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]
