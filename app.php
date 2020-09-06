@@ -70,14 +70,14 @@ $errorMiddleware = $app->addErrorMiddleware(true, true, true);
 
 // Define app routes
 $app->get('/layout/{filename}', function (Request $request, Response $response, $args) {
-    /** @var JsonEntityManager $manager */
-    $manager = $this->get('JsonEntityManager');
+    /** @var JsonEntityManager $jsonEntityManager */
+    $jsonEntityManager = $this->get('JsonEntityManager');
 
-    $layout = $manager->findByHash($args['filename']);
+    /** @var \App\Doctrine\Repository\ContentRepository $contentRepository */
+    $contentRepository = $this->get('DoctrineEntityManager')->getRepository(Content::class);
 
-    $contents = $this->get('DoctrineEntityManager')
-        ->getRepository(Content::class)
-        ->findByHashes($layout->getHashes());
+    $layout = $jsonEntityManager->findByHash($args['filename']);
+    $contents = $contentRepository->findByHashes($layout->getHashes());
 
     $layout->setContents($contents);
 
