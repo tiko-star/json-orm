@@ -1,29 +1,38 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Orm\Entity;
 
+use App\Doctrine\Entity\Content;
 use App\Orm\Persistence\ReferenceAwareEntityCollection;
 use JsonSerializable;
 
+/**
+ * Base class for all kind of Entities.
+ * Contains all general methods.
+ *
+ * @package App\Orm\Entity
+ */
 abstract class AbstractEntity implements JsonSerializable
 {
     /**
-     * @var string
+     * @var string The type of the current entity.
      */
-    protected $type;
+    protected string $type;
 
     /**
-     * @var string
+     * @var string|null The unique hash of the current entity.
      */
-    protected $hash;
+    protected ?string $hash;
 
     /**
-     * @var array
+     * @var array Individual properties of the current entity.
      */
-    protected $properties = [];
+    protected array $properties = [];
 
     /**
-     * @var \App\Orm\Persistence\ReferenceAwareEntityCollection
+     * @var \App\Orm\Persistence\ReferenceAwareEntityCollection Reference on the instance of the wrapping object.
      */
     protected ReferenceAwareEntityCollection $root;
 
@@ -44,7 +53,7 @@ abstract class AbstractEntity implements JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getHash() : ?string
     {
@@ -52,7 +61,7 @@ abstract class AbstractEntity implements JsonSerializable
     }
 
     /**
-     * @param mixed $hash
+     * @param string $hash
      */
     public function setHash(string $hash) : void
     {
@@ -91,8 +100,40 @@ abstract class AbstractEntity implements JsonSerializable
         $this->root = $root;
     }
 
-    public function jsonSerialize()
+    /**
+     * Apply content data to the current entity.
+     * This method will only be invoked during JSON serialization process.
+     */
+    public function applyContent() : void
     {
+        $contents = $this->getRoot()->getReference()->getContents();
+
+        /** @var Content|false $content */
+        $content = $contents
+            ->filter(fn(Content $content) => $content->getHash() === $this->getHash())
+            ->first();
+
+        if ($content) {
+            $this->initializeContent($content);
+        }
+    }
+
+    /**
+     * Initialize content data for current entity.
+     *
+     * @param \App\Doctrine\Entity\Content $content
+     */
+    protected abstract function initializeContent(Content $content) : void;
+
+    /**
+     * Specify data which should be serialized to JSON.
+     *
+     * @return array
+     */
+    public function jsonSerialize() : array
+    {
+        $this->applyContent();
+
         return [
             'type'  => $this->getType(),
             'hash'  => $this->getHash(),

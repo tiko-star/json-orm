@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Orm\Factory;
 
 use App\Orm\Entity\AbstractEntity;
@@ -13,10 +15,22 @@ use App\Orm\Exception\MissingEntityTypeIdentifierException;
 use App\Orm\Persistence\LayoutObject;
 use App\Orm\Persistence\ReferenceAwareEntityCollection;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
+/**
+ * Complex factory for creating instances of LayoutObject.
+ *
+ * @see     \App\Orm\Persistence\LayoutObject
+ *
+ * @package App\Orm\Factory
+ */
 class LayoutObjectFactory
 {
-    protected $entityToTypeMapping = [
+    /**
+     * @var array<string, string> Mapping of the entity types and appropriate fully qualified class names.
+     */
+    protected array $entityToTypeMapping = [
         'blockGroup' => BlockGroup::class,
         'block'      => Block::class,
         'column'     => Column::class,
@@ -24,10 +38,15 @@ class LayoutObjectFactory
     ];
 
     /**
-     * @var \Symfony\Component\PropertyAccess\PropertyAccessor
+     * @var \Symfony\Component\PropertyAccess\PropertyAccessorInterface Reference on PropertyAccessorInterface instance.
      */
-    protected $propertyAccessor;
+    protected PropertyAccessorInterface $propertyAccessor;
 
+    /**
+     * LayoutObjectFactory constructor.
+     *
+     * Initialize PropertyAccessor without exception support.
+     */
     public function __construct()
     {
         $this->propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
@@ -36,17 +55,38 @@ class LayoutObjectFactory
             ->getPropertyAccessor();
     }
 
+    /**
+     * Create instance of LayoutObject with given content inside.
+     *
+     * @param array $content
+     *
+     * @return \App\Orm\Persistence\LayoutObject
+     */
     public function createLayoutObject(array $content) : LayoutObject
     {
+        $layoutObject = new LayoutObject();
         $hashes = [];
-        $tree = $this->hydrate($content, $hashes);
+        $tree = $this->hydrate($content, $hashes, $layoutObject);
 
-        return new LayoutObject($tree, $hashes);
+        $layoutObject->setHashes($hashes);
+        $layoutObject->setTree($tree);
+
+        return $layoutObject;
     }
 
-    protected function hydrate(array $content, array &$hashes) : ReferenceAwareEntityCollection
+    /**
+     * Recursively iterate over the given content and initialize appropriate AbstractEntity instances.
+     *
+     * @param array                             $content
+     * @param array                             $hashes
+     * @param \App\Orm\Persistence\LayoutObject $layoutObject
+     *
+     * @return \App\Orm\Persistence\ReferenceAwareEntityCollection
+     */
+    protected function hydrate(array $content, array &$hashes, LayoutObject $layoutObject) : ReferenceAwareEntityCollection
     {
         $collection = new ReferenceAwareEntityCollection();
+        $collection->setReference($layoutObject);
 
         foreach ($content as $item) {
             $entity = $this->createEntityInstance($item);
@@ -58,7 +98,7 @@ class LayoutObjectFactory
 
             if (($children = $this->propertyAccessor->getValue($item, '[children]'))
                 && $entity instanceof ContainsChildrenInterface) {
-                $children = $this->hydrate($children, $hashes);
+                $children = $this->hydrate($children, $hashes, $layoutObject);
 
                 $entity->setChildren($children);
             }
@@ -67,6 +107,13 @@ class LayoutObjectFactory
         return $collection;
     }
 
+    /**
+     * Create instance of particular AbstractEntity based on given data.
+     *
+     * @param array $data
+     *
+     * @return \App\Orm\Entity\AbstractEntity
+     */
     protected function createEntityInstance(array $data) : AbstractEntity
     {
         $type = $this->guessEntityType($data);
@@ -89,6 +136,18 @@ class LayoutObjectFactory
         return $entity;
     }
 
+    /**
+     * Try to guess a type of the AbstractEntity.
+     *
+     * @param array $item
+     *
+     * @return string
+     *
+     * @throws \App\Orm\Exception\MissingEntityTypeIdentifierException Throw exception if the type identifier is
+     *                                                                 missing.
+     * @throws \App\Orm\Exception\InvalidEntityTypeException Throw exception if there is something wrong with the type
+     *                                                       identifier.
+     */
     protected function guessEntityType(array $item) : string
     {
         $type = $this->propertyAccessor->getValue($item, '[type]');

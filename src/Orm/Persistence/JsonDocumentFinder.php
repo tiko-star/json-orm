@@ -1,11 +1,28 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Orm\Persistence;
 
 use InvalidArgumentException;
 
+/**
+ * Utility for working with JSON documents.
+ *
+ * @package App\Orm\Persistence
+ */
 class JsonDocumentFinder
 {
+    /**
+     * @var string Root directory.
+     */
+    protected string $root;
+
+    public function __construct(string $root)
+    {
+        $this->root = $root;
+    }
+
     /**
      * @param string $filename
      *
@@ -14,7 +31,7 @@ class JsonDocumentFinder
      */
     public function fetchDocumentContent(string $filename) : array
     {
-        $path = ROOT_DIR.'/documents/'.$filename;
+        $path = $this->root.'/documents/'.$filename;
 
         if (!is_readable($path)) {
             throw new InvalidArgumentException('Document file not found!');

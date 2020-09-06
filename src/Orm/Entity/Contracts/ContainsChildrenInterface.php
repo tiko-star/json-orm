@@ -1,9 +1,16 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Orm\Entity\Contracts;
 
 use App\Orm\Persistence\ReferenceAwareEntityCollection;
 
+/**
+ * Interface for declaring methods for children support of AbstractEntities.
+ *
+ * @package App\Orm\Entity\Contracts
+ */
 interface ContainsChildrenInterface
 {
     /**

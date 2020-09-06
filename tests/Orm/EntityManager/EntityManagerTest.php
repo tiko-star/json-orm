@@ -62,6 +62,8 @@ class EntityManagerTest extends TestCase
 
     protected function createExpected() : LayoutObject
     {
+        $layoutObject = new LayoutObject();
+
         $button = new Button();
         $button->setType('widget');
         $button->setWidgetType('button');
@@ -70,18 +72,30 @@ class EntityManagerTest extends TestCase
         $column = new Column();
         $column->setType('column');
         $column->setHash('ccc');
-        $column->setChildren(new ReferenceAwareEntityCollection([$button]));
+        $children1 = new ReferenceAwareEntityCollection([$button]);
+        $children1->setReference($layoutObject);
+        $column->setChildren($children1);
 
         $block = new Block();
         $block->setType('block');
         $block->setHash('bbb');
-        $block->setChildren(new ReferenceAwareEntityCollection([$column]));
+        $children2 = new ReferenceAwareEntityCollection([$column]);
+        $children2->setReference($layoutObject);
+        $block->setChildren($children2);
 
         $blockGroup = new BlockGroup();
         $blockGroup->setType('blockGroup');
         $blockGroup->setHash('aaa');
-        $blockGroup->setChildren(new ReferenceAwareEntityCollection([$block]));
+        $children3 = new ReferenceAwareEntityCollection([$block]);
+        $children3->setReference($layoutObject);
+        $blockGroup->setChildren($children3);
 
-        return new LayoutObject(new ReferenceAwareEntityCollection([$blockGroup]), ['aaa', 'bbb', 'ccc', 'ddd']);
+        $tree = new ReferenceAwareEntityCollection([$blockGroup]);
+        $tree->setReference($layoutObject);
+
+        $layoutObject->setTree($tree);
+        $layoutObject->setHashes(['aaa', 'bbb', 'ccc', 'ddd']);
+
+        return $layoutObject;
     }
 }

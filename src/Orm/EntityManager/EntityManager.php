@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Orm\EntityManager;
 
 use App\Orm\Factory\LayoutObjectFactory;
@@ -9,14 +11,14 @@ use App\Orm\Persistence\LayoutObject;
 class EntityManager
 {
     /**
-     * @var \App\Orm\Persistence\JsonDocumentFinder
+     * @var \App\Orm\Persistence\JsonDocumentFinder Reference on JsonDocumentFinder instance.
      */
-    protected $finder;
+    protected JsonDocumentFinder $finder;
 
     /**
-     * @var \App\Orm\Factory\LayoutObjectFactory
+     * @var \App\Orm\Factory\LayoutObjectFactory Reference on LayoutObjectFactory instance.
      */
-    protected $factory;
+    protected LayoutObjectFactory $factory;
 
     public function __construct(JsonDocumentFinder $finder, LayoutObjectFactory $factory)
     {
@@ -25,6 +27,8 @@ class EntityManager
     }
 
     /**
+     * Find instance of LayoutObject by given hash.
+     *
      * @param string $hash
      *
      * @return \App\Orm\Persistence\LayoutObject

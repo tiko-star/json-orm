@@ -30,7 +30,7 @@ class LayoutObjectFactoryTest extends TestCase
         $this->assertEquals($hashes, $layoutObject->getHashes());
     }
 
-    public function documentProvider()
+    public function documentProvider() : array
     {
         return [
             [
@@ -77,6 +77,8 @@ class LayoutObjectFactoryTest extends TestCase
 
     protected function createFirstLayoutObject() : LayoutObject
     {
+        $layoutObject = new LayoutObject();
+
         $button = new Button();
         $button->setType('widget');
         $button->setWidgetType('button');
@@ -85,19 +87,31 @@ class LayoutObjectFactoryTest extends TestCase
         $column = new Column();
         $column->setType('column');
         $column->setHash('ccc');
-        $column->setChildren(new ReferenceAwareEntityCollection([$button]));
+        $children1 = new ReferenceAwareEntityCollection([$button]);
+        $children1->setReference($layoutObject);
+        $column->setChildren($children1);
 
         $block = new Block();
         $block->setType('block');
         $block->setHash('bbb');
-        $block->setChildren(new ReferenceAwareEntityCollection([$column]));
+        $children2 = new ReferenceAwareEntityCollection([$column]);
+        $children2->setReference($layoutObject);
+        $block->setChildren($children2);
 
         $blockGroup = new BlockGroup();
         $blockGroup->setType('blockGroup');
         $blockGroup->setHash('aaa');
-        $blockGroup->setChildren(new ReferenceAwareEntityCollection([$block]));
+        $children3 = new ReferenceAwareEntityCollection([$block]);
+        $children3->setReference($layoutObject);
+        $blockGroup->setChildren($children3);
 
-        return new LayoutObject(new ReferenceAwareEntityCollection([$blockGroup]), ['aaa', 'bbb', 'ccc', 'ddd']);
+        $tree = new ReferenceAwareEntityCollection([$blockGroup]);
+        $tree->setReference($layoutObject);
+
+        $layoutObject->setTree($tree);
+        $layoutObject->setHashes(['aaa', 'bbb', 'ccc', 'ddd']);
+
+        return $layoutObject;
     }
 
     protected function createSecondDocument() : array
@@ -164,6 +178,8 @@ class LayoutObjectFactoryTest extends TestCase
 
     protected function createSecondLayoutObject() : LayoutObject
     {
+        $layoutObject = new LayoutObject();
+
         $button1 = new Button();
         $button1->setType('widget');
         $button1->setWidgetType('button');
@@ -177,17 +193,23 @@ class LayoutObjectFactoryTest extends TestCase
         $column1 = new Column();
         $column1->setType('column');
         $column1->setHash('ccc');
-        $column1->setChildren(new ReferenceAwareEntityCollection([$button1, $button2]));
+        $children1 = new ReferenceAwareEntityCollection([$button1, $button2]);
+        $children1->setReference($layoutObject);
+        $column1->setChildren($children1);
 
         $block1 = new Block();
         $block1->setType('block');
         $block1->setHash('bbb');
-        $block1->setChildren(new ReferenceAwareEntityCollection([$column1]));
+        $children2 = new ReferenceAwareEntityCollection([$column1]);
+        $children2->setReference($layoutObject);
+        $block1->setChildren($children2);
 
         $blockGroup1 = new BlockGroup();
         $blockGroup1->setType('blockGroup');
         $blockGroup1->setHash('aaa');
-        $blockGroup1->setChildren(new ReferenceAwareEntityCollection([$block1]));
+        $children3 = new ReferenceAwareEntityCollection([$block1]);
+        $children3->setReference($layoutObject);
+        $blockGroup1->setChildren($children3);
 
         $button3 = new Button();
         $button3->setType('widget');
@@ -202,22 +224,31 @@ class LayoutObjectFactoryTest extends TestCase
         $column2 = new Column();
         $column2->setType('column');
         $column2->setHash('ccc');
-        $column2->setChildren(new ReferenceAwareEntityCollection([$button3, $button4]));
+        $children4 = new ReferenceAwareEntityCollection([$button3, $button4]);
+        $children4->setReference($layoutObject);
+        $column2->setChildren($children4);
 
         $block2 = new Block();
         $block2->setType('block');
         $block2->setHash('bbb');
-        $block2->setChildren(new ReferenceAwareEntityCollection([$column2]));
+        $children5 = new ReferenceAwareEntityCollection([$column2]);
+        $children5->setReference($layoutObject);
+        $block2->setChildren($children5);
 
         $blockGroup2 = new BlockGroup();
         $blockGroup2->setType('blockGroup');
         $blockGroup2->setHash('aaa');
-        $blockGroup2->setChildren(new ReferenceAwareEntityCollection([$block2]));
+        $children6 = new ReferenceAwareEntityCollection([$block2]);
+        $children6->setReference($layoutObject);
+        $blockGroup2->setChildren($children6);
 
-        return new LayoutObject(
-            new ReferenceAwareEntityCollection([$blockGroup1, $blockGroup2]),
-            ['aaa', 'bbb', 'ccc', 'ddd', 'eee', 'aaa', 'bbb', 'ccc', 'ddd', 'eee']
-        );
+        $tree = new ReferenceAwareEntityCollection([$blockGroup1, $blockGroup2]);
+        $tree->setReference($layoutObject);
+
+        $layoutObject->setTree($tree);
+        $layoutObject->setHashes(['aaa', 'bbb', 'ccc', 'ddd', 'eee', 'aaa', 'bbb', 'ccc', 'ddd', 'eee']);
+
+        return $layoutObject;
     }
 
     protected function createFactoryInstance() : LayoutObjectFactory
