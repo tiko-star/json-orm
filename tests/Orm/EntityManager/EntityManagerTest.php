@@ -7,7 +7,7 @@ use App\Orm\Entity\BlockGroup;
 use App\Orm\Entity\Button;
 use App\Orm\Entity\Column;
 use App\Orm\Factory\LayoutObjectFactory;
-use App\Orm\Persistence\JsonDocumentFinder;
+use App\Orm\Persistence\JsonDocumentManager;
 use App\Orm\Persistence\ReferenceAwareEntityCollection;
 use PHPUnit\Framework\TestCase;
 
@@ -29,7 +29,7 @@ class EntityManagerTest extends TestCase
 
     protected function createEntityManager() : EntityManager
     {
-        $stub = $this->createStub(JsonDocumentFinder::class);
+        $stub = $this->createStub(JsonDocumentManager::class);
         $stub->method('fetchDocumentContent')
             ->willReturn([
                 [

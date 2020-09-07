@@ -8,7 +8,7 @@ use Slim\Factory\AppFactory;
 use DI\Container;
 
 use App\Orm\EntityManager\EntityManager as JsonEntityManager;
-use App\Orm\Persistence\JsonDocumentFinder;
+use App\Orm\Persistence\JsonDocumentManager;
 use App\Orm\Factory\LayoutObjectFactory;
 
 use Doctrine\ORM\Tools\Setup;
@@ -22,7 +22,7 @@ $container = new Container();
 
 $container->set('JsonEntityManager', function () {
     return new JsonEntityManager(
-        new JsonDocumentFinder(__DIR__),
+        new JsonDocumentManager(__DIR__),
         new LayoutObjectFactory()
     );
 });

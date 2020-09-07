@@ -5,24 +5,24 @@ declare(strict_types = 1);
 namespace App\Orm\EntityManager;
 
 use App\Orm\Factory\LayoutObjectFactory;
-use App\Orm\Persistence\JsonDocumentFinder;
+use App\Orm\Persistence\JsonDocumentManager;
 use App\Orm\Persistence\LayoutObject;
 
 class EntityManager
 {
     /**
-     * @var \App\Orm\Persistence\JsonDocumentFinder Reference on JsonDocumentFinder instance.
+     * @var \App\Orm\Persistence\JsonDocumentManager Reference on JsonDocumentManager instance.
      */
-    protected JsonDocumentFinder $finder;
+    protected JsonDocumentManager $documentManager;
 
     /**
      * @var \App\Orm\Factory\LayoutObjectFactory Reference on LayoutObjectFactory instance.
      */
     protected LayoutObjectFactory $factory;
 
-    public function __construct(JsonDocumentFinder $finder, LayoutObjectFactory $factory)
+    public function __construct(JsonDocumentManager $documentManager, LayoutObjectFactory $factory)
     {
-        $this->finder = $finder;
+        $this->documentManager = $documentManager;
         $this->factory = $factory;
     }
 
@@ -32,11 +32,10 @@ class EntityManager
      * @param string $hash
      *
      * @return \App\Orm\Persistence\LayoutObject
-     * @throws \JsonException
      */
     public function findByHash(string $hash) : LayoutObject
     {
-        $content = $this->finder->fetchDocumentContent($hash);
+        $content = $this->documentManager->fetchDocumentContent($hash);
 
         return $this->factory->createLayoutObject($content);
     }

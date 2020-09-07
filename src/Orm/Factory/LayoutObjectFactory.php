@@ -15,8 +15,10 @@ use App\Orm\Exception\MissingEntityTypeIdentifierException;
 use App\Orm\Persistence\LayoutObject;
 use App\Orm\Persistence\ReferenceAwareEntityCollection;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+
+use function array_push;
+use function sprintf;
 
 /**
  * Complex factory for creating instances of LayoutObject.
