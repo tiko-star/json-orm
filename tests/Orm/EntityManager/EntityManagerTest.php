@@ -9,6 +9,7 @@ use App\Orm\Entity\Column;
 use App\Orm\Factory\LayoutObjectFactory;
 use App\Orm\Persistence\JsonDocumentManager;
 use App\Orm\Persistence\ReferenceAwareEntityCollection;
+use App\Orm\Persistence\State\FetchedState;
 use PHPUnit\Framework\TestCase;
 
 use App\Orm\EntityManager\EntityManager;
@@ -63,7 +64,10 @@ class EntityManagerTest extends TestCase
 
     protected function createExpected() : LayoutObject
     {
-        $layoutObject = new LayoutObject('6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b');
+        $layoutObject = new LayoutObject(
+            '6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b',
+            new FetchedState()
+        );
 
         $button = new Button();
         $button->setType('widget');

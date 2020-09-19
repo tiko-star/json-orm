@@ -13,7 +13,7 @@ class Button extends AbstractWidget
      *
      * @param \App\Doctrine\Entity\Content $content
      */
-    protected function initializeContent(Content $content) : void
+    public function initializeContent(Content $content) : void
     {
         $data = $content->getContent();
         $this->setButtonText($data['text']);

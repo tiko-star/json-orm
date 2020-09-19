@@ -32,14 +32,4 @@ abstract class AbstractWidget extends AbstractEntity
     {
         $this->widgetType = $widgetType;
     }
-
-    /**
-     * Specify data which should be serialized to JSON.
-     *
-     * @return array
-     */
-    public function jsonSerialize() : array
-    {
-        return parent::jsonSerialize() + ['widgetType' => $this->getWidgetType()];
-    }
 }

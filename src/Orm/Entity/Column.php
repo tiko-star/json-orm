@@ -17,7 +17,7 @@ class Column extends AbstractEntity implements ContainsChildrenInterface
         return parent::jsonSerialize() + ['children' => $this->getChildren()];
     }
 
-    protected function initializeContent(Content $content) : void
+    public function initializeContent(Content $content) : void
     {
     }
 }

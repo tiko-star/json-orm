@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Orm\Entity;
 
 use App\Doctrine\Entity\Content;
+use App\Orm\Persistence\LayoutObject;
 use App\Orm\Persistence\ReferenceAwareEntityCollection;
 use JsonSerializable;
 
@@ -35,6 +36,13 @@ abstract class AbstractEntity implements JsonSerializable
      * @var \App\Orm\Persistence\ReferenceAwareEntityCollection Reference on the instance of the wrapping object.
      */
     protected ReferenceAwareEntityCollection $root;
+
+    /**
+     * Initialize content data for current entity.
+     *
+     * @param \App\Doctrine\Entity\Content $content
+     */
+    public abstract function initializeContent(Content $content) : void;
 
     /**
      * @return string
@@ -119,25 +127,16 @@ abstract class AbstractEntity implements JsonSerializable
     }
 
     /**
-     * Initialize content data for current entity.
-     *
-     * @param \App\Doctrine\Entity\Content $content
-     */
-    protected abstract function initializeContent(Content $content) : void;
-
-    /**
      * Specify data which should be serialized to JSON.
      *
      * @return array
      */
     public function jsonSerialize() : array
     {
-        $this->applyContent();
-
-        return [
-            'type'  => $this->getType(),
-            'hash'  => $this->getHash(),
-            'props' => $this->getProperties(),
-        ];
+        return $this
+            ->getRoot()
+            ->getReference()
+            ->getState()
+            ->serialize($this);
     }
 }

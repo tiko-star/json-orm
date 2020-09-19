@@ -14,6 +14,7 @@ use App\Orm\Exception\InvalidEntityTypeException;
 use App\Orm\Exception\MissingEntityTypeIdentifierException;
 use App\Orm\Persistence\LayoutObject;
 use App\Orm\Persistence\ReferenceAwareEntityCollection;
+use App\Orm\Persistence\State\SerializationStateInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
@@ -60,15 +61,16 @@ class LayoutObjectFactory
     /**
      * Create instance of LayoutObject with given content inside.
      *
-     * @param array       $content
-     * @param string|null $hash
+     * @param array                                                       $content
+     * @param string|null                                                 $hash
+     * @param \App\Orm\Persistence\State\SerializationStateInterface|null $state
      *
      * @return \App\Orm\Persistence\LayoutObject
      * @throws \Exception
      */
-    public function createLayoutObject(array $content, string $hash = null) : LayoutObject
+    public function createLayoutObject(array $content, string $hash = null, SerializationStateInterface $state = null) : LayoutObject
     {
-        $layoutObject = new LayoutObject($hash);
+        $layoutObject = new LayoutObject($hash, $state);
         $hashes = [];
         $tree = $this->hydrate($content, $hashes, $layoutObject);
 

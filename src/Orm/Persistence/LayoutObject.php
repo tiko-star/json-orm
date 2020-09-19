@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace App\Orm\Persistence;
 
+use App\Orm\Persistence\State\DefaultState;
+use App\Orm\Persistence\State\SerializationStateInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use JsonSerializable;
 
@@ -35,10 +37,16 @@ class LayoutObject implements JsonSerializable
      */
     protected ArrayCollection $contents;
 
-    public function __construct(string $name = null)
+    /**
+     * @var \App\Orm\Persistence\State\SerializationStateInterface Reference on instance of SerializationStateInterface
+     */
+    protected SerializationStateInterface $state;
+
+    public function __construct(string $name = null, SerializationStateInterface $state = null)
     {
         $this->name = $name;
         $this->contents = new ArrayCollection();
+        $this->state = $state ?? new DefaultState();
     }
 
     public function getHashes() : array
@@ -97,6 +105,22 @@ class LayoutObject implements JsonSerializable
     public function setName(string $name) : void
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return \App\Orm\Persistence\State\SerializationStateInterface
+     */
+    public function getState() : SerializationStateInterface
+    {
+        return $this->state;
+    }
+
+    /**
+     * @param \App\Orm\Persistence\State\SerializationStateInterface $state
+     */
+    public function setState(SerializationStateInterface $state) : void
+    {
+        $this->state = $state;
     }
 
     /**
