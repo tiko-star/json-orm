@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace App\Doctrine\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Doctrine\Repository\ContentRepository;
+use JsonSerializable;
 
 /**
  * Class Content
@@ -15,7 +15,7 @@ use App\Doctrine\Repository\ContentRepository;
  *
  * @package App\Doctrine\Entity
  */
-class Content
+class Content implements JsonSerializable
 {
     /**
      * @ORM\Id
@@ -34,7 +34,7 @@ class Content
     protected string $hash;
 
     /**
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      *
      * @var array
      */
@@ -86,5 +86,14 @@ class Content
     public function setContent(array $content) : void
     {
         $this->content = $content;
+    }
+
+    public function jsonSerialize() : array
+    {
+        return [
+            'id'      => $this->getId(),
+            'hash'    => $this->getHash(),
+            'content' => $this->getContent(),
+        ];
     }
 }

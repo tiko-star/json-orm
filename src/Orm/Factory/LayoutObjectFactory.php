@@ -60,13 +60,15 @@ class LayoutObjectFactory
     /**
      * Create instance of LayoutObject with given content inside.
      *
-     * @param array $content
+     * @param array       $content
+     * @param string|null $hash
      *
      * @return \App\Orm\Persistence\LayoutObject
+     * @throws \Exception
      */
-    public function createLayoutObject(array $content) : LayoutObject
+    public function createLayoutObject(array $content, string $hash = null) : LayoutObject
     {
-        $layoutObject = new LayoutObject();
+        $layoutObject = new LayoutObject($hash);
         $hashes = [];
         $tree = $this->hydrate($content, $hashes, $layoutObject);
 
@@ -84,6 +86,7 @@ class LayoutObjectFactory
      * @param \App\Orm\Persistence\LayoutObject $layoutObject
      *
      * @return \App\Orm\Persistence\ReferenceAwareEntityCollection
+     * @throws \Exception
      */
     protected function hydrate(array $content, array &$hashes, LayoutObject $layoutObject) : ReferenceAwareEntityCollection
     {
@@ -115,6 +118,7 @@ class LayoutObjectFactory
      * @param array $data
      *
      * @return \App\Orm\Entity\AbstractEntity
+     * @throws \Exception
      */
     protected function createEntityInstance(array $data) : AbstractEntity
     {

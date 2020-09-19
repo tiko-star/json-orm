@@ -24,7 +24,7 @@ abstract class AbstractEntity implements JsonSerializable
     /**
      * @var string|null The unique hash of the current entity.
      */
-    protected ?string $hash;
+    protected ?string $hash = null;
 
     /**
      * @var array Individual properties of the current entity.

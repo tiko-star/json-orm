@@ -15,6 +15,11 @@ use JsonSerializable;
 class LayoutObject implements JsonSerializable
 {
     /**
+     * @var string|null JSON document name.
+     */
+    protected ?string $name;
+
+    /**
      * @var \App\Orm\Persistence\ReferenceAwareEntityCollection Tree of AbstractEntity instances inside.
      */
     protected ReferenceAwareEntityCollection $tree;
@@ -29,6 +34,12 @@ class LayoutObject implements JsonSerializable
      *      instances inside.
      */
     protected ArrayCollection $contents;
+
+    public function __construct(string $name = null)
+    {
+        $this->name = $name;
+        $this->contents = new ArrayCollection();
+    }
 
     public function getHashes() : array
     {
@@ -70,6 +81,22 @@ class LayoutObject implements JsonSerializable
     public function setContents(ArrayCollection $contents) : void
     {
         $this->contents = $contents;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getName() : ?string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name) : void
+    {
+        $this->name = $name;
     }
 
     /**

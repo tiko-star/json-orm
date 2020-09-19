@@ -25,6 +25,7 @@ class EntityManagerTest extends TestCase
 
         $this->assertEquals($expected, $layoutObject);
         $this->assertEquals(['aaa', 'bbb', 'ccc', 'ddd'], $layoutObject->getHashes());
+        $this->assertEquals('6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b', $layoutObject->getName());
     }
 
     protected function createEntityManager() : EntityManager
@@ -62,7 +63,7 @@ class EntityManagerTest extends TestCase
 
     protected function createExpected() : LayoutObject
     {
-        $layoutObject = new LayoutObject();
+        $layoutObject = new LayoutObject('6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b');
 
         $button = new Button();
         $button->setType('widget');

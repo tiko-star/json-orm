@@ -41,7 +41,7 @@ class JsonDocumentManager
      */
     public function fetchDocumentContent(string $filename) : array
     {
-        $path = $this->root.'/documents/'.$filename;
+        $path = $this->root.'/documents/'.$filename.'.json';
 
         if (!is_readable($path)) {
             throw new JsonDocumentNotFoundException(
@@ -60,5 +60,12 @@ class JsonDocumentManager
                 $exception
             );
         }
+    }
+
+    public function save(string $filename, string $contents) : void
+    {
+        $path = $this->root.'/documents/'.$filename.'.json';
+
+        file_put_contents($path, $contents);
     }
 }

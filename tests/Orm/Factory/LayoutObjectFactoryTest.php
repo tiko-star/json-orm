@@ -19,6 +19,8 @@ class LayoutObjectFactoryTest extends TestCase
      * @param array                             $document
      * @param array                             $hashes
      * @param \App\Orm\Persistence\LayoutObject $expected
+     *
+     * @throws \Exception
      */
     public function testCreateLayoutObject_WithValidDataset_CreatesValidLayoutObjects(array $document, array $hashes, LayoutObject $expected) : void
     {

@@ -83,8 +83,35 @@ $app->get('/layout/{filename}', function (Request $request, Response $response, 
 
     $response->getBody()->write(json_encode($layout));
 
-    return $response->withHeader('Content-Type', 'application/json');;
+    return $response->withHeader('Content-Type', 'application/json');
 });
+
+$app->post('/layout', function (Request $request, Response $response) {
+    $content = json_decode($request->getBody()->getContents(), true);
+
+    /** @var JsonEntityManager $jsonEntityManager */
+    $jsonEntityManager = $this->get('JsonEntityManager');
+    $layoutObject = $jsonEntityManager->persist($content);
+
+    $response->getBody()->write(json_encode($layoutObject));
+
+    return $response->withHeader('Content-Type', 'application/json');
+});
+
+$app->post('/content/{hash}', function (Request $request, Response $response) {
+    $content = new Content();
+
+    $content->setHash(md5((string) time()));
+    $content->setContent(json_decode($request->getBody()->getContents(), true));
+
+    /** @var EntityManager $manager */
+    $manager = $this->get('DoctrineEntityManager');
+    $manager->persist($content);
+    $manager->flush();
+
+    $response->getBody()->write(json_encode($content));
+
+    return $response->withHeader('Content-Type', 'application/json');});
 
 // Run app
 $app->run();
