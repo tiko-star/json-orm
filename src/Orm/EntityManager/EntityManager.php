@@ -7,6 +7,7 @@ namespace App\Orm\EntityManager;
 use App\Orm\Factory\LayoutObjectFactory;
 use App\Orm\Persistence\JsonDocumentManager;
 use App\Orm\Persistence\LayoutObject;
+use App\Orm\Persistence\State\FetchedState;
 use App\Orm\Persistence\State\PersistingState;
 
 class EntityManager
@@ -28,20 +29,17 @@ class EntityManager
     }
 
     /**
-     * @param array $data
+     * @param \App\Orm\Persistence\LayoutObject $layoutObject
      *
-     * @return \App\Orm\Persistence\LayoutObject
-     * @throws \Exception
+     * @return void
      */
-    public function persist(array $data) : LayoutObject
+    public function persist(LayoutObject $layoutObject) : void
     {
-        $layoutObject = $this->factory->createLayoutObject($data, md5((string) time()));
         $layoutObject->setState(new PersistingState());
 
         $json = json_encode($layoutObject, JSON_PRETTY_PRINT);
 
         $this->documentManager->save($layoutObject->getName(), $json);
-
-        return $layoutObject;
+        $layoutObject->setState(new FetchedState());
     }
 }

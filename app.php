@@ -6,50 +6,21 @@ use App\Orm\Repository\ObjectRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
-use DI\Container;
 
 use App\Orm\EntityManager\EntityManager as JsonEntityManager;
-use App\Orm\Persistence\JsonDocumentManager;
 use App\Orm\Factory\LayoutObjectFactory;
 
-use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 use App\Doctrine\Entity\Content;
 
 require __DIR__.'/vendor/autoload.php';
 
-// Create Container using PHP-DI
-$container = new Container();
+$builder = new DI\ContainerBuilder();
+$builder->enableCompilation(__DIR__.'/tmp');
+$builder->writeProxiesToFile(true, __DIR__.'/tmp/proxies');
+$builder->addDefinitions(__DIR__ . '/config.php');
 
-$container->set(JsonEntityManager::class, function () {
-    return new JsonEntityManager(
-        new JsonDocumentManager(__DIR__),
-        new LayoutObjectFactory()
-    );
-});
-
-$container->set(ObjectRepository::class, function () {
-    return new ObjectRepository(
-        new JsonDocumentManager(__DIR__),
-        new LayoutObjectFactory()
-    );
-});
-
-$container->set(EntityManager::class, function () {
-    $params = [
-        'driver'   => 'pdo_mysql',
-        'user'     => 'root',
-        'password' => 'babelino',
-        'dbname'   => 'foo',
-    ];
-
-    $paths = [__DIR__.'/src/Doctrine/Entity'];
-    $proxyDir = __DIR__.'/src/Doctrine/Proxy';
-
-    $config = Setup::createAnnotationMetadataConfiguration($paths, false, $proxyDir, null, false);
-
-    return EntityManager::create($params, $config);
-});
+$container = $builder->build();
 
 /**
  * Instantiate App
@@ -60,6 +31,9 @@ $container->set(EntityManager::class, function () {
  */
 AppFactory::setContainer($container);
 $app = AppFactory::create();
+
+// Parse json, form data and xml
+$app->addBodyParsingMiddleware();
 
 // Add Routing Middleware
 $app->addRoutingMiddleware();
@@ -95,11 +69,15 @@ $app->get('/layout/{filename}', function (Request $request, Response $response, 
 });
 
 $app->post('/layout', function (Request $request, Response $response) {
-    $content = json_decode($request->getBody()->getContents(), true);
+    $content = $request->getParsedBody();
+
+    /** @var LayoutObjectFactory $factory */
+    $factory = $this->get(LayoutObjectFactory::class);
+    $layoutObject = $factory->createLayoutObject($content, md5((string) time()));
 
     /** @var JsonEntityManager $jsonEntityManager */
     $jsonEntityManager = $this->get(JsonEntityManager::class);
-    $layoutObject = $jsonEntityManager->persist($content);
+    $jsonEntityManager->persist($layoutObject);
 
     $response->getBody()->write(json_encode($layoutObject));
 
@@ -110,7 +88,7 @@ $app->post('/content/{hash}', function (Request $request, Response $response) {
     $content = new Content();
 
     $content->setHash(md5((string) time()));
-    $content->setContent(json_decode($request->getBody()->getContents(), true));
+    $content->setContent($request->getParsedBody());
 
     /** @var EntityManager $manager */
     $manager = $this->get(EntityManager::class);
