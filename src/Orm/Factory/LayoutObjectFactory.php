@@ -66,7 +66,6 @@ class LayoutObjectFactory
      * @param \App\Orm\Persistence\State\SerializationStateInterface|null $state
      *
      * @return \App\Orm\Persistence\LayoutObject
-     * @throws \Exception
      */
     public function createLayoutObject(array $content, string $hash = null, SerializationStateInterface $state = null) : LayoutObject
     {
@@ -88,7 +87,6 @@ class LayoutObjectFactory
      * @param \App\Orm\Persistence\LayoutObject $layoutObject
      *
      * @return \App\Orm\Persistence\ReferenceAwareEntityCollection
-     * @throws \Exception
      */
     protected function hydrate(array $content, array &$hashes, LayoutObject $layoutObject) : ReferenceAwareEntityCollection
     {
@@ -120,7 +118,7 @@ class LayoutObjectFactory
      * @param array $data
      *
      * @return \App\Orm\Entity\AbstractEntity
-     * @throws \Exception
+     * @throws \App\Orm\Exception\InvalidEntityTypeException
      */
     protected function createEntityInstance(array $data) : AbstractEntity
     {

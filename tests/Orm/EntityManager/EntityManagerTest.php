@@ -10,18 +10,17 @@ use App\Orm\Factory\LayoutObjectFactory;
 use App\Orm\Persistence\JsonDocumentManager;
 use App\Orm\Persistence\ReferenceAwareEntityCollection;
 use App\Orm\Persistence\State\FetchedState;
+use App\Orm\Repository\ObjectRepository;
 use PHPUnit\Framework\TestCase;
-
-use App\Orm\EntityManager\EntityManager;
 use App\Orm\Persistence\LayoutObject;
 
 class EntityManagerTest extends TestCase
 {
     public function testFindByHash_WithExistingJsonDocument_ReturnsInstanceOfLayoutObject() : void
     {
-        $manager = $this->createEntityManager();
+        $repository = $this->createObjectRepositoryInstance();
 
-        $layoutObject = $manager->findByHash('6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b');
+        $layoutObject = $repository->find('6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b');
         $expected = $this->createExpected();
 
         $this->assertEquals($expected, $layoutObject);
@@ -29,7 +28,7 @@ class EntityManagerTest extends TestCase
         $this->assertEquals('6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b', $layoutObject->getName());
     }
 
-    protected function createEntityManager() : EntityManager
+    protected function createObjectRepositoryInstance() : ObjectRepository
     {
         $stub = $this->createStub(JsonDocumentManager::class);
         $stub->method('fetchDocumentContent')
@@ -59,7 +58,7 @@ class EntityManagerTest extends TestCase
                 ],
             ]);
 
-        return new EntityManager($stub, new LayoutObjectFactory());
+        return new ObjectRepository($stub, new LayoutObjectFactory());
     }
 
     protected function createExpected() : LayoutObject

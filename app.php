@@ -2,6 +2,7 @@
 
 declare(strict_types = 1);
 
+use App\Orm\Repository\ObjectRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
@@ -20,14 +21,21 @@ require __DIR__.'/vendor/autoload.php';
 // Create Container using PHP-DI
 $container = new Container();
 
-$container->set('JsonEntityManager', function () {
+$container->set(JsonEntityManager::class, function () {
     return new JsonEntityManager(
         new JsonDocumentManager(__DIR__),
         new LayoutObjectFactory()
     );
 });
 
-$container->set('DoctrineEntityManager', function () {
+$container->set(ObjectRepository::class, function () {
+    return new ObjectRepository(
+        new JsonDocumentManager(__DIR__),
+        new LayoutObjectFactory()
+    );
+});
+
+$container->set(EntityManager::class, function () {
     $params = [
         'driver'   => 'pdo_mysql',
         'user'     => 'root',
@@ -70,13 +78,13 @@ $errorMiddleware = $app->addErrorMiddleware(true, true, true);
 
 // Define app routes
 $app->get('/layout/{filename}', function (Request $request, Response $response, $args) {
-    /** @var JsonEntityManager $jsonEntityManager */
-    $jsonEntityManager = $this->get('JsonEntityManager');
+    /** @var ObjectRepository $objectRepository */
+    $objectRepository = $this->get(ObjectRepository::class);
 
     /** @var \App\Doctrine\Repository\ContentRepository $contentRepository */
-    $contentRepository = $this->get('DoctrineEntityManager')->getRepository(Content::class);
+    $contentRepository = $this->get(EntityManager::class)->getRepository(Content::class);
 
-    $layout = $jsonEntityManager->findByHash($args['filename']);
+    $layout = $objectRepository->find($args['filename']);
     $contents = $contentRepository->findByHashes($layout->getHashes());
 
     $layout->setContents($contents);
@@ -90,7 +98,7 @@ $app->post('/layout', function (Request $request, Response $response) {
     $content = json_decode($request->getBody()->getContents(), true);
 
     /** @var JsonEntityManager $jsonEntityManager */
-    $jsonEntityManager = $this->get('JsonEntityManager');
+    $jsonEntityManager = $this->get(JsonEntityManager::class);
     $layoutObject = $jsonEntityManager->persist($content);
 
     $response->getBody()->write(json_encode($layoutObject));
@@ -105,13 +113,14 @@ $app->post('/content/{hash}', function (Request $request, Response $response) {
     $content->setContent(json_decode($request->getBody()->getContents(), true));
 
     /** @var EntityManager $manager */
-    $manager = $this->get('DoctrineEntityManager');
+    $manager = $this->get(EntityManager::class);
     $manager->persist($content);
     $manager->flush();
 
     $response->getBody()->write(json_encode($content));
 
-    return $response->withHeader('Content-Type', 'application/json');});
+    return $response->withHeader('Content-Type', 'application/json');
+});
 
 // Run app
 $app->run();

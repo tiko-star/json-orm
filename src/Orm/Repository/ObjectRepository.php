@@ -2,14 +2,14 @@
 
 declare(strict_types = 1);
 
-namespace App\Orm\EntityManager;
+namespace App\Orm\Repository;
 
 use App\Orm\Factory\LayoutObjectFactory;
 use App\Orm\Persistence\JsonDocumentManager;
 use App\Orm\Persistence\LayoutObject;
-use App\Orm\Persistence\State\PersistingState;
+use App\Orm\Persistence\State\FetchedState;
 
-class EntityManager
+class ObjectRepository
 {
     /**
      * @var \App\Orm\Persistence\JsonDocumentManager Reference on JsonDocumentManager instance.
@@ -28,20 +28,16 @@ class EntityManager
     }
 
     /**
-     * @param array $data
+     * Find instance of LayoutObject by given name.
+     *
+     * @param string $documentName
      *
      * @return \App\Orm\Persistence\LayoutObject
-     * @throws \Exception
      */
-    public function persist(array $data) : LayoutObject
+    public function find(string $documentName) : LayoutObject
     {
-        $layoutObject = $this->factory->createLayoutObject($data, md5((string) time()));
-        $layoutObject->setState(new PersistingState());
+        $content = $this->documentManager->fetchDocumentContent($documentName);
 
-        $json = json_encode($layoutObject, JSON_PRETTY_PRINT);
-
-        $this->documentManager->save($layoutObject->getName(), $json);
-
-        return $layoutObject;
+        return $this->factory->createLayoutObject($content, $documentName, new FetchedState());
     }
 }

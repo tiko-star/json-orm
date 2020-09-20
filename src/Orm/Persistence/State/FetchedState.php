@@ -13,6 +13,11 @@ class FetchedState implements SerializationStateInterface
 {
     public function serialize(AbstractEntity $entity) : array
     {
+        $data = [
+            'type' => $entity->getType(),
+            'hash' => $entity->getHash(),
+        ];
+
         $contents = $entity->getRoot()->getReference()->getContents();
 
         /** @var Content|false $content */
@@ -21,14 +26,8 @@ class FetchedState implements SerializationStateInterface
             ->first();
 
         if ($content) {
-            $entity->initializeContent($content);
+            $data['props'] = $entity->initializeContent($content);
         }
-
-        $data = [
-            'type'  => $entity->getType(),
-            'hash'  => $entity->getHash(),
-            'props' => $entity->getProperties(),
-        ];
 
         if ($entity instanceof ContainsChildrenInterface) {
             $data['children'] = $entity->getChildren();

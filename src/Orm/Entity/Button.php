@@ -12,22 +12,15 @@ class Button extends AbstractWidget
      * Initialize content data for current entity.
      *
      * @param \App\Doctrine\Entity\Content $content
+     *
+     * @return array
      */
-    public function initializeContent(Content $content) : void
+    public function initializeContent(Content $content) : array
     {
         $data = $content->getContent();
-        $this->setButtonText($data['text']);
-    }
 
-    /**
-     * Set text of the current button.
-     *
-     * @param string $text
-     */
-    protected function setButtonText(string $text) : void
-    {
-        $props = $this->getProperties();
-        $props['text'] = $text;
-        $this->setProperties($props);
+        return [
+            'children' => $data['text'],
+        ];
     }
 }
