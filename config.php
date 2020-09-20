@@ -1,11 +1,12 @@
 <?php
 
 use App\Orm\Repository\ObjectRepository;
+use Doctrine\Common\Cache\PhpFileCache;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\Configuration;
 use Psr\Container\ContainerInterface;
 use App\Orm\Persistence\JsonDocumentManager;
-use App\Orm\EntityManager as JsonEntityManager;
+use App\Orm\EntityManager\EntityManager as JsonEntityManager;
 use App\Orm\Factory\LayoutObjectFactory;
 
 return [
@@ -33,11 +34,18 @@ return [
             'dbname'   => 'foo',
         ];
 
-        $paths = [__DIR__.'/src/Doctrine/Entity'];
-        $proxyDir = __DIR__.'/src/Doctrine/Proxy';
-
-        $config = Setup::createAnnotationMetadataConfiguration($paths, false, $proxyDir, null, false);
+        $cache = new PhpFileCache(__DIR__.'/src/Doctrine/Cache');
+        $config = new Configuration;
+        $config->setMetadataCacheImpl($cache);
+        $driverImpl = $config->newDefaultAnnotationDriver(__DIR__.'/src/Doctrine/Entity');
+        $config->setMetadataDriverImpl($driverImpl);
+        $config->setQueryCacheImpl($cache);
+        $config->setProxyDir(__DIR__.'/src/Doctrine/Proxy');
+        $config->setProxyNamespace('App\Proxies');
+        $config->setAutoGenerateProxyClasses(true);
 
         return EntityManager::create($params, $config);
     },
+
+    LayoutObjectFactory::class => DI\create(LayoutObjectFactory::class),
 ];

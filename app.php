@@ -12,6 +12,7 @@ use App\Orm\Factory\LayoutObjectFactory;
 
 use Doctrine\ORM\EntityManager;
 use App\Doctrine\Entity\Content;
+use Slim\Middleware\ContentLengthMiddleware;
 
 require __DIR__.'/vendor/autoload.php';
 
@@ -19,6 +20,8 @@ $builder = new DI\ContainerBuilder();
 $builder->enableCompilation(__DIR__.'/tmp');
 $builder->writeProxiesToFile(true, __DIR__.'/tmp/proxies');
 $builder->addDefinitions(__DIR__ . '/config.php');
+$builder->useAutowiring(false);
+$builder->useAnnotations(false);
 
 $container = $builder->build();
 
@@ -34,6 +37,8 @@ $app = AppFactory::create();
 
 // Parse json, form data and xml
 $app->addBodyParsingMiddleware();
+
+$app->add(new ContentLengthMiddleware());
 
 // Add Routing Middleware
 $app->addRoutingMiddleware();
@@ -78,6 +83,12 @@ $app->post('/layout', function (Request $request, Response $response) {
     /** @var JsonEntityManager $jsonEntityManager */
     $jsonEntityManager = $this->get(JsonEntityManager::class);
     $jsonEntityManager->persist($layoutObject);
+
+    /** @var \App\Doctrine\Repository\ContentRepository $contentRepository */
+    $contentRepository = $this->get(EntityManager::class)->getRepository(Content::class);
+    $contents = $contentRepository->findByHashes($layoutObject->getHashes());
+
+    $layoutObject->setContents($contents);
 
     $response->getBody()->write(json_encode($layoutObject));
 
