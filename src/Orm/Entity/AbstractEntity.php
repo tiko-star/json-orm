@@ -44,7 +44,10 @@ abstract class AbstractEntity implements JsonSerializable
      *
      * @return array
      */
-    public abstract function initializeContent(Content $content) : array;
+    public function initializeContent(Content $content) : array
+    {
+        return $content->getContent();
+    }
 
     /**
      * @return string
