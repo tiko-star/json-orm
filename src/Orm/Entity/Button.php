@@ -20,7 +20,7 @@ class Button extends AbstractWidget
         $data = $content->getContent();
 
         return [
-            'children' => $data['text'],
+            'text' => $data['text'],
         ];
     }
 }

@@ -19,7 +19,7 @@ require __DIR__.'/vendor/autoload.php';
 $builder = new DI\ContainerBuilder();
 $builder->enableCompilation(__DIR__.'/tmp');
 $builder->writeProxiesToFile(true, __DIR__.'/tmp/proxies');
-$builder->addDefinitions(__DIR__ . '/config.php');
+$builder->addDefinitions(__DIR__.'/config.php');
 $builder->useAutowiring(false);
 $builder->useAnnotations(false);
 
@@ -90,7 +90,9 @@ $app->post('/layout', function (Request $request, Response $response) {
 
     $layoutObject->setContents($contents);
 
-    $response->getBody()->write(json_encode($layoutObject));
+    $response->getBody()->write(json_encode([
+        $layoutObject->getName() => $layoutObject
+    ]));
 
     return $response->withHeader('Content-Type', 'application/json');
 });
