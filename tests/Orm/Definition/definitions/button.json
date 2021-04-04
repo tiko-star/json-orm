@@ -1,0 +1,15 @@
+{
+  "name": "button",
+  "type": "WIDGET",
+  "containsChildren": false,
+  "properties": [
+    {
+      "name": "text",
+      "type": "STRING"
+    },
+    {
+      "name": "link",
+      "type": "STRING"
+    }
+  ]
+}

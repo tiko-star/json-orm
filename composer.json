@@ -8,7 +8,9 @@
     "ext-json": "*",
     "php-di/php-di": "^6.2",
     "doctrine/orm": "^2.7",
-    "symfony/uid": "^5.1"
+    "symfony/uid": "^5.1",
+    "symfony/finder": "^5.2",
+    "symfony/cache": "^5.2"
   },
   "authors": [
     {
