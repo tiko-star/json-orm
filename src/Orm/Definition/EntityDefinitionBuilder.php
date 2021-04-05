@@ -8,14 +8,31 @@ use App\Orm\Definition\Exception\DefinitionCompilationException;
 
 use function sprintf;
 
+/**
+ * Class EntityDefinitionBuilder creates EntityDefinition instances based on the setup.
+ *
+ * @package App\Orm\Definition
+ */
 class EntityDefinitionBuilder
 {
+    /**
+     * @var string Name of the Entity.
+     */
     protected string $name = '';
 
+    /**
+     * @var string Type of the Entity.
+     */
     protected string $type = EntityDefinition::ENTITY_TYPE_WIDGET;
 
+    /**
+     * @var bool Define whether an Entity can contain children or not.
+     */
     protected bool $containsChildren = false;
 
+    /**
+     * @var array List of definitions of Entity properties.
+     */
     protected array $propertyDefinitions = [];
 
     /**
@@ -58,6 +75,11 @@ class EntityDefinitionBuilder
         return $this;
     }
 
+    /**
+     * Enable for an Entity to be able to contain child Entities.
+     *
+     * @return $this
+     */
     public function enableChildrenSupport() : EntityDefinitionBuilder
     {
         $this->containsChildren = true;
@@ -65,6 +87,11 @@ class EntityDefinitionBuilder
         return $this;
     }
 
+    /**
+     * Disable for an Entity to be able to contain child Entities.
+     *
+     * @return $this
+     */
     public function disableChildrenSupport() : EntityDefinitionBuilder
     {
         $this->containsChildren = false;
@@ -73,7 +100,7 @@ class EntityDefinitionBuilder
     }
 
     /**
-     * @return array
+     * @return \App\Orm\Definition\PropertyDefinition[]
      */
     public function getPropertyDefinitions() : array
     {
@@ -89,6 +116,8 @@ class EntityDefinitionBuilder
     }
 
     /**
+     * Create EntityDefinition instance based on previously defined settings.
+     *
      * @return \App\Orm\Definition\EntityDefinition
      * @throws \App\Orm\Definition\Exception\DefinitionCompilationException
      */

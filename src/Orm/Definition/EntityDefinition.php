@@ -4,6 +4,11 @@ declare(strict_types = 1);
 
 namespace App\Orm\Definition;
 
+/**
+ * Object Oriented representation of the Entity definitions.
+ *
+ * @package App\Orm\Definition
+ */
 class EntityDefinition
 {
     const ENTITY_TYPE_WIDGET = 'WIDGET';

@@ -11,14 +11,32 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 use function sprintf;
 
+/**
+ * Class EntityDefinitionProvider provides mechanism for retrieving EntityDefinition definition instances.
+ * After first time retrieval it caches the definition instances for later use.
+ *
+ * @package App\Orm\Definition
+ */
 class EntityDefinitionProvider
 {
+    /**
+     * @var string Path from where to read definitions.
+     */
     protected string $definitionsPath;
 
+    /**
+     * @var \App\Orm\Definition\EntityDefinitionLoader Reference on EntityDefinitionLoader instance.
+     */
     protected EntityDefinitionLoader $definitionLoader;
 
+    /**
+     * @var \Psr\Cache\CacheItemPoolInterface Reference on CacheItemPoolInterface instance.
+     */
     protected CacheItemPoolInterface $cache;
 
+    /**
+     * @var \Symfony\Component\PropertyAccess\PropertyAccessorInterface Reference on PropertyAccessorInterface instance.
+     */
     protected PropertyAccessorInterface $propertyAccessor;
 
     public function __construct(string $definitionsPath, EntityDefinitionLoader $definitionLoader, CacheItemPoolInterface $cache)
@@ -33,7 +51,11 @@ class EntityDefinitionProvider
     }
 
     /**
-     * @param string $entityName
+     * Retrieve definition for given entity name.
+     * First of all try to fetch it from cache.
+     * If the definition is missing in the cache, try to load it from the source and after store it in the cache.
+     *
+     * @param string $entityName Name of the requested Entity.
      *
      * @return \App\Orm\Definition\EntityDefinition
      *
@@ -49,8 +71,9 @@ class EntityDefinitionProvider
             return $item->get();
         }
 
+        // Here we are loading all the definitions from the source.
+        // To store them in the cache for later use.
         $entityDefinitions = $this->definitionLoader->loadDefinitions($this->definitionsPath);
-        $this->cacheDefinitions($entityDefinitions);
 
         if (!$this->propertyAccessor->isReadable($entityDefinitions, "[$entityName]")) {
             throw new DefinitionNotFoundException(
@@ -58,11 +81,15 @@ class EntityDefinitionProvider
             );
         }
 
+        $this->cacheDefinitions($entityDefinitions);
+
         return $this->propertyAccessor->getValue($entityDefinitions, "[$entityName]");
     }
 
     /**
-     * @param \App\Orm\Definition\EntityDefinition[] $entityDefinitions
+     * Store definition instances in the cache.
+     *
+     * @param \App\Orm\Definition\EntityDefinition[] $entityDefinitions List of EntityDefinition instances.
      *
      * @throws \Psr\Cache\InvalidArgumentException
      */
