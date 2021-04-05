@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Tests\Orm\Definition;
 
+use App\Orm\Definition\DefinitionCompiler;
 use App\Orm\Definition\EntityDefinition;
 use App\Orm\Definition\EntityDefinitionLoader;
 use Symfony\Component\Finder\Finder;
@@ -30,6 +31,6 @@ class EntityDefinitionLoaderTest extends DefinitionAssertions
 
     protected function createLoaderInstance() : EntityDefinitionLoader
     {
-        return new EntityDefinitionLoader(new Finder());
+        return new EntityDefinitionLoader(new Finder(), new DefinitionCompiler());
     }
 }
