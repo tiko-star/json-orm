@@ -40,4 +40,38 @@ abstract class DefinitionAssertions extends TestCase
         $this->assertEquals('text', $propertyDescriptionList['text']->getPropertyName());
         $this->assertEquals(PropertyDefinition::PROPERTY_TYPE_STRING, $propertyDescriptionList['text']->getPropertyType());
     }
+
+    protected function assertGalleryDefinition(EntityDefinition $definition) : void
+    {
+        $this->assertEquals('gallery', $definition->getName());
+        $this->assertTrue($definition->isWidget());
+        $this->assertFalse($definition->isWidgetItem());
+        $this->assertTrue($definition->containsChildren());
+        $this->assertCount(3, $definition->getPropertyDescriptionList());
+
+        $propertyDescriptionList = $definition->getPropertyDescriptionList();
+
+        $this->assertEquals('title', $propertyDescriptionList['title']->getPropertyName());
+        $this->assertEquals(PropertyDefinition::PROPERTY_TYPE_STRING, $propertyDescriptionList['title']->getPropertyType());
+
+        $this->assertEquals('rows', $propertyDescriptionList['rows']->getPropertyName());
+        $this->assertEquals(PropertyDefinition::PROPERTY_TYPE_INT, $propertyDescriptionList['rows']->getPropertyType());
+
+        $this->assertEquals('cols', $propertyDescriptionList['cols']->getPropertyName());
+        $this->assertEquals(PropertyDefinition::PROPERTY_TYPE_INT, $propertyDescriptionList['cols']->getPropertyType());
+    }
+
+    protected function assertGalleryItemDefinition(EntityDefinition $definition) : void
+    {
+        $this->assertEquals('galleryItem', $definition->getName());
+        $this->assertFalse($definition->isWidget());
+        $this->assertTrue($definition->isWidgetItem());
+        $this->assertFalse($definition->containsChildren());
+        $this->assertCount(1, $definition->getPropertyDescriptionList());
+
+        $propertyDescriptionList = $definition->getPropertyDescriptionList();
+
+        $this->assertEquals('image', $propertyDescriptionList['image']->getPropertyName());
+        $this->assertEquals(PropertyDefinition::PROPERTY_TYPE_INT, $propertyDescriptionList['image']->getPropertyType());
+    }
 }

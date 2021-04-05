@@ -74,8 +74,9 @@ class EntityDefinitionProvider
         // Here we are loading all the definitions from the source.
         // To store them in the cache for later use.
         $entityDefinitions = $this->definitionLoader->loadDefinitions($this->definitionsPath);
+        $entityDefinition = $this->propertyAccessor->getValue($entityDefinitions, "[$entityName]");
 
-        if (!$this->propertyAccessor->isReadable($entityDefinitions, "[$entityName]")) {
+        if ($entityDefinition === null) {
             throw new DefinitionNotFoundException(
                 sprintf('There is no definition for entity: %s', $entityName)
             );
@@ -83,7 +84,7 @@ class EntityDefinitionProvider
 
         $this->cacheDefinitions($entityDefinitions);
 
-        return $this->propertyAccessor->getValue($entityDefinitions, "[$entityName]");
+        return $entityDefinition;
     }
 
     /**

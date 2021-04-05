@@ -1,0 +1,19 @@
+{
+  "name": "gallery",
+  "type": "WIDGET",
+  "containsChildren": true,
+  "properties": [
+    {
+      "name": "title",
+      "type": "STRING"
+    },
+    {
+      "name": "rows",
+      "type": "INT"
+    },
+    {
+      "name": "cols",
+      "type": "INT"
+    }
+  ]
+}

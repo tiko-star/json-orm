@@ -1,0 +1,11 @@
+{
+  "name": "galleryItem",
+  "type": "WIDGET_ITEM",
+  "containsChildren": false,
+  "properties": [
+    {
+      "name": "image",
+      "type": "INT"
+    }
+  ]
+}
