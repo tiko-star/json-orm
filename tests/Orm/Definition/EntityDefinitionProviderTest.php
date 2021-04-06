@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Tests\Orm\Definition;
 
+use App\Orm\Definition\DefinitionCompiler;
 use App\Orm\Definition\EntityDefinitionLoader;
 use App\Orm\Definition\EntityDefinitionProvider;
 use App\Orm\Definition\Exception\DefinitionNotFoundException;
@@ -58,7 +59,7 @@ class EntityDefinitionProviderTest extends DefinitionAssertions
     {
         return new EntityDefinitionProvider(
             __DIR__.'/definitions',
-            new EntityDefinitionLoader(new Finder()),
+            new EntityDefinitionLoader(new Finder(), new DefinitionCompiler()),
             new PhpFilesAdapter('definitions', 0, __DIR__.'/cache')
         );
     }

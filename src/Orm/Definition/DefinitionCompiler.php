@@ -78,7 +78,7 @@ class DefinitionCompiler
             }
         }
 
-        return $definitionBuilder->getEntityDescription();
+        return $definitionBuilder->getEntityDefinition();
     }
 
     /**

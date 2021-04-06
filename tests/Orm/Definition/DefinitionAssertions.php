@@ -16,15 +16,15 @@ abstract class DefinitionAssertions extends TestCase
         $this->assertTrue($definition->isWidget());
         $this->assertFalse($definition->isWidgetItem());
         $this->assertFalse($definition->containsChildren());
-        $this->assertCount(2, $definition->getPropertyDescriptionList());
+        $this->assertCount(2, $definition->getPropertyDefinitionList());
 
-        $propertyDescriptionList = $definition->getPropertyDescriptionList();
+        $propertyDefinitionList = $definition->getPropertyDefinitionList();
 
-        $this->assertEquals('text', $propertyDescriptionList['text']->getPropertyName());
-        $this->assertEquals(PropertyDefinition::PROPERTY_TYPE_STRING, $propertyDescriptionList['text']->getPropertyType());
+        $this->assertEquals('text', $propertyDefinitionList['text']->getPropertyName());
+        $this->assertEquals(PropertyDefinition::PROPERTY_TYPE_STRING, $propertyDefinitionList['text']->getPropertyType());
 
-        $this->assertEquals('link', $propertyDescriptionList['link']->getPropertyName());
-        $this->assertEquals(PropertyDefinition::PROPERTY_TYPE_STRING, $propertyDescriptionList['link']->getPropertyType());
+        $this->assertEquals('link', $propertyDefinitionList['link']->getPropertyName());
+        $this->assertEquals(PropertyDefinition::PROPERTY_TYPE_STRING, $propertyDefinitionList['link']->getPropertyType());
     }
 
     protected function assertTitleDefinition(EntityDefinition $definition) : void
@@ -33,12 +33,12 @@ abstract class DefinitionAssertions extends TestCase
         $this->assertTrue($definition->isWidget());
         $this->assertFalse($definition->isWidgetItem());
         $this->assertFalse($definition->containsChildren());
-        $this->assertCount(1, $definition->getPropertyDescriptionList());
+        $this->assertCount(1, $definition->getPropertyDefinitionList());
 
-        $propertyDescriptionList = $definition->getPropertyDescriptionList();
+        $propertyDefinitionList = $definition->getPropertyDefinitionList();
 
-        $this->assertEquals('text', $propertyDescriptionList['text']->getPropertyName());
-        $this->assertEquals(PropertyDefinition::PROPERTY_TYPE_STRING, $propertyDescriptionList['text']->getPropertyType());
+        $this->assertEquals('text', $propertyDefinitionList['text']->getPropertyName());
+        $this->assertEquals(PropertyDefinition::PROPERTY_TYPE_STRING, $propertyDefinitionList['text']->getPropertyType());
     }
 
     protected function assertGalleryDefinition(EntityDefinition $definition) : void
@@ -47,18 +47,18 @@ abstract class DefinitionAssertions extends TestCase
         $this->assertTrue($definition->isWidget());
         $this->assertFalse($definition->isWidgetItem());
         $this->assertTrue($definition->containsChildren());
-        $this->assertCount(3, $definition->getPropertyDescriptionList());
+        $this->assertCount(3, $definition->getPropertyDefinitionList());
 
-        $propertyDescriptionList = $definition->getPropertyDescriptionList();
+        $propertyDefinitionList = $definition->getPropertyDefinitionList();
 
-        $this->assertEquals('title', $propertyDescriptionList['title']->getPropertyName());
-        $this->assertEquals(PropertyDefinition::PROPERTY_TYPE_STRING, $propertyDescriptionList['title']->getPropertyType());
+        $this->assertEquals('title', $propertyDefinitionList['title']->getPropertyName());
+        $this->assertEquals(PropertyDefinition::PROPERTY_TYPE_STRING, $propertyDefinitionList['title']->getPropertyType());
 
-        $this->assertEquals('rows', $propertyDescriptionList['rows']->getPropertyName());
-        $this->assertEquals(PropertyDefinition::PROPERTY_TYPE_INT, $propertyDescriptionList['rows']->getPropertyType());
+        $this->assertEquals('rows', $propertyDefinitionList['rows']->getPropertyName());
+        $this->assertEquals(PropertyDefinition::PROPERTY_TYPE_INT, $propertyDefinitionList['rows']->getPropertyType());
 
-        $this->assertEquals('cols', $propertyDescriptionList['cols']->getPropertyName());
-        $this->assertEquals(PropertyDefinition::PROPERTY_TYPE_INT, $propertyDescriptionList['cols']->getPropertyType());
+        $this->assertEquals('cols', $propertyDefinitionList['cols']->getPropertyName());
+        $this->assertEquals(PropertyDefinition::PROPERTY_TYPE_INT, $propertyDefinitionList['cols']->getPropertyType());
     }
 
     protected function assertGalleryItemDefinition(EntityDefinition $definition) : void
@@ -67,11 +67,11 @@ abstract class DefinitionAssertions extends TestCase
         $this->assertFalse($definition->isWidget());
         $this->assertTrue($definition->isWidgetItem());
         $this->assertFalse($definition->containsChildren());
-        $this->assertCount(1, $definition->getPropertyDescriptionList());
+        $this->assertCount(1, $definition->getPropertyDefinitionList());
 
-        $propertyDescriptionList = $definition->getPropertyDescriptionList();
+        $propertyDefinitionList = $definition->getPropertyDefinitionList();
 
-        $this->assertEquals('image', $propertyDescriptionList['image']->getPropertyName());
-        $this->assertEquals(PropertyDefinition::PROPERTY_TYPE_INT, $propertyDescriptionList['image']->getPropertyType());
+        $this->assertEquals('image', $propertyDefinitionList['image']->getPropertyName());
+        $this->assertEquals(PropertyDefinition::PROPERTY_TYPE_INT, $propertyDefinitionList['image']->getPropertyType());
     }
 }

@@ -37,15 +37,15 @@ class EntityDefinition
     /**
      * @var \App\Orm\Definition\PropertyDefinition[] List of PropertyDefinition instances.
      */
-    protected array $propertyDescriptionList;
+    protected array $propertyDefinitionList;
 
-    public function __construct(string $name, bool $isWidget, bool $isWidgetItem, bool $containsChildren, array $propertyDescriptionList)
+    public function __construct(string $name, bool $isWidget, bool $isWidgetItem, bool $containsChildren, array $propertyDefinitionList)
     {
         $this->name = $name;
         $this->isWidget = $isWidget;
         $this->isWidgetItem = $isWidgetItem;
         $this->containsChildren = $containsChildren;
-        $this->propertyDescriptionList = $propertyDescriptionList;
+        $this->propertyDefinitionList = $propertyDefinitionList;
     }
 
     /**
@@ -83,8 +83,8 @@ class EntityDefinition
     /**
      * @return \App\Orm\Definition\PropertyDefinition[]
      */
-    public function getPropertyDescriptionList() : array
+    public function getPropertyDefinitionList() : array
     {
-        return $this->propertyDescriptionList;
+        return $this->propertyDefinitionList;
     }
 }

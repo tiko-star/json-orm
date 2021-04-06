@@ -109,10 +109,14 @@ class EntityDefinitionBuilder
 
     /**
      * @param \App\Orm\Definition\PropertyDefinition $propertyDefinition
+     *
+     * @return \App\Orm\Definition\EntityDefinitionBuilder
      */
-    public function addPropertyDefinition(PropertyDefinition $propertyDefinition) : void
+    public function addPropertyDefinition(PropertyDefinition $propertyDefinition) : EntityDefinitionBuilder
     {
         $this->propertyDefinitions[$propertyDefinition->getPropertyName()] = $propertyDefinition;
+
+        return $this;
     }
 
     /**
@@ -121,7 +125,7 @@ class EntityDefinitionBuilder
      * @return \App\Orm\Definition\EntityDefinition
      * @throws \App\Orm\Definition\Exception\DefinitionCompilationException
      */
-    public function getEntityDescription() : EntityDefinition
+    public function getEntityDefinition() : EntityDefinition
     {
         $isWidget = false;
         $isWidgetItem = false;
@@ -138,7 +142,7 @@ class EntityDefinitionBuilder
 
         if (($isWidget || $isWidgetItem) === false) {
             throw new DefinitionCompilationException(
-                sprintf('Invalid entity type in description: [%s]', $this->type)
+                sprintf('Invalid entity type in the definition: [%s]', $this->type)
             );
         }
 
