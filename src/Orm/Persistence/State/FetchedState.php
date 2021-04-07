@@ -7,6 +7,7 @@ namespace App\Orm\Persistence\State;
 use App\Doctrine\Entity\Content;
 use App\Orm\Entity\AbstractEntity;
 use App\Orm\Entity\AbstractWidget;
+use App\Orm\Entity\AbstractWidgetItem;
 use App\Orm\Entity\Contracts\ContainsChildrenInterface;
 
 class FetchedState implements SerializationStateInterface
@@ -35,6 +36,10 @@ class FetchedState implements SerializationStateInterface
 
         if ($entity instanceof AbstractWidget) {
             $data['widgetType'] = $entity->getWidgetType();
+        }
+
+        if ($entity instanceof AbstractWidgetItem) {
+            $data['widgetItemType'] = $entity->getWidgetItemType();
         }
 
         return $data;

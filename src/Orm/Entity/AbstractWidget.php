@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace App\Orm\Entity;
 
+use App\Orm\Entity\Contracts\ContainsDefinitionInterface;
+
 /**
  * Base class for all kind of Entities.
  * Contains all general methods.
