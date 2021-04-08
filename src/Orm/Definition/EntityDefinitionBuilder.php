@@ -7,6 +7,7 @@ namespace App\Orm\Definition;
 use App\Orm\Definition\Exception\DefinitionCompilationException;
 
 use function sprintf;
+use function in_array;
 
 /**
  * Class EntityDefinitionBuilder creates EntityDefinition instances based on the setup.
