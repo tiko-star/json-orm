@@ -5,15 +5,18 @@
   "properties": [
     {
       "name": "title",
-      "type": "STRING"
+      "type": "STRING",
+      "isTranslatable": true
     },
     {
       "name": "rows",
-      "type": "INT"
+      "type": "INT",
+      "isTranslatable": false
     },
     {
       "name": "cols",
-      "type": "INT"
+      "type": "INT",
+      "isTranslatable": false
     }
   ]
 }

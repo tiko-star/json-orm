@@ -13,6 +13,11 @@ class EntityDefinition
 {
     const ENTITY_TYPE_WIDGET = 'WIDGET';
     const ENTITY_TYPE_WIDGET_ITEM = 'WIDGET_ITEM';
+    const ENTITY_TYPE_GRID = [
+        'BLOCK',
+        'ROW',
+        'COLUMN'
+    ];
 
     /**
      * @var string Name of the Entity.
@@ -30,6 +35,11 @@ class EntityDefinition
     protected bool $isWidgetItem;
 
     /**
+     * @var bool Define whether an Entity is instance of Grid representation or not.
+     */
+    protected bool $isGrid;
+
+    /**
      * @var bool Define whether an Entity can contain child Entities or not.
      */
     protected bool $containsChildren;
@@ -39,11 +49,12 @@ class EntityDefinition
      */
     protected array $propertyDefinitionList;
 
-    public function __construct(string $name, bool $isWidget, bool $isWidgetItem, bool $containsChildren, array $propertyDefinitionList)
+    public function __construct(string $name, bool $isWidget, bool $isWidgetItem, bool $isGrid, bool $containsChildren, array $propertyDefinitionList)
     {
         $this->name = $name;
         $this->isWidget = $isWidget;
         $this->isWidgetItem = $isWidgetItem;
+        $this->isGrid = $isGrid;
         $this->containsChildren = $containsChildren;
         $this->propertyDefinitionList = $propertyDefinitionList;
     }
@@ -70,6 +81,22 @@ class EntityDefinition
     public function isWidgetItem() : bool
     {
         return $this->isWidgetItem;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGrid() : bool
+    {
+        return $this->isGrid;
+    }
+
+    /**
+     * @param bool $isGrid
+     */
+    public function setIsGrid(bool $isGrid) : void
+    {
+        $this->isGrid = $isGrid;
     }
 
     /**

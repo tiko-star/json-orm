@@ -73,7 +73,7 @@ class EntityDefinitionProviderTest extends DefinitionAssertions
         $item
             ->expects($this->once())
             ->method('get')
-            ->willReturn(new EntityDefinition('button', true, false, false, []));
+            ->willReturn(new EntityDefinition('button', true, false, false, false, []));
 
         // Set up the expectation for the getItem() method
         // to be called only once and with the string 'button' as its parameter.
@@ -94,7 +94,7 @@ class EntityDefinitionProviderTest extends DefinitionAssertions
         return new EntityDefinitionProvider(
             __DIR__.'/definitions',
             new EntityDefinitionLoader(new Finder(), new DefinitionCompiler()),
-            $pool ?? new PhpFilesAdapter('definitions')
+            $pool ?? new PhpFilesAdapter('definitions', 1, __DIR__.'/cache')
         );
     }
 }

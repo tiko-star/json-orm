@@ -28,10 +28,16 @@ class PropertyDefinition
      */
     protected string $propertyType;
 
-    public function __construct(string $propertyName, string $propertyType)
+    /**
+     * @var bool Define whether property is translatable is not.
+     */
+    protected bool $isTranslatable;
+
+    public function __construct(string $propertyName, string $propertyType, bool $isTranslatable = true)
     {
         $this->propertyName = $propertyName;
         $this->propertyType = $propertyType;
+        $this->isTranslatable = $isTranslatable;
     }
 
     /**
@@ -48,5 +54,13 @@ class PropertyDefinition
     public function getPropertyType() : string
     {
         return $this->propertyType;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTranslatable() : bool
+    {
+        return $this->isTranslatable;
     }
 }

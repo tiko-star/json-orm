@@ -5,7 +5,8 @@
   "properties": [
     {
       "name": "image",
-      "type": "INT"
+      "type": "INT",
+      "isTranslatable": false
     }
   ]
 }

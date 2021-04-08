@@ -10,13 +10,8 @@ use App\Orm\Definition\Exception\DefinitionException;
 use App\Orm\Entity\AbstractEntity;
 use App\Orm\Entity\AbstractWidget;
 use App\Orm\Entity\AbstractWidgetItem;
-use App\Orm\Entity\Block;
-use App\Orm\Entity\BlockGroup;
-use App\Orm\Entity\Column;
 use App\Orm\Entity\Contracts\ContainsChildrenInterface;
-use App\Orm\Entity\Contracts\ContainsDefinitionInterface;
 use App\Orm\Entity\Utils\HandleChildrenTrait;
-use App\Orm\Entity\Utils\HandleDefinitionTrait;
 use App\Orm\Exception\InvalidEntityTypeException;
 use App\Orm\Exception\MissingEntityTypeIdentifierException;
 use App\Orm\Persistence\LayoutObject;
@@ -38,15 +33,6 @@ use function sprintf;
  */
 class LayoutObjectFactory
 {
-    /**
-     * @var array<string, string> Mapping of the entity types and appropriate fully qualified class names.
-     */
-    protected array $entityToTypeMapping = [
-        'blockGroup' => BlockGroup::class,
-        'block'      => Block::class,
-        'column'     => Column::class,
-    ];
-
     /**
      * @var \App\Orm\Definition\EntityDefinitionProvider Reference on EntityDefinitionProvider instance.
      */
@@ -139,16 +125,9 @@ class LayoutObjectFactory
     {
         $type = $this->guessEntityType($data);
 
-        // First try to load an entity instance from mappings.
-        $entityClass = $this->propertyAccessor->getValue($this->entityToTypeMapping, "[$type]");
-
-        // If there is no appropriate entity class then we should look for definition.
-        if (null === $entityClass) {
-            $definition = $this->createEntityDefinition($type);
-            $entity = $this->createEntityInstanceFromDefinition($definition);
-        } else {
-            $entity = new $entityClass();
-        }
+        // Look for the entity definition.
+        $definition = $this->createEntityDefinition($type);
+        $entity = $this->createEntityInstanceFromDefinition($definition);
 
         unset($data['children']);
 
@@ -233,28 +212,30 @@ class LayoutObjectFactory
     {
         $entity = null;
 
+        if ($definition->isGrid()) {
+            $entity = new class extends AbstractEntity implements ContainsChildrenInterface {
+                use HandleChildrenTrait;
+            };
+        }
+
         if ($definition->isWidget()) {
             if ($definition->containsChildren()) {
-                $entity = new class extends AbstractWidget implements ContainsChildrenInterface, ContainsDefinitionInterface {
-                    use HandleChildrenTrait,
-                        HandleDefinitionTrait;
+                $entity = new class extends AbstractWidget implements ContainsChildrenInterface {
+                    use HandleChildrenTrait;
                 };
             } else {
-                $entity = new class extends AbstractWidget implements ContainsDefinitionInterface {
-                    use HandleDefinitionTrait;
+                $entity = new class extends AbstractWidget {
                 };
             }
         }
 
         if ($definition->isWidgetItem()) {
             if ($definition->containsChildren()) {
-                $entity = new class extends AbstractWidgetItem implements ContainsChildrenInterface, ContainsDefinitionInterface {
-                    use HandleChildrenTrait,
-                        HandleDefinitionTrait;
+                $entity = new class extends AbstractWidgetItem implements ContainsChildrenInterface {
+                    use HandleChildrenTrait;
                 };
             } else {
-                $entity = new class extends AbstractWidgetItem implements ContainsDefinitionInterface {
-                    use HandleDefinitionTrait;
+                $entity = new class extends AbstractWidgetItem {
                 };
             }
         }

@@ -9,7 +9,8 @@
     },
     {
       "name": "link",
-      "type": "STRING"
+      "type": "STRING",
+      "isTranslatable": false
     }
   ]
 }
