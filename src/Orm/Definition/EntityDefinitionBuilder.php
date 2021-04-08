@@ -7,6 +7,7 @@ namespace App\Orm\Definition;
 use App\Orm\Definition\Exception\DefinitionCompilationException;
 
 use function sprintf;
+use function in_array;
 
 /**
  * Class EntityDefinitionBuilder creates EntityDefinition instances based on the setup.
@@ -129,18 +130,21 @@ class EntityDefinitionBuilder
     {
         $isWidget = false;
         $isWidgetItem = false;
+        $isGrid = false;
 
         if ($this->type === EntityDefinition::ENTITY_TYPE_WIDGET) {
             $isWidget = true;
-            $isWidgetItem = false;
         }
 
         if ($this->type === EntityDefinition::ENTITY_TYPE_WIDGET_ITEM) {
-            $isWidget = false;
             $isWidgetItem = true;
         }
 
-        if (($isWidget || $isWidgetItem) === false) {
+        if (in_array($this->type, EntityDefinition::ENTITY_TYPE_GRID)) {
+            $isGrid = true;
+        }
+
+        if (($isWidget || $isWidgetItem || $isGrid) === false) {
             throw new DefinitionCompilationException(
                 sprintf('Invalid entity type in the definition: [%s]', $this->type)
             );
@@ -150,6 +154,7 @@ class EntityDefinitionBuilder
             $this->getName(),
             $isWidget,
             $isWidgetItem,
+            $isGrid,
             $this->containsChildren,
             $this->getPropertyDefinitions()
         );

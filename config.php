@@ -1,5 +1,8 @@
 <?php
 
+use App\Orm\Definition\DefinitionCompiler;
+use App\Orm\Definition\EntityDefinitionLoader;
+use App\Orm\Definition\EntityDefinitionProvider;
 use App\Orm\Repository\ObjectRepository;
 use Doctrine\Common\Cache\PhpFileCache;
 use Doctrine\ORM\EntityManager;
@@ -8,6 +11,8 @@ use Psr\Container\ContainerInterface;
 use App\Orm\Persistence\JsonDocumentManager;
 use App\Orm\EntityManager\EntityManager as JsonEntityManager;
 use App\Orm\Factory\LayoutObjectFactory;
+use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
+use Symfony\Component\Finder\Finder;
 
 return [
     JsonDocumentManager::class => DI\create(JsonDocumentManager::class)->constructor(__DIR__),
@@ -47,5 +52,25 @@ return [
         return EntityManager::create($params, $config);
     },
 
-    LayoutObjectFactory::class => DI\create(LayoutObjectFactory::class),
+    EntityDefinitionLoader::class => function (ContainerInterface $c) {
+        return new EntityDefinitionLoader(new Finder(), new DefinitionCompiler());
+    },
+
+    EntityDefinitionProvider::class => function (ContainerInterface $c) {
+        return new EntityDefinitionProvider(
+            __DIR__.'/definitions',
+            $c->get(EntityDefinitionLoader::class),
+            new PhpFilesAdapter(
+                'definitions',
+                0,
+                __DIR__.'/tmp'
+            )
+        );
+    },
+
+    LayoutObjectFactory::class => function (ContainerInterface $c) {
+        return new LayoutObjectFactory(
+            $c->get(EntityDefinitionProvider::class)
+        );
+    },
 ];

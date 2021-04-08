@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Orm\Entity;
 
 use App\Doctrine\Entity\Content;
+use App\Orm\Definition\EntityDefinition;
 use App\Orm\Persistence\ReferenceAwareEntityCollection;
 use JsonSerializable;
 
@@ -35,6 +36,11 @@ abstract class AbstractEntity implements JsonSerializable
      * @var \App\Orm\Persistence\ReferenceAwareEntityCollection Reference on the instance of the wrapping object.
      */
     protected ReferenceAwareEntityCollection $root;
+
+    /**
+     * @var \App\Orm\Definition\EntityDefinition Reference on the EntityDefinition instance.
+     */
+    protected EntityDefinition $definition;
 
     /**
      * Initialize content data for current entity.
@@ -111,6 +117,22 @@ abstract class AbstractEntity implements JsonSerializable
     public function setRoot(ReferenceAwareEntityCollection $root) : void
     {
         $this->root = $root;
+    }
+
+    /**
+     * @return \App\Orm\Definition\EntityDefinition
+     */
+    public function getDefinition() : EntityDefinition
+    {
+        return $this->definition;
+    }
+
+    /**
+     * @param \App\Orm\Definition\EntityDefinition $definition
+     */
+    public function setDefinition(EntityDefinition $definition) : void
+    {
+        $this->definition = $definition;
     }
 
     /**

@@ -5,11 +5,13 @@
   "properties": [
     {
       "name": "text",
-      "type": "STRING"
+      "type": "STRING",
+      "isTranslatable": true
     },
     {
       "name": "link",
-      "type": "STRING"
+      "type": "STRING",
+      "isTranslatable": true
     }
   ]
 }

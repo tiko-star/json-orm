@@ -71,9 +71,10 @@ class DefinitionCompiler
             foreach ($properties as $property) {
                 $name = $this->fetchPropertyFromDefinitionData('name', $property);
                 $type = $this->fetchPropertyFromDefinitionData('type', $property);
+                $isTranslatable = $this->fetchPropertyFromDefinitionData('isTranslatable', $property, false);
 
                 $definitionBuilder->addPropertyDefinition(
-                    new PropertyDefinition($name, $type)
+                    new PropertyDefinition($name, $type, $isTranslatable ?? true)
                 );
             }
         }

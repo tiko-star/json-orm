@@ -2,6 +2,10 @@
 
 namespace App\Tests\Orm\Factory;
 
+use App\Orm\Definition\DefinitionCompiler;
+use App\Orm\Definition\EntityDefinitionLoader;
+use App\Orm\Definition\EntityDefinitionProvider;
+use App\Orm\Entity\AbstractWidget;
 use App\Orm\Entity\Block;
 use App\Orm\Entity\BlockGroup;
 use App\Orm\Entity\Button;
@@ -10,6 +14,8 @@ use App\Orm\Factory\LayoutObjectFactory;
 use App\Orm\Persistence\LayoutObject;
 use App\Orm\Persistence\ReferenceAwareEntityCollection;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
+use Symfony\Component\Finder\Finder;
 
 class LayoutObjectFactoryTest extends TestCase
 {
@@ -24,12 +30,23 @@ class LayoutObjectFactoryTest extends TestCase
      */
     public function testCreateLayoutObject_WithValidDataset_CreatesValidLayoutObjects(array $document, array $hashes, LayoutObject $expected) : void
     {
-        $factory = new LayoutObjectFactory();
+        $factory = $this->createFactoryInstance();
 
         $layoutObject = $factory->createLayoutObject($document);
 
         $this->assertEquals($expected, $layoutObject);
         $this->assertEquals($hashes, $layoutObject->getHashes());
+    }
+
+    protected function createFactoryInstance() : LayoutObjectFactory
+    {
+        return new LayoutObjectFactory(
+            new EntityDefinitionProvider(
+                __DIR__.'/definitions',
+                new EntityDefinitionLoader(new Finder(), new DefinitionCompiler()),
+                new PhpFilesAdapter('definitions')
+            )
+        );
     }
 
     public function documentProvider() : array
@@ -81,7 +98,8 @@ class LayoutObjectFactoryTest extends TestCase
     {
         $layoutObject = new LayoutObject();
 
-        $button = new Button();
+        $button = new class extends AbstractWidget {
+        };
         $button->setType('widget');
         $button->setWidgetType('button');
         $button->setHash('ddd');
@@ -182,12 +200,14 @@ class LayoutObjectFactoryTest extends TestCase
     {
         $layoutObject = new LayoutObject();
 
-        $button1 = new Button();
+        $button1 = new class extends AbstractWidget {
+        };
         $button1->setType('widget');
         $button1->setWidgetType('button');
         $button1->setHash('ddd');
 
-        $button2 = new Button();
+        $button2 = new class extends AbstractWidget {
+        };
         $button2->setType('widget');
         $button2->setWidgetType('button');
         $button2->setHash('eee');
@@ -213,12 +233,14 @@ class LayoutObjectFactoryTest extends TestCase
         $children3->setReference($layoutObject);
         $blockGroup1->setChildren($children3);
 
-        $button3 = new Button();
+        $button3 = new class extends AbstractWidget {
+        };
         $button3->setType('widget');
         $button3->setWidgetType('button');
         $button3->setHash('ddd');
 
-        $button4 = new Button();
+        $button4 = new class extends AbstractWidget {
+        };
         $button4->setType('widget');
         $button4->setWidgetType('button');
         $button4->setHash('eee');
@@ -251,10 +273,5 @@ class LayoutObjectFactoryTest extends TestCase
         $layoutObject->setHashes(['aaa', 'bbb', 'ccc', 'ddd', 'eee', 'aaa', 'bbb', 'ccc', 'ddd', 'eee']);
 
         return $layoutObject;
-    }
-
-    protected function createFactoryInstance() : LayoutObjectFactory
-    {
-        return new LayoutObjectFactory();
     }
 }
