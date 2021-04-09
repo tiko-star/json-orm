@@ -119,6 +119,7 @@ class LayoutObjectFactoryTest extends TestCase
         $button->setWidgetType('button');
         $button->setHash('d6e4529e-b531-4ada-9f0b-7185b78ff811');
 
+        /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $column */
         $column = $this->createGridEntity();
         $column->setType('column');
         $column->setHash('482247e6-1006-448f-aae7-102c3517f51e');
@@ -126,6 +127,7 @@ class LayoutObjectFactoryTest extends TestCase
         $children1->setReference($layoutObject);
         $column->setChildren($children1);
 
+        /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $row */
         $row = $this->createGridEntity();
         $row->setType('row');
         $row->setHash('577d40b1-af02-4e1a-8575-3c8f0263e40d');
@@ -133,6 +135,7 @@ class LayoutObjectFactoryTest extends TestCase
         $children2->setReference($layoutObject);
         $row->setChildren($children2);
 
+        /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $block */
         $block = $this->createGridEntity();
         $block->setType('block');
         $block->setHash('e76f2ba5-9e84-4141-975c-af48a62d4ac1');
@@ -230,6 +233,7 @@ class LayoutObjectFactoryTest extends TestCase
         $button2->setWidgetType('button');
         $button2->setHash('7d2cba14-c8d2-42d8-a81a-c169f88713c4');
 
+        /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $column1 */
         $column1 = $this->createGridEntity();
         $column1->setType('column');
         $column1->setHash('482247e6-1006-448f-aae7-102c3517f51e');
@@ -237,6 +241,7 @@ class LayoutObjectFactoryTest extends TestCase
         $children1->setReference($layoutObject);
         $column1->setChildren($children1);
 
+        /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $row1 */
         $row1 = $this->createGridEntity();
         $row1->setType('row');
         $row1->setHash('577d40b1-af02-4e1a-8575-3c8f0263e40d');
@@ -244,6 +249,7 @@ class LayoutObjectFactoryTest extends TestCase
         $children2->setReference($layoutObject);
         $row1->setChildren($children2);
 
+        /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $block1 */
         $block1 = $this->createGridEntity();
         $block1->setType('block');
         $block1->setHash('e76f2ba5-9e84-4141-975c-af48a62d4ac1');
@@ -261,6 +267,7 @@ class LayoutObjectFactoryTest extends TestCase
         $button4->setWidgetType('button');
         $button4->setHash('7d2cba14-c8d2-42d8-a81a-c169f88713c4');
 
+        /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $column2 */
         $column2 = $this->createGridEntity();
         $column2->setType('column');
         $column2->setHash('482247e6-1006-448f-aae7-102c3517f51e');
@@ -268,6 +275,7 @@ class LayoutObjectFactoryTest extends TestCase
         $children4->setReference($layoutObject);
         $column2->setChildren($children4);
 
+        /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $row2 */
         $row2 = $this->createGridEntity();
         $row2->setType('row');
         $row2->setHash('577d40b1-af02-4e1a-8575-3c8f0263e40d');
@@ -275,6 +283,7 @@ class LayoutObjectFactoryTest extends TestCase
         $children5->setReference($layoutObject);
         $row2->setChildren($children5);
 
+        /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $block2 */
         $block2 = $this->createGridEntity();
         $block2->setType('block');
         $block2->setHash('e76f2ba5-9e84-4141-975c-af48a62d4ac1');

@@ -59,6 +59,7 @@ class EntityDefinitionProvider
      *
      * @return \App\Orm\Definition\EntityDefinition
      *
+     * @phpstan-ignore-next-line
      * @throws \Psr\Cache\InvalidArgumentException
      * @throws \App\Orm\Definition\Exception\DefinitionCompilationException
      * @throws \App\Orm\Definition\Exception\DefinitionNotFoundException
@@ -92,6 +93,7 @@ class EntityDefinitionProvider
      *
      * @param \App\Orm\Definition\EntityDefinition[] $entityDefinitions List of EntityDefinition instances.
      *
+     * @phpstan-ignore-next-line
      * @throws \Psr\Cache\InvalidArgumentException
      */
     protected function cacheDefinitions(array $entityDefinitions) : void

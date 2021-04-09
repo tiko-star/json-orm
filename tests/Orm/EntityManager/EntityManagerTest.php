@@ -95,6 +95,7 @@ class EntityManagerTest extends TestCase
         $button->setWidgetType('button');
         $button->setHash('d6e4529e-b531-4ada-9f0b-7185b78ff811');
 
+        /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $column */
         $column = $this->createGridEntity();
         $column->setType('column');
         $column->setHash('482247e6-1006-448f-aae7-102c3517f51e');
@@ -102,6 +103,7 @@ class EntityManagerTest extends TestCase
         $children1->setReference($layoutObject);
         $column->setChildren($children1);
 
+        /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $row */
         $row = $this->createGridEntity();
         $row->setType('row');
         $row->setHash('577d40b1-af02-4e1a-8575-3c8f0263e40d');
@@ -109,6 +111,7 @@ class EntityManagerTest extends TestCase
         $children2->setReference($layoutObject);
         $row->setChildren($children2);
 
+        /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $block */
         $block = $this->createGridEntity();
         $block->setType('block');
         $block->setHash('e76f2ba5-9e84-4141-975c-af48a62d4ac1');
