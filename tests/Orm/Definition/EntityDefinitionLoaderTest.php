@@ -17,16 +17,22 @@ class EntityDefinitionLoaderTest extends DefinitionAssertions
 
         $definitions = $loader->loadDefinitions(__DIR__.'/definitions');
 
-        $this->assertCount(4, $definitions);
+        $this->assertCount(7, $definitions);
         $this->assertInstanceOf(EntityDefinition::class, $definitions['button']);
         $this->assertInstanceOf(EntityDefinition::class, $definitions['title']);
         $this->assertInstanceOf(EntityDefinition::class, $definitions['gallery']);
         $this->assertInstanceOf(EntityDefinition::class, $definitions['galleryItem']);
+        $this->assertInstanceOf(EntityDefinition::class, $definitions['block']);
+        $this->assertInstanceOf(EntityDefinition::class, $definitions['row']);
+        $this->assertInstanceOf(EntityDefinition::class, $definitions['column']);
 
         $this->assertButtonDefinition($definitions['button']);
         $this->assertTitleDefinition($definitions['title']);
         $this->assertGalleryDefinition($definitions['gallery']);
         $this->assertGalleryItemDefinition($definitions['galleryItem']);
+        $this->assertBlockDefinition($definitions['block']);
+        $this->assertRowDefinition($definitions['row']);
+        $this->assertColumnDefinition($definitions['column']);
     }
 
     protected function createLoaderInstance() : EntityDefinitionLoader

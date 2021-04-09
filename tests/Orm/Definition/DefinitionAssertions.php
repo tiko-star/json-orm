@@ -8,6 +8,11 @@ use App\Orm\Definition\EntityDefinition;
 use App\Orm\Definition\PropertyDefinition;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Base class for different EntityDefinition assertions.
+ *
+ * @package App\Tests\Orm\Definition
+ */
 abstract class DefinitionAssertions extends TestCase
 {
     protected function assertButtonDefinition(EntityDefinition $definition) : void
@@ -84,5 +89,31 @@ abstract class DefinitionAssertions extends TestCase
         $this->assertEquals('image', $propertyDefinitionList['image']->getPropertyName());
         $this->assertEquals(PropertyDefinition::PROPERTY_TYPE_INT, $propertyDefinitionList['image']->getPropertyType());
         $this->assertFalse($propertyDefinitionList['image']->isTranslatable());
+    }
+
+    public function assertBlockDefinition(EntityDefinition $definition) : void
+    {
+        $this->assertEquals('block', $definition->getName());
+        $this->assertGridDefinition($definition);
+    }
+
+    public function assertRowDefinition(EntityDefinition $definition) : void
+    {
+        $this->assertEquals('row', $definition->getName());
+        $this->assertGridDefinition($definition);
+    }
+
+    public function assertColumnDefinition(EntityDefinition $definition) : void
+    {
+        $this->assertEquals('column', $definition->getName());
+        $this->assertGridDefinition($definition);
+    }
+
+    private function assertGridDefinition(EntityDefinition $definition) : void
+    {
+        $this->assertFalse($definition->isWidget());
+        $this->assertFalse($definition->isWidgetItem());
+        $this->assertTrue($definition->isGrid());
+        $this->assertTrue($definition->containsChildren());
     }
 }

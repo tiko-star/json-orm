@@ -48,6 +48,30 @@ class EntityDefinitionProviderTest extends DefinitionAssertions
         $this->assertGalleryItemDefinition($definition);
     }
 
+    public function testFetchEntityDefinition_ForBlock_ReturnsDefinitionInstance() : void
+    {
+        $provider = $this->createProviderInstance();
+        $definition = $provider->fetchEntityDefinition('block');
+
+        $this->assertBlockDefinition($definition);
+    }
+
+    public function testFetchEntityDefinition_ForRow_ReturnsDefinitionInstance() : void
+    {
+        $provider = $this->createProviderInstance();
+        $definition = $provider->fetchEntityDefinition('row');
+
+        $this->assertRowDefinition($definition);
+    }
+
+    public function testFetchEntityDefinition_ForColumn_ReturnsDefinitionInstance() : void
+    {
+        $provider = $this->createProviderInstance();
+        $definition = $provider->fetchEntityDefinition('column');
+
+        $this->assertColumnDefinition($definition);
+    }
+
     public function testFetchEntityDefinition_WhenDefinitionSourceIsMissing_ThrowsException() : void
     {
         $provider = $this->createProviderInstance();
