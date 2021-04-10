@@ -34,7 +34,6 @@ abstract class AbstractDecorator extends AbstractEntity
      */
     public function __call(string $name, array $arguments)
     {
-        dd($name);
         return call_user_func([$this->entity, $name], $arguments);
     }
 }
