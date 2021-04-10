@@ -2,19 +2,20 @@
 
 declare(strict_types = 1);
 
-namespace App\Orm\Entity\Utils;
+namespace App\Orm\Entity\Decorators;
 
+use App\Orm\Entity\Contracts\ContainsChildrenInterface;
 use App\Orm\Persistence\ReferenceAwareEntityCollection;
 
 /**
- * Utility for enabling children support of AbstractEntities.
+ * Decorator for enabling children support for AbstractEntities.
  * Defines methods declared in ContainsChildrenInterface.
  *
  * @see     \App\Orm\Entity\Contracts\ContainsChildrenInterface
  *
- * @package App\Orm\Entity\Utils
+ * @package App\Orm\Entity\Decorators
  */
-trait HandleChildrenTrait
+class ContainerEntityDecorator extends AbstractDecorator implements ContainsChildrenInterface
 {
     /**
      * @var \App\Orm\Persistence\ReferenceAwareEntityCollection Reference on instance of the children property.

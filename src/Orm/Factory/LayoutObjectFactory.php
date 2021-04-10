@@ -8,10 +8,11 @@ use App\Orm\Definition\EntityDefinition;
 use App\Orm\Definition\EntityDefinitionProvider;
 use App\Orm\Definition\Exception\DefinitionException;
 use App\Orm\Entity\AbstractEntity;
-use App\Orm\Entity\AbstractWidget;
-use App\Orm\Entity\AbstractWidgetItem;
+use App\Orm\Entity\Grid;
+use App\Orm\Entity\Widget;
+use App\Orm\Entity\WidgetItem;
 use App\Orm\Entity\Contracts\ContainsChildrenInterface;
-use App\Orm\Entity\Utils\HandleChildrenTrait;
+use App\Orm\Entity\Decorators\ContainerEntityDecorator;
 use App\Orm\Exception\InvalidEntityTypeException;
 use App\Orm\Exception\MissingEntityTypeIdentifierException;
 use App\Orm\Persistence\LayoutObject;
@@ -213,37 +214,26 @@ class LayoutObjectFactory
         $entity = null;
 
         if ($definition->isGrid()) {
-            $entity = new class extends AbstractEntity implements ContainsChildrenInterface {
-                use HandleChildrenTrait;
-            };
+            $entity = new Grid();
         }
 
         if ($definition->isWidget()) {
-            if ($definition->containsChildren()) {
-                $entity = new class extends AbstractWidget implements ContainsChildrenInterface {
-                    use HandleChildrenTrait;
-                };
-            } else {
-                $entity = new class extends AbstractWidget {
-                };
-            }
+            $entity = new Widget();
         }
 
         if ($definition->isWidgetItem()) {
-            if ($definition->containsChildren()) {
-                $entity = new class extends AbstractWidgetItem implements ContainsChildrenInterface {
-                    use HandleChildrenTrait;
-                };
-            } else {
-                $entity = new class extends AbstractWidgetItem {
-                };
-            }
+            $entity = new WidgetItem();
         }
 
         if (null === $entity) {
             throw new InvalidEntityTypeException(
                 sprintf('Invalid entity type: %s', $definition->getName())
             );
+        }
+
+        // Decorate Entity with additional functionalities.
+        if ($definition->containsChildren()) {
+            $entity = new ContainerEntityDecorator($entity);
         }
 
         $entity->setDefinition($definition);

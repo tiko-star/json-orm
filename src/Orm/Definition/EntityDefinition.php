@@ -25,12 +25,12 @@ class EntityDefinition
     protected string $name;
 
     /**
-     * @var bool Define whether an Entity is instance of AbstractWidget or not.
+     * @var bool Define whether an Entity is instance of Widget or not.
      */
     protected bool $isWidget;
 
     /**
-     * @var bool Define whether an Entity is instance of AbstractWidgetItem or not.
+     * @var bool Define whether an Entity is instance of WidgetItem or not.
      */
     protected bool $isWidgetItem;
 
@@ -104,7 +104,7 @@ class EntityDefinition
      */
     public function containsChildren() : bool
     {
-        return $this->containsChildren;
+        return $this->containsChildren || $this->isGrid();
     }
 
     /**

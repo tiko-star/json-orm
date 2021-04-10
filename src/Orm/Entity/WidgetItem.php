@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Orm\Entity;
 
-abstract class AbstractWidgetItem extends AbstractEntity
+class WidgetItem extends AbstractEntity
 {
     protected string $widgetItemType;
 

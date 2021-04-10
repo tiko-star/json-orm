@@ -5,9 +5,9 @@ declare(strict_types = 1);
 namespace App\Tests\Orm;
 
 use App\Orm\Entity\AbstractEntity;
-use App\Orm\Entity\AbstractWidget;
-use App\Orm\Entity\Contracts\ContainsChildrenInterface;
-use App\Orm\Entity\Utils\HandleChildrenTrait;
+use App\Orm\Entity\Decorators\ContainerEntityDecorator;
+use App\Orm\Entity\Grid;
+use App\Orm\Entity\Widget;
 
 /**
  * Trait EntityCreators defines factory methods for creating instances of Entities and Widgets.
@@ -24,33 +24,29 @@ trait EntityCreators
      */
     protected function createGridEntity() : AbstractEntity
     {
-        return new class extends AbstractEntity implements ContainsChildrenInterface {
-            use HandleChildrenTrait;
-        };
+        return new ContainerEntityDecorator(new Grid());
+    }
+
+    /**
+     * Create instance of ENTITY_TYPE_WIDGET type AbstractEntity.
+     * Decorates with children support.
+     *
+     * @return \App\Orm\Entity\Decorators\ContainerEntityDecorator
+     * @see \App\Orm\Definition\EntityDefinition::ENTITY_TYPE_WIDGET
+     */
+    protected function createContainerWidget() : ContainerEntityDecorator
+    {
+        return new ContainerEntityDecorator(new Widget());
     }
 
     /**
      * Create instance of ENTITY_TYPE_WIDGET type AbstractEntity.
      *
-     * @return \App\Orm\Entity\AbstractWidget
-     * @see \App\Orm\Definition\EntityDefinition::ENTITY_TYPE_WIDGET
-     */
-    protected function createContainerWidget() : AbstractWidget
-    {
-        return new class extends AbstractWidget implements ContainsChildrenInterface {
-            use HandleChildrenTrait;
-        };
-    }
-
-    /**
-     * Create instance of ENTITY_TYPE_WIDGET_ITEM type AbstractEntity.
-     *
-     * @return \App\Orm\Entity\AbstractWidget
+     * @return \App\Orm\Entity\Widget
      * @see \App\Orm\Definition\EntityDefinition::ENTITY_TYPE_WIDGET_ITEM
      */
-    protected function createSimpleWidget() : AbstractWidget
+    protected function createSimpleWidget() : Widget
     {
-        return new class extends AbstractWidget {
-        };
+        return new Widget();
     }
 }
