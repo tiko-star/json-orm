@@ -6,6 +6,8 @@ namespace App\Orm\Entity\Decorators;
 
 use App\Orm\Entity\AbstractEntity;
 
+use function call_user_func;
+
 /**
  * Class AbstractDecorator is the base class for all kind of decorators.
  * Defines common methods for working with decorated instances.
