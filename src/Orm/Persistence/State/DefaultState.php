@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace App\Orm\Persistence\State;
 
 use App\Orm\Entity\AbstractEntity;
-use App\Orm\Entity\AbstractWidget;
+use App\Orm\Entity\Widget;
 use App\Orm\Entity\Contracts\ContainsChildrenInterface;
 
 class DefaultState implements SerializationStateInterface
@@ -21,7 +21,7 @@ class DefaultState implements SerializationStateInterface
             $data['children'] = $entity->getChildren();
         }
 
-        if ($entity instanceof AbstractWidget) {
+        if ($entity instanceof Widget) {
             $data['widgetType'] = $entity->getWidgetType();
         }
 

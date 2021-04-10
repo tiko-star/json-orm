@@ -5,12 +5,12 @@ declare(strict_types = 1);
 namespace App\Orm\Entity;
 
 /**
- * Base class for all kind of Entities.
+ * Base class for all kind of Widgets.
  * Contains all general methods.
  *
  * @package App\Orm\Entity
  */
-abstract class AbstractWidget extends AbstractEntity
+class Widget extends AbstractEntity
 {
     /**
      * @var string Type of the current Widget.
