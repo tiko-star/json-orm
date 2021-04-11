@@ -77,10 +77,8 @@ class LayoutObjectFactory
     public function createLayoutObject(array $content, string $hash = null, SerializationStateInterface $state = null) : LayoutObject
     {
         $layoutObject = new LayoutObject($hash, $state);
-        $hashes = [];
-        $tree = $this->hydrate($content, $hashes, $layoutObject);
+        $tree = $this->hydrate($content, $layoutObject);
 
-        $layoutObject->setHashes($hashes);
         $layoutObject->setTree($tree);
 
         return $layoutObject;
@@ -90,7 +88,6 @@ class LayoutObjectFactory
      * Recursively iterate over the given content and initialize appropriate AbstractEntity instances.
      *
      * @param array                             $content
-     * @param array                             $hashes
      * @param \App\Orm\Persistence\LayoutObject $layoutObject
      *
      * @return \App\Orm\Persistence\ReferenceAwareEntityCollection
@@ -98,7 +95,7 @@ class LayoutObjectFactory
      * @throws \App\Orm\Exception\InvalidEntityTypeException
      * @throws \App\Orm\Exception\MissingEntityTypeIdentifierException
      */
-    protected function hydrate(array $content, array &$hashes, LayoutObject $layoutObject) : ReferenceAwareEntityCollection
+    protected function hydrate(array $content, LayoutObject $layoutObject) : ReferenceAwareEntityCollection
     {
         $collection = new ReferenceAwareEntityCollection();
         $collection->setReference($layoutObject);
@@ -106,14 +103,11 @@ class LayoutObjectFactory
         foreach ($content as $item) {
             $entity = $this->createEntityInstance($item);
             $collection[] = $entity;
-
-            if (!$entity->getHash()->isDraft()) {
-                array_push($hashes, (string) $entity->getHash());
-            }
+            $layoutObject->getHashMap()->set((string) $entity->getHash(), $entity);
 
             if (($children = $this->propertyAccessor->getValue($item, '[children]'))
                 && $entity instanceof ContainsChildrenInterface) {
-                $children = $this->hydrate($children, $hashes, $layoutObject);
+                $children = $this->hydrate($children, $layoutObject);
 
                 $entity->setChildren($children);
             }

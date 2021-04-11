@@ -4,8 +4,10 @@ declare(strict_types = 1);
 
 namespace App\Orm\Persistence;
 
+use App\Orm\Entity\AbstractEntity;
 use App\Orm\Persistence\State\DefaultState;
 use App\Orm\Persistence\State\SerializationStateInterface;
+use App\Utilities\ObjectMap;
 use Doctrine\Common\Collections\ArrayCollection;
 use JsonSerializable;
 
@@ -27,18 +29,19 @@ class LayoutObject implements JsonSerializable
     protected ReferenceAwareEntityCollection $tree;
 
     /**
-     * @var array<string> List of the entity hashes inside.
+     * @var \App\Utilities\ObjectMap Reference on instance of ObjectMap.
+     *                               Keeps list of the entity hashes inside.
      */
-    protected array $hashes = [];
+    protected ObjectMap $hashMap;
 
     /**
-     * @var \Doctrine\Common\Collections\ArrayCollection Reference on list of contents of current AbstractEntity
+     * @var \Doctrine\Common\Collections\ArrayCollection Reference on list of contents of current AbstractEntity.
      *      instances inside.
      */
     protected ArrayCollection $contents;
 
     /**
-     * @var \App\Orm\Persistence\State\SerializationStateInterface Reference on instance of SerializationStateInterface
+     * @var \App\Orm\Persistence\State\SerializationStateInterface Reference on instance of SerializationStateInterface.
      */
     protected SerializationStateInterface $state;
 
@@ -47,16 +50,28 @@ class LayoutObject implements JsonSerializable
         $this->name = $name;
         $this->contents = new ArrayCollection();
         $this->state = $state ?? new DefaultState();
+        $this->hashMap = new ObjectMap();
+    }
+
+    /**
+     * @return \App\Utilities\ObjectMap
+     */
+    public function getHashMap() : ObjectMap
+    {
+        return $this->hashMap;
+    }
+
+    /**
+     * @param \App\Utilities\ObjectMap $hashMap
+     */
+    public function setHashMap(ObjectMap $hashMap) : void
+    {
+        $this->hashMap = $hashMap;
     }
 
     public function getHashes() : array
     {
-        return $this->hashes;
-    }
-
-    public function setHashes(array $hashes) : void
-    {
-        $this->hashes = $hashes;
+        return $this->hashMap->keys();
     }
 
     /**
@@ -131,5 +146,21 @@ class LayoutObject implements JsonSerializable
     public function jsonSerialize() : ReferenceAwareEntityCollection
     {
         return $this->getTree();
+    }
+
+    /**
+     * Find an Entity instance by given hash.
+     * In case of absence return null.
+     *
+     * @param string $hash
+     *
+     * @return \App\Orm\Entity\AbstractEntity|null
+     */
+    public function findEntityByHash(string $hash) : ?AbstractEntity
+    {
+        /** @var AbstractEntity $entity */
+        $entity = $this->hashMap->get($hash);
+
+        return $entity;
     }
 }

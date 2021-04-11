@@ -14,6 +14,7 @@ use App\Orm\Persistence\ReferenceAwareEntityCollection;
 use App\Orm\Persistence\State\FetchedState;
 use App\Orm\Repository\ObjectRepository;
 use App\Tests\Orm\EntityCreators;
+use App\Utilities\ObjectMap;
 use PHPUnit\Framework\TestCase;
 use App\Orm\Persistence\LayoutObject;
 use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
@@ -124,12 +125,12 @@ class EntityManagerTest extends TestCase
         $tree->setReference($layoutObject);
 
         $layoutObject->setTree($tree);
-        $layoutObject->setHashes([
-            'e76f2ba5-9e84-4141-975c-af48a62d4ac1',
-            '577d40b1-af02-4e1a-8575-3c8f0263e40d',
-            '482247e6-1006-448f-aae7-102c3517f51e',
-            'd6e4529e-b531-4ada-9f0b-7185b78ff811',
-        ]);
+        $layoutObject->setHashMap(new ObjectMap([
+            'e76f2ba5-9e84-4141-975c-af48a62d4ac1' => $block,
+            '577d40b1-af02-4e1a-8575-3c8f0263e40d' => $row,
+            '482247e6-1006-448f-aae7-102c3517f51e' => $column,
+            'd6e4529e-b531-4ada-9f0b-7185b78ff811' => $button,
+        ]));
 
         return $layoutObject;
     }

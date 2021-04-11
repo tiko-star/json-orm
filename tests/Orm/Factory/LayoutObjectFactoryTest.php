@@ -12,6 +12,7 @@ use App\Orm\Factory\LayoutObjectFactory;
 use App\Orm\Persistence\LayoutObject;
 use App\Orm\Persistence\ReferenceAwareEntityCollection;
 use App\Tests\Orm\EntityCreators;
+use App\Utilities\ObjectMap;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
 use Symfony\Component\Finder\Finder;
@@ -71,11 +72,11 @@ class LayoutObjectFactoryTest extends TestCase
                     '482247e6-1006-448f-aae7-102c3517f51e',
                     'd6e4529e-b531-4ada-9f0b-7185b78ff811',
                     '7d2cba14-c8d2-42d8-a81a-c169f88713c4',
-                    'e76f2ba5-9e84-4141-975c-af48a62d4ac1',
-                    '577d40b1-af02-4e1a-8575-3c8f0263e40d',
-                    '482247e6-1006-448f-aae7-102c3517f51e',
-                    'd6e4529e-b531-4ada-9f0b-7185b78ff811',
-                    '7d2cba14-c8d2-42d8-a81a-c169f88713c4',
+                    'd1cdf6ae-68ec-449a-b55e-169e16326cf2',
+                    '69075ea6-d779-4f5d-97ea-51e6cc17033f',
+                    '2997d70b-57f6-4026-9e75-d0abd919082b',
+                    'ac9114cf-b457-4556-8c6c-700e8cd28b6e',
+                    '2a9726a5-3817-4230-ab92-e76592de1983',
                 ],
                 $this->createSecondLayoutObject(),
             ]
@@ -148,12 +149,12 @@ class LayoutObjectFactoryTest extends TestCase
         $tree->setReference($layoutObject);
 
         $layoutObject->setTree($tree);
-        $layoutObject->setHashes([
-            'e76f2ba5-9e84-4141-975c-af48a62d4ac1',
-            '577d40b1-af02-4e1a-8575-3c8f0263e40d',
-            '482247e6-1006-448f-aae7-102c3517f51e',
-            'd6e4529e-b531-4ada-9f0b-7185b78ff811',
-        ]);
+        $layoutObject->setHashMap(new ObjectMap([
+            'e76f2ba5-9e84-4141-975c-af48a62d4ac1' => $block,
+            '577d40b1-af02-4e1a-8575-3c8f0263e40d' => $row,
+            '482247e6-1006-448f-aae7-102c3517f51e' => $column,
+            'd6e4529e-b531-4ada-9f0b-7185b78ff811' => $button,
+        ]));
 
         return $layoutObject;
     }
@@ -191,25 +192,25 @@ class LayoutObjectFactoryTest extends TestCase
             ],
             [
                 'type'     => 'block',
-                'hash'     => 'e76f2ba5-9e84-4141-975c-af48a62d4ac1',
+                'hash'     => 'd1cdf6ae-68ec-449a-b55e-169e16326cf2',
                 'children' => [
                     [
                         'type'     => 'row',
-                        'hash'     => '577d40b1-af02-4e1a-8575-3c8f0263e40d',
+                        'hash'     => '69075ea6-d779-4f5d-97ea-51e6cc17033f',
                         'children' => [
                             [
                                 'type'     => 'column',
-                                'hash'     => '482247e6-1006-448f-aae7-102c3517f51e',
+                                'hash'     => '2997d70b-57f6-4026-9e75-d0abd919082b',
                                 'children' => [
                                     [
                                         'type'       => 'widget',
                                         'widgetType' => 'button',
-                                        'hash'       => 'd6e4529e-b531-4ada-9f0b-7185b78ff811'
+                                        'hash'       => 'ac9114cf-b457-4556-8c6c-700e8cd28b6e'
                                     ],
                                     [
                                         'type'       => 'widget',
                                         'widgetType' => 'button',
-                                        'hash'       => '7d2cba14-c8d2-42d8-a81a-c169f88713c4'
+                                        'hash'       => '2a9726a5-3817-4230-ab92-e76592de1983'
                                     ]
                                 ]
                             ]
@@ -261,17 +262,17 @@ class LayoutObjectFactoryTest extends TestCase
         $button3 = $this->createSimpleWidget();
         $button3->setType('widget');
         $button3->setWidgetType('button');
-        $button3->setHash(new Hash('d6e4529e-b531-4ada-9f0b-7185b78ff811'));
+        $button3->setHash(new Hash('ac9114cf-b457-4556-8c6c-700e8cd28b6e'));
 
         $button4 = $this->createSimpleWidget();
         $button4->setType('widget');
         $button4->setWidgetType('button');
-        $button4->setHash(new Hash('7d2cba14-c8d2-42d8-a81a-c169f88713c4'));
+        $button4->setHash(new Hash('2a9726a5-3817-4230-ab92-e76592de1983'));
 
         /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $column2 */
         $column2 = $this->createGridEntity();
         $column2->setType('column');
-        $column2->setHash(new Hash('482247e6-1006-448f-aae7-102c3517f51e'));
+        $column2->setHash(new Hash('2997d70b-57f6-4026-9e75-d0abd919082b'));
         $children4 = new ReferenceAwareEntityCollection([$button3, $button4]);
         $children4->setReference($layoutObject);
         $column2->setChildren($children4);
@@ -279,7 +280,7 @@ class LayoutObjectFactoryTest extends TestCase
         /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $row2 */
         $row2 = $this->createGridEntity();
         $row2->setType('row');
-        $row2->setHash(new Hash('577d40b1-af02-4e1a-8575-3c8f0263e40d'));
+        $row2->setHash(new Hash('69075ea6-d779-4f5d-97ea-51e6cc17033f'));
         $children5 = new ReferenceAwareEntityCollection([$column2]);
         $children5->setReference($layoutObject);
         $row2->setChildren($children5);
@@ -287,7 +288,7 @@ class LayoutObjectFactoryTest extends TestCase
         /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $block2 */
         $block2 = $this->createGridEntity();
         $block2->setType('block');
-        $block2->setHash(new Hash('e76f2ba5-9e84-4141-975c-af48a62d4ac1'));
+        $block2->setHash(new Hash('d1cdf6ae-68ec-449a-b55e-169e16326cf2'));
         $children6 = new ReferenceAwareEntityCollection([$row2]);
         $children6->setReference($layoutObject);
         $block2->setChildren($children6);
@@ -296,18 +297,18 @@ class LayoutObjectFactoryTest extends TestCase
         $tree->setReference($layoutObject);
 
         $layoutObject->setTree($tree);
-        $layoutObject->setHashes([
-            'e76f2ba5-9e84-4141-975c-af48a62d4ac1',
-            '577d40b1-af02-4e1a-8575-3c8f0263e40d',
-            '482247e6-1006-448f-aae7-102c3517f51e',
-            'd6e4529e-b531-4ada-9f0b-7185b78ff811',
-            '7d2cba14-c8d2-42d8-a81a-c169f88713c4',
-            'e76f2ba5-9e84-4141-975c-af48a62d4ac1',
-            '577d40b1-af02-4e1a-8575-3c8f0263e40d',
-            '482247e6-1006-448f-aae7-102c3517f51e',
-            'd6e4529e-b531-4ada-9f0b-7185b78ff811',
-            '7d2cba14-c8d2-42d8-a81a-c169f88713c4',
-        ]);
+        $layoutObject->setHashMap(new ObjectMap([
+            'e76f2ba5-9e84-4141-975c-af48a62d4ac1' => $block1,
+            '577d40b1-af02-4e1a-8575-3c8f0263e40d' => $row1,
+            '482247e6-1006-448f-aae7-102c3517f51e' => $column1,
+            'd6e4529e-b531-4ada-9f0b-7185b78ff811' => $button1,
+            '7d2cba14-c8d2-42d8-a81a-c169f88713c4' => $button2,
+            'd1cdf6ae-68ec-449a-b55e-169e16326cf2' => $block2,
+            '69075ea6-d779-4f5d-97ea-51e6cc17033f' => $row2,
+            '2997d70b-57f6-4026-9e75-d0abd919082b' => $column2,
+            'ac9114cf-b457-4556-8c6c-700e8cd28b6e' => $button3,
+            '2a9726a5-3817-4230-ab92-e76592de1983' => $button4,
+        ]));
 
         return $layoutObject;
     }
