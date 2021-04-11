@@ -76,6 +76,7 @@ JSON;
 
         $this->assertNull($layoutObject->findEntityByHash('e6342850-918e-11eb-9bba-ada57c2a135e-xxx'));
     }
+
     /**
      * @param array $document
      *
