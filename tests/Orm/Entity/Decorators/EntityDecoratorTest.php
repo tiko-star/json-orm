@@ -40,7 +40,9 @@ class EntityDecoratorTest extends TestCase
         return new class($entity) extends AbstractDecorator {
             public function getType() : string
             {
-                return '**'.$this->entity->getType().'**';
+                $type = parent::getType();
+
+                return '**'.$type.'**';
             }
         };
     }
@@ -50,7 +52,9 @@ class EntityDecoratorTest extends TestCase
         return new class($entity) extends AbstractDecorator {
             public function getType() : string
             {
-                return '--'.$this->entity->getType().'--';
+                $type = parent::getType();
+
+                return '--'.$type.'--';
             }
         };
     }
