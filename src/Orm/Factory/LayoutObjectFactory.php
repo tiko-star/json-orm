@@ -70,6 +70,9 @@ class LayoutObjectFactory
      * @param \App\Orm\Persistence\State\SerializationStateInterface|null $state
      *
      * @return \App\Orm\Persistence\LayoutObject
+     * @throws \App\Orm\Exception\InvalidEntityHashException
+     * @throws \App\Orm\Exception\InvalidEntityTypeException
+     * @throws \App\Orm\Exception\MissingEntityTypeIdentifierException
      */
     public function createLayoutObject(array $content, string $hash = null, SerializationStateInterface $state = null) : LayoutObject
     {
@@ -91,6 +94,9 @@ class LayoutObjectFactory
      * @param \App\Orm\Persistence\LayoutObject $layoutObject
      *
      * @return \App\Orm\Persistence\ReferenceAwareEntityCollection
+     * @throws \App\Orm\Exception\InvalidEntityHashException
+     * @throws \App\Orm\Exception\InvalidEntityTypeException
+     * @throws \App\Orm\Exception\MissingEntityTypeIdentifierException
      */
     protected function hydrate(array $content, array &$hashes, LayoutObject $layoutObject) : ReferenceAwareEntityCollection
     {
