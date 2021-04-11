@@ -16,14 +16,14 @@ class FetchedState implements SerializationStateInterface
     {
         $data = [
             'type' => $entity->getType(),
-            'hash' => $entity->getHash(),
+            'hash' => (string) $entity->getHash(),
         ];
 
         $contents = $entity->getRoot()->getReference()->getContents();
 
         /** @var Content|false $content */
         $content = $contents
-            ->filter(fn(Content $content) => $content->getHash() === $entity->getHash())
+            ->filter(fn(Content $content) => $content->getHash() === (string) $entity->getHash())
             ->first();
 
         if ($content) {

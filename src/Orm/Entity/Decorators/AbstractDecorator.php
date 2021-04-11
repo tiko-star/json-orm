@@ -7,6 +7,7 @@ namespace App\Orm\Entity\Decorators;
 use App\Doctrine\Entity\Content;
 use App\Orm\Definition\EntityDefinition;
 use App\Orm\Entity\AbstractEntity;
+use App\Orm\Entity\Hash;
 use App\Orm\Persistence\ReferenceAwareEntityCollection;
 
 use function call_user_func;
@@ -59,17 +60,17 @@ abstract class AbstractDecorator extends AbstractEntity
     }
 
     /**
-     * @return string|null
+     * @return \App\Orm\Entity\Hash|null
      */
-    public function getHash() : ?string
+    public function getHash() : ?Hash
     {
         return $this->entity->getHash();
     }
 
     /**
-     * @param string $hash
+     * @param \App\Orm\Entity\Hash $hash
      */
-    public function setHash(string $hash) : void
+    public function setHash(Hash $hash) : void
     {
         $this->entity->setHash($hash);
     }

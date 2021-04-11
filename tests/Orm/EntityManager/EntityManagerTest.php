@@ -7,6 +7,7 @@ namespace App\Tests\Orm\EntityManager;
 use App\Orm\Definition\DefinitionCompiler;
 use App\Orm\Definition\EntityDefinitionLoader;
 use App\Orm\Definition\EntityDefinitionProvider;
+use App\Orm\Entity\Hash;
 use App\Orm\Factory\LayoutObjectFactory;
 use App\Orm\Persistence\JsonDocumentManager;
 use App\Orm\Persistence\ReferenceAwareEntityCollection;
@@ -93,12 +94,12 @@ class EntityManagerTest extends TestCase
         $button = $this->createSimpleWidget();
         $button->setType('widget');
         $button->setWidgetType('button');
-        $button->setHash('d6e4529e-b531-4ada-9f0b-7185b78ff811');
+        $button->setHash(new Hash('d6e4529e-b531-4ada-9f0b-7185b78ff811'));
 
         /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $column */
         $column = $this->createGridEntity();
         $column->setType('column');
-        $column->setHash('482247e6-1006-448f-aae7-102c3517f51e');
+        $column->setHash(new Hash('482247e6-1006-448f-aae7-102c3517f51e'));
         $children1 = new ReferenceAwareEntityCollection([$button]);
         $children1->setReference($layoutObject);
         $column->setChildren($children1);
@@ -106,7 +107,7 @@ class EntityManagerTest extends TestCase
         /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $row */
         $row = $this->createGridEntity();
         $row->setType('row');
-        $row->setHash('577d40b1-af02-4e1a-8575-3c8f0263e40d');
+        $row->setHash(new Hash('577d40b1-af02-4e1a-8575-3c8f0263e40d'));
         $children2 = new ReferenceAwareEntityCollection([$column]);
         $children2->setReference($layoutObject);
         $row->setChildren($children2);
@@ -114,7 +115,7 @@ class EntityManagerTest extends TestCase
         /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $block */
         $block = $this->createGridEntity();
         $block->setType('block');
-        $block->setHash('e76f2ba5-9e84-4141-975c-af48a62d4ac1');
+        $block->setHash(new Hash('e76f2ba5-9e84-4141-975c-af48a62d4ac1'));
         $children3 = new ReferenceAwareEntityCollection([$row]);
         $children3->setReference($layoutObject);
         $block->setChildren($children3);

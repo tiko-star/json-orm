@@ -9,10 +9,12 @@ use App\Orm\Definition\EntityDefinitionProvider;
 use App\Orm\Definition\Exception\DefinitionException;
 use App\Orm\Entity\AbstractEntity;
 use App\Orm\Entity\Grid;
+use App\Orm\Entity\Hash;
 use App\Orm\Entity\Widget;
 use App\Orm\Entity\WidgetItem;
 use App\Orm\Entity\Contracts\ContainsChildrenInterface;
 use App\Orm\Entity\Decorators\ContainerEntityDecorator;
+use App\Orm\Exception\InvalidEntityHashException;
 use App\Orm\Exception\InvalidEntityTypeException;
 use App\Orm\Exception\MissingEntityTypeIdentifierException;
 use App\Orm\Persistence\LayoutObject;
@@ -99,8 +101,8 @@ class LayoutObjectFactory
             $entity = $this->createEntityInstance($item);
             $collection[] = $entity;
 
-            if ($hash = $entity->getHash()) {
-                array_push($hashes, $hash);
+            if (!$entity->getHash()->isDraft()) {
+                array_push($hashes, (string) $entity->getHash());
             }
 
             if (($children = $this->propertyAccessor->getValue($item, '[children]'))
@@ -120,7 +122,9 @@ class LayoutObjectFactory
      * @param array $data
      *
      * @return \App\Orm\Entity\AbstractEntity
+     * @throws \App\Orm\Exception\InvalidEntityHashException
      * @throws \App\Orm\Exception\InvalidEntityTypeException
+     * @throws \App\Orm\Exception\MissingEntityTypeIdentifierException
      */
     protected function createEntityInstance(array $data) : AbstractEntity
     {
@@ -129,7 +133,16 @@ class LayoutObjectFactory
         // Look for the entity definition.
         $definition = $this->createEntityDefinition($type);
         $entity = $this->createEntityInstanceFromDefinition($definition);
+        $hash = $this->propertyAccessor->getValue($data, '[hash]');
 
+        if (empty($hash)) {
+            throw new InvalidEntityHashException('An entity hash can not be empty.');
+        }
+
+        $entity->setHash(new Hash($hash));
+        // The hash has already been set.
+        unset($data['hash']);
+        // We will set children during recursive iterations.
         unset($data['children']);
 
         foreach ($data as $property => $value) {

@@ -1,10 +1,9 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Orm\Exception;
 
-use RuntimeException;
-
-class InvalidEntityTypeException extends RuntimeException
+class InvalidEntityTypeException extends JsonOrmException
 {
-
 }

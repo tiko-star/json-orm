@@ -23,9 +23,9 @@ abstract class AbstractEntity implements JsonSerializable
     protected string $type;
 
     /**
-     * @var string|null The unique hash of the current entity.
+     * @var \App\Orm\Entity\Hash|null The unique hash of the current entity.
      */
-    protected ?string $hash = null;
+    protected ?Hash $hash = null;
 
     /**
      * @var array Individual properties of the current entity.
@@ -72,17 +72,17 @@ abstract class AbstractEntity implements JsonSerializable
     }
 
     /**
-     * @return string|null
+     * @return \App\Orm\Entity\Hash|null
      */
-    public function getHash() : ?string
+    public function getHash() : ?Hash
     {
         return $this->hash;
     }
 
     /**
-     * @param string $hash
+     * @param \App\Orm\Entity\Hash $hash
      */
-    public function setHash(string $hash) : void
+    public function setHash(Hash $hash) : void
     {
         $this->hash = $hash;
     }

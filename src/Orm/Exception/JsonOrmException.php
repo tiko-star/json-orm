@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace App\Orm\Exception;
 
-class JsonDocumentNotFoundException extends JsonOrmException
+use Exception;
+
+class JsonOrmException extends Exception
 {
 }
