@@ -18,6 +18,10 @@ class FetchedState implements SerializationStateInterface
             'hash' => (string) $entity->getHash(),
         ];
 
+        if ($params = $entity->getParams()) {
+            $data['params'] = $params;
+        }
+
         $contents = $entity->getRoot()->getReference()->getContents();
 
         /** @var Content|false $content */
@@ -26,7 +30,7 @@ class FetchedState implements SerializationStateInterface
             ->first();
 
         if ($content) {
-            $data['props'] = $entity->initializeContent($content);
+            $data['params']['props'] = $entity->initializeContent($content);
         }
 
         /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface $entity */

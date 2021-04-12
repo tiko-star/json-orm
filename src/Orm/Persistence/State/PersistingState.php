@@ -23,6 +23,14 @@ class PersistingState implements SerializationStateInterface
             'hash' => (string) $entity->getHash(),
         ];
 
+        // Remove content related data.
+        $params = $entity->getParams();
+        unset($params['props']);
+
+        if (!empty($params)) {
+            $data['params'] = $params;
+        }
+
         /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface $entity */
         if ($definition->containsChildren()) {
             $data['children'] = $entity->getChildren();
