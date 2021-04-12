@@ -5,6 +5,8 @@ declare(strict_types = 1);
 namespace App\Tests\Orm\EntityManager;
 
 use App\Orm\Definition\DefinitionCompiler;
+use App\Orm\Definition\EntityDefinition;
+use App\Orm\Definition\EntityDefinitionBuilder;
 use App\Orm\Definition\EntityDefinitionLoader;
 use App\Orm\Definition\EntityDefinitionProvider;
 use App\Orm\Entity\Hash;
@@ -92,10 +94,19 @@ class EntityManagerTest extends TestCase
             new FetchedState()
         );
 
+        $builder = new EntityDefinitionBuilder();
+
         $button = $this->createSimpleWidget();
         $button->setType('widget');
         $button->setWidgetType('button');
         $button->setHash(new Hash('d6e4529e-b531-4ada-9f0b-7185b78ff811'));
+        $button->setDefinition(
+            $builder
+                ->setName('button')
+                ->setType(EntityDefinition::ENTITY_TYPE_WIDGET)
+                ->disableChildrenSupport()
+                ->getEntityDefinition()
+        );
 
         /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $column */
         $column = $this->createGridEntity();
@@ -104,6 +115,13 @@ class EntityManagerTest extends TestCase
         $children1 = new ReferenceAwareEntityCollection([$button]);
         $children1->setReference($layoutObject);
         $column->setChildren($children1);
+        $column->setDefinition(
+            $builder
+                ->setName('column')
+                ->setType(EntityDefinition::ENTITY_TYPE_GRID[2])
+                ->enableChildrenSupport()
+                ->getEntityDefinition()
+        );
 
         /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $row */
         $row = $this->createGridEntity();
@@ -112,6 +130,13 @@ class EntityManagerTest extends TestCase
         $children2 = new ReferenceAwareEntityCollection([$column]);
         $children2->setReference($layoutObject);
         $row->setChildren($children2);
+        $row->setDefinition(
+            $builder
+                ->setName('row')
+                ->setType(EntityDefinition::ENTITY_TYPE_GRID[1])
+                ->enableChildrenSupport()
+                ->getEntityDefinition()
+        );
 
         /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $block */
         $block = $this->createGridEntity();
@@ -120,6 +145,13 @@ class EntityManagerTest extends TestCase
         $children3 = new ReferenceAwareEntityCollection([$row]);
         $children3->setReference($layoutObject);
         $block->setChildren($children3);
+        $block->setDefinition(
+            $builder
+                ->setName('block')
+                ->setType(EntityDefinition::ENTITY_TYPE_GRID[0])
+                ->enableChildrenSupport()
+                ->getEntityDefinition()
+        );
 
         $tree = new ReferenceAwareEntityCollection([$block]);
         $tree->setReference($layoutObject);

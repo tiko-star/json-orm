@@ -24,7 +24,6 @@ use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
-use function array_push;
 use function sprintf;
 
 /**
@@ -59,6 +58,7 @@ class LayoutObjectFactory
         $this->propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
             ->disableExceptionOnInvalidIndex()
             ->disableExceptionOnInvalidPropertyPath()
+            ->enableMagicCall()
             ->getPropertyAccessor();
     }
 

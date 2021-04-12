@@ -47,6 +47,7 @@ class EntityDefinitionProvider
         $this->propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
             ->disableExceptionOnInvalidIndex()
             ->disableExceptionOnInvalidPropertyPath()
+            ->enableMagicCall()
             ->getPropertyAccessor();
     }
 

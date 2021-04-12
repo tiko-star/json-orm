@@ -10,7 +10,7 @@ use App\Orm\Entity\AbstractEntity;
 use App\Orm\Entity\Hash;
 use App\Orm\Persistence\ReferenceAwareEntityCollection;
 
-use function call_user_func;
+use function call_user_func_array;
 
 /**
  * Class AbstractDecorator is the base class for all kind of decorators.
@@ -78,17 +78,17 @@ abstract class AbstractDecorator extends AbstractEntity
     /**
      * @return array
      */
-    public function getProperties() : array
+    public function getParams() : array
     {
-        return $this->entity->getProperties();
+        return $this->entity->getParams();
     }
 
     /**
      * @param array $properties
      */
-    public function setProperties(array $properties) : void
+    public function setParams(array $properties) : void
     {
-        $this->entity->setProperties($properties);
+        $this->entity->setParams($properties);
     }
 
     /**
@@ -133,6 +133,6 @@ abstract class AbstractDecorator extends AbstractEntity
      */
     public function __call(string $name, array $arguments)
     {
-        return call_user_func([$this->entity, $name], $arguments);
+        return call_user_func_array([$this->entity, $name], $arguments);
     }
 }

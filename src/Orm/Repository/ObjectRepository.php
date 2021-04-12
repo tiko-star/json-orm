@@ -33,6 +33,10 @@ class ObjectRepository
      * @param string $documentName
      *
      * @return \App\Orm\Persistence\LayoutObject
+     * @throws \App\Orm\Exception\InvalidEntityHashException
+     * @throws \App\Orm\Exception\InvalidEntityTypeException
+     * @throws \App\Orm\Exception\JsonDocumentNotFoundException
+     * @throws \App\Orm\Exception\MissingEntityTypeIdentifierException
      */
     public function find(string $documentName) : LayoutObject
     {

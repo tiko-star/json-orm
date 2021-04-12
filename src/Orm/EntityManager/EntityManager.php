@@ -10,6 +10,8 @@ use App\Orm\Persistence\LayoutObject;
 use App\Orm\Persistence\State\FetchedState;
 use App\Orm\Persistence\State\PersistingState;
 
+use function json_encode;
+
 class EntityManager
 {
     /**

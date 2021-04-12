@@ -30,7 +30,7 @@ abstract class AbstractEntity implements JsonSerializable
     /**
      * @var array Individual properties of the current entity.
      */
-    protected array $properties = [];
+    protected array $params = [];
 
     /**
      * @var \App\Orm\Persistence\ReferenceAwareEntityCollection Reference on the instance of the wrapping object.
@@ -90,17 +90,17 @@ abstract class AbstractEntity implements JsonSerializable
     /**
      * @return array
      */
-    public function getProperties() : array
+    public function getParams() : array
     {
-        return $this->properties;
+        return $this->params;
     }
 
     /**
-     * @param array $properties
+     * @param array $params
      */
-    public function setProperties(array $properties) : void
+    public function setParams(array $params) : void
     {
-        $this->properties = $properties;
+        $this->params = $params;
     }
 
     /**

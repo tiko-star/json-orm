@@ -31,6 +31,7 @@ class DefinitionCompiler
         $this->propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
             ->disableExceptionOnInvalidIndex()
             ->disableExceptionOnInvalidPropertyPath()
+            ->enableMagicCall()
             ->getPropertyAccessor();
     }
 

@@ -5,6 +5,8 @@ declare(strict_types = 1);
 namespace App\Tests\Orm\Factory;
 
 use App\Orm\Definition\DefinitionCompiler;
+use App\Orm\Definition\EntityDefinition;
+use App\Orm\Definition\EntityDefinitionBuilder;
 use App\Orm\Definition\EntityDefinitionLoader;
 use App\Orm\Definition\EntityDefinitionProvider;
 use App\Orm\Entity\Hash;
@@ -129,11 +131,19 @@ class LayoutObjectFactoryTest extends TestCase
     protected function createFirstLayoutObject() : LayoutObject
     {
         $layoutObject = new LayoutObject();
+        $builder = new EntityDefinitionBuilder();
 
         $button = $this->createSimpleWidget();
         $button->setType('widget');
         $button->setWidgetType('button');
         $button->setHash(new Hash('d6e4529e-b531-4ada-9f0b-7185b78ff811'));
+        $button->setDefinition(
+            $builder
+                ->setName('button')
+                ->setType(EntityDefinition::ENTITY_TYPE_WIDGET)
+                ->disableChildrenSupport()
+                ->getEntityDefinition()
+        );
 
         /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $column */
         $column = $this->createGridEntity();
@@ -142,6 +152,13 @@ class LayoutObjectFactoryTest extends TestCase
         $children1 = new ReferenceAwareEntityCollection([$button]);
         $children1->setReference($layoutObject);
         $column->setChildren($children1);
+        $column->setDefinition(
+            $builder
+                ->setName('column')
+                ->setType(EntityDefinition::ENTITY_TYPE_GRID[2])
+                ->enableChildrenSupport()
+                ->getEntityDefinition()
+        );
 
         /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $row */
         $row = $this->createGridEntity();
@@ -150,6 +167,13 @@ class LayoutObjectFactoryTest extends TestCase
         $children2 = new ReferenceAwareEntityCollection([$column]);
         $children2->setReference($layoutObject);
         $row->setChildren($children2);
+        $row->setDefinition(
+            $builder
+                ->setName('row')
+                ->setType(EntityDefinition::ENTITY_TYPE_GRID[1])
+                ->enableChildrenSupport()
+                ->getEntityDefinition()
+        );
 
         /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $block */
         $block = $this->createGridEntity();
@@ -158,6 +182,13 @@ class LayoutObjectFactoryTest extends TestCase
         $children3 = new ReferenceAwareEntityCollection([$row]);
         $children3->setReference($layoutObject);
         $block->setChildren($children3);
+        $block->setDefinition(
+            $builder
+                ->setName('block')
+                ->setType(EntityDefinition::ENTITY_TYPE_GRID[0])
+                ->enableChildrenSupport()
+                ->getEntityDefinition()
+        );
 
         $tree = new ReferenceAwareEntityCollection([$block]);
         $tree->setReference($layoutObject);
@@ -238,16 +269,31 @@ class LayoutObjectFactoryTest extends TestCase
     protected function createSecondLayoutObject() : LayoutObject
     {
         $layoutObject = new LayoutObject();
+        $builder = new EntityDefinitionBuilder();
 
         $button1 = $this->createSimpleWidget();
         $button1->setType('widget');
         $button1->setWidgetType('button');
         $button1->setHash(new Hash('d6e4529e-b531-4ada-9f0b-7185b78ff811'));
+        $button1->setDefinition(
+            $builder
+                ->setName('button')
+                ->setType(EntityDefinition::ENTITY_TYPE_WIDGET)
+                ->disableChildrenSupport()
+                ->getEntityDefinition()
+        );
 
         $button2 = $this->createSimpleWidget();
         $button2->setType('widget');
         $button2->setWidgetType('button');
         $button2->setHash(new Hash('7d2cba14-c8d2-42d8-a81a-c169f88713c4'));
+        $button2->setDefinition(
+            $builder
+                ->setName('button')
+                ->setType(EntityDefinition::ENTITY_TYPE_WIDGET)
+                ->disableChildrenSupport()
+                ->getEntityDefinition()
+        );
 
         /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $column1 */
         $column1 = $this->createGridEntity();
@@ -256,6 +302,13 @@ class LayoutObjectFactoryTest extends TestCase
         $children1 = new ReferenceAwareEntityCollection([$button1, $button2]);
         $children1->setReference($layoutObject);
         $column1->setChildren($children1);
+        $column1->setDefinition(
+            $builder
+                ->setName('column')
+                ->setType(EntityDefinition::ENTITY_TYPE_GRID[2])
+                ->enableChildrenSupport()
+                ->getEntityDefinition()
+        );
 
         /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $row1 */
         $row1 = $this->createGridEntity();
@@ -264,6 +317,13 @@ class LayoutObjectFactoryTest extends TestCase
         $children2 = new ReferenceAwareEntityCollection([$column1]);
         $children2->setReference($layoutObject);
         $row1->setChildren($children2);
+        $row1->setDefinition(
+            $builder
+                ->setName('row')
+                ->setType(EntityDefinition::ENTITY_TYPE_GRID[1])
+                ->enableChildrenSupport()
+                ->getEntityDefinition()
+        );
 
         /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $block1 */
         $block1 = $this->createGridEntity();
@@ -272,16 +332,37 @@ class LayoutObjectFactoryTest extends TestCase
         $children3 = new ReferenceAwareEntityCollection([$row1]);
         $children3->setReference($layoutObject);
         $block1->setChildren($children3);
+        $block1->setDefinition(
+            $builder
+                ->setName('block')
+                ->setType(EntityDefinition::ENTITY_TYPE_GRID[0])
+                ->enableChildrenSupport()
+                ->getEntityDefinition()
+        );
 
         $button3 = $this->createSimpleWidget();
         $button3->setType('widget');
         $button3->setWidgetType('button');
         $button3->setHash(new Hash('ac9114cf-b457-4556-8c6c-700e8cd28b6e'));
+        $button3->setDefinition(
+            $builder
+                ->setName('button')
+                ->setType(EntityDefinition::ENTITY_TYPE_WIDGET)
+                ->disableChildrenSupport()
+                ->getEntityDefinition()
+        );
 
         $button4 = $this->createSimpleWidget();
         $button4->setType('widget');
         $button4->setWidgetType('button');
         $button4->setHash(new Hash('2a9726a5-3817-4230-ab92-e76592de1983'));
+        $button4->setDefinition(
+            $builder
+                ->setName('button')
+                ->setType(EntityDefinition::ENTITY_TYPE_WIDGET)
+                ->disableChildrenSupport()
+                ->getEntityDefinition()
+        );
 
         /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $column2 */
         $column2 = $this->createGridEntity();
@@ -290,6 +371,13 @@ class LayoutObjectFactoryTest extends TestCase
         $children4 = new ReferenceAwareEntityCollection([$button3, $button4]);
         $children4->setReference($layoutObject);
         $column2->setChildren($children4);
+        $column2->setDefinition(
+            $builder
+                ->setName('column')
+                ->setType(EntityDefinition::ENTITY_TYPE_GRID[2])
+                ->enableChildrenSupport()
+                ->getEntityDefinition()
+        );
 
         /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $row2 */
         $row2 = $this->createGridEntity();
@@ -298,6 +386,13 @@ class LayoutObjectFactoryTest extends TestCase
         $children5 = new ReferenceAwareEntityCollection([$column2]);
         $children5->setReference($layoutObject);
         $row2->setChildren($children5);
+        $row2->setDefinition(
+            $builder
+                ->setName('row')
+                ->setType(EntityDefinition::ENTITY_TYPE_GRID[1])
+                ->enableChildrenSupport()
+                ->getEntityDefinition()
+        );
 
         /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface|\App\Orm\Entity\AbstractEntity $block2 */
         $block2 = $this->createGridEntity();
@@ -306,6 +401,13 @@ class LayoutObjectFactoryTest extends TestCase
         $children6 = new ReferenceAwareEntityCollection([$row2]);
         $children6->setReference($layoutObject);
         $block2->setChildren($children6);
+        $block2->setDefinition(
+            $builder
+                ->setName('block')
+                ->setType(EntityDefinition::ENTITY_TYPE_GRID[0])
+                ->enableChildrenSupport()
+                ->getEntityDefinition()
+        );
 
         $tree = new ReferenceAwareEntityCollection([$block1, $block2]);
         $tree->setReference($layoutObject);
