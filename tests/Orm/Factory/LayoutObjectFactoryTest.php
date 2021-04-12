@@ -14,6 +14,8 @@ use App\Orm\Persistence\ReferenceAwareEntityCollection;
 use App\Tests\Orm\EntityCreators;
 use App\Utilities\ObjectMap;
 use PHPUnit\Framework\TestCase;
+use Psr\Cache\CacheItemInterface;
+use Symfony\Component\Cache\Adapter\AbstractAdapter;
 use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
 use Symfony\Component\Finder\Finder;
 
@@ -46,9 +48,21 @@ class LayoutObjectFactoryTest extends TestCase
             new EntityDefinitionProvider(
                 __DIR__.'/../Definition/definitions',
                 new EntityDefinitionLoader(new Finder(), new DefinitionCompiler()),
-                new PhpFilesAdapter('definitions')
+                $this->createCacheMock()
             )
         );
+    }
+
+    protected function createCacheMock() : AbstractAdapter
+    {
+        $item = $this->createStub(CacheItemInterface::class);
+        $item->method('isHit')->willReturn(false);
+
+        $cache = $this->createStub(PhpFilesAdapter::class);
+        $cache->method('getItem')->willReturn($item);
+        $cache->method('save')->willReturn(false);
+
+        return $cache;
     }
 
     public function documentProvider() : array

@@ -11,6 +11,7 @@ use App\Orm\Definition\EntityDefinitionProvider;
 use App\Orm\Definition\Exception\DefinitionNotFoundException;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
+use Symfony\Component\Cache\Adapter\AbstractAdapter;
 use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
 use Symfony\Component\Finder\Finder;
 
@@ -118,7 +119,19 @@ class EntityDefinitionProviderTest extends DefinitionAssertions
         return new EntityDefinitionProvider(
             __DIR__.'/definitions',
             new EntityDefinitionLoader(new Finder(), new DefinitionCompiler()),
-            $pool ?? new PhpFilesAdapter('definitions', 1, __DIR__.'/cache')
+            $pool ?? $this->createCacheMock()
         );
+    }
+
+    protected function createCacheMock() : AbstractAdapter
+    {
+        $item = $this->createStub(CacheItemInterface::class);
+        $item->method('isHit')->willReturn(false);
+
+        $cache = $this->createStub(PhpFilesAdapter::class);
+        $cache->method('getItem')->willReturn($item);
+        $cache->method('save')->willReturn(false);
+
+        return $cache;
     }
 }
