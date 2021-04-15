@@ -2,6 +2,8 @@
 
 declare(strict_types = 1);
 
+use App\Orm\ContentManagement\ContentDispatcher;
+use App\Orm\ContentManagement\ContentPersistenceManager;
 use App\Orm\Repository\ObjectRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -76,19 +78,31 @@ $app->get('/layout/{filename}', function (Request $request, Response $response, 
 $app->post('/layout', function (Request $request, Response $response) {
     $content = $request->getParsedBody();
 
+    /** @var ContentDispatcher $dispatcher */
+    $dispatcher = $this->get(ContentDispatcher::class);
+
     /** @var LayoutObjectFactory $factory */
     $factory = $this->get(LayoutObjectFactory::class);
     $layoutObject = $factory->createLayoutObject($content, md5((string) time()));
+
+    /** @var \App\Doctrine\Repository\ContentRepository $contentRepository */
+    $contentRepository = $this->get(EntityManager::class)->getRepository(Content::class);
+    // Fetch existing content.
+    $existingContents = $contentRepository->findByHashes($layoutObject->getHashes());
 
     /** @var JsonEntityManager $jsonEntityManager */
     $jsonEntityManager = $this->get(JsonEntityManager::class);
     $jsonEntityManager->persist($layoutObject);
 
-    /** @var \App\Doctrine\Repository\ContentRepository $contentRepository */
-    $contentRepository = $this->get(EntityManager::class)->getRepository(Content::class);
-    $contents = $contentRepository->findByHashes($layoutObject->getHashes());
+    // Fetch upcoming content
+    $upcomingContents = $layoutObject->getContents();
 
-    $layoutObject->setContents($contents);
+    $dispatched = $dispatcher->dispatch($upcomingContents, $existingContents);
+    // Persist dispatched content
+    /** @var ContentPersistenceManager $contentPersistenceManager */
+    $contentPersistenceManager = $this->get(ContentPersistenceManager::class);
+    $contentPersistenceManager->persist($dispatched);
+    $layoutObject->setContents($upcomingContents);
 
     $response->getBody()->write(json_encode([
         $layoutObject->getName() => $layoutObject
@@ -97,18 +111,41 @@ $app->post('/layout', function (Request $request, Response $response) {
     return $response->withHeader('Content-Type', 'application/json');
 });
 
-$app->post('/content/{hash}', function (Request $request, Response $response) {
-    $content = new Content();
+$app->patch('/layout/{hash}', function (Request $request, Response $response, array $args) {
+    /** @var ObjectRepository $objectRepository */
+    $objectRepository = $this->get(ObjectRepository::class);
+    $layoutObject = $objectRepository->find($args['hash']);
 
-    $content->setHash(md5((string) time()));
-    $content->setContent($request->getParsedBody());
+    /** @var \App\Doctrine\Repository\ContentRepository $contentRepository */
+    $contentRepository = $this->get(EntityManager::class)->getRepository(Content::class);
+    // Fetch existing content.
+    $existingContents = $contentRepository->findByHashes($layoutObject->getHashes());
 
-    /** @var EntityManager $manager */
-    $manager = $this->get(EntityManager::class);
-    $manager->persist($content);
-    $manager->flush();
+    $json = $request->getParsedBody();
+    /** @var LayoutObjectFactory $factory */
+    $factory = $this->get(LayoutObjectFactory::class);
+    $layoutObject = $factory->createLayoutObject($json, $args['hash']);
 
-    $response->getBody()->write(json_encode($content));
+    /** @var JsonEntityManager $jsonEntityManager */
+    $jsonEntityManager = $this->get(JsonEntityManager::class);
+    $jsonEntityManager->persist($layoutObject);
+
+    // Fetch upcoming content
+    $upcomingContents = $layoutObject->getContents();
+
+    /** @var ContentDispatcher $dispatcher */
+    $dispatcher = $this->get(ContentDispatcher::class);
+    $dispatched = $dispatcher->dispatch($upcomingContents, $existingContents);
+
+    // Persist dispatched content
+    /** @var ContentPersistenceManager $contentPersistenceManager */
+    $contentPersistenceManager = $this->get(ContentPersistenceManager::class);
+    $contentPersistenceManager->persist($dispatched);
+    $layoutObject->setContents($upcomingContents);
+
+    $response->getBody()->write(json_encode([
+        $layoutObject->getName() => $layoutObject
+    ]));
 
     return $response->withHeader('Content-Type', 'application/json');
 });

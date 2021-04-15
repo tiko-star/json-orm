@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Orm\Persistence\State;
 
+use App\Doctrine\Entity\Content;
 use App\Orm\Entity\AbstractEntity;
 use App\Orm\Entity\Hash;
 use Symfony\Component\Uid\Uuid;
@@ -13,8 +14,9 @@ class PersistingState implements SerializationStateInterface
     public function serialize(AbstractEntity $entity) : array
     {
         $definition = $entity->getDefinition();
+        $hash = $entity->getHash();
 
-        if ($entity->getHash()->isDraft()) {
+        if ($hash->isDraft()) {
             $entity->setHash(new Hash((string) Uuid::v1()));
         }
 
@@ -23,8 +25,20 @@ class PersistingState implements SerializationStateInterface
             'hash' => (string) $entity->getHash(),
         ];
 
-        // Remove content related data.
         $params = $entity->getParams();
+
+        if (isset($params['props'])) {
+            $content = new Content();
+            $content->setHash((string) $entity->getHash());
+            $content->setContent($params['props']);
+            $entity
+                ->getRoot()
+                ->getReference()
+                ->getContents()
+                ->attach($entity->getHash(), $content);
+        }
+
+        // Remove content related data.
         unset($params['props']);
 
         if (!empty($params)) {

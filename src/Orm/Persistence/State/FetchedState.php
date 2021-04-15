@@ -18,18 +18,15 @@ class FetchedState implements SerializationStateInterface
             'hash' => (string) $entity->getHash(),
         ];
 
-        if ($params = $entity->getParams()) {
-            $data['params'] = $params;
+        $params = $entity->getParams();
+
+        if (isset($params['css'])) {
+            $data['params']['css'] = $params['css'];
         }
 
-        $contents = $entity->getRoot()->getReference()->getContents();
+        $content = $this->findEntityContent($entity);
 
-        /** @var Content|false $content */
-        $content = $contents
-            ->filter(fn(Content $content) => $content->getHash() === (string) $entity->getHash())
-            ->first();
-
-        if ($content) {
+        if (null !== $content && !empty($content->getContent())) {
             $data['params']['props'] = $entity->initializeContent($content);
         }
 
@@ -49,5 +46,25 @@ class FetchedState implements SerializationStateInterface
         }
 
         return $data;
+    }
+
+    protected function findEntityContent(AbstractEntity $entity) : ?Content
+    {
+        $contents = $entity->getRoot()->getReference()->getContents();
+
+        $contents->rewind();
+
+        while ($contents->valid()) {
+            /** @var \App\Orm\Entity\Hash $hash */
+            $hash = $contents->current();
+
+            if ((string) $hash === (string) $entity->getHash()) {
+                return $contents->getInfo();
+            }
+
+            $contents->next();
+        }
+
+        return null;
     }
 }

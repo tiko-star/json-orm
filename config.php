@@ -1,5 +1,7 @@
 <?php
 
+use App\Orm\ContentManagement\ContentDispatcher;
+use App\Orm\ContentManagement\ContentPersistenceManager;
 use App\Orm\Definition\DefinitionCompiler;
 use App\Orm\Definition\EntityDefinitionLoader;
 use App\Orm\Definition\EntityDefinitionProvider;
@@ -16,6 +18,7 @@ use Symfony\Component\Finder\Finder;
 
 return [
     JsonDocumentManager::class => DI\create(JsonDocumentManager::class)->constructor(__DIR__),
+    ContentDispatcher::class   => DI\create(ContentDispatcher::class),
 
     JsonEntityManager::class => function (ContainerInterface $c) {
         return new JsonEntityManager(
@@ -50,6 +53,10 @@ return [
         $config->setAutoGenerateProxyClasses(true);
 
         return EntityManager::create($params, $config);
+    },
+
+    ContentPersistenceManager::class => function (ContainerInterface $c) {
+        return new ContentPersistenceManager($c->get(EntityManager::class));
     },
 
     EntityDefinitionLoader::class => function (ContainerInterface $c) {

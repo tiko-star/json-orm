@@ -8,7 +8,6 @@ use App\Orm\Entity\AbstractEntity;
 use App\Orm\Persistence\State\DefaultState;
 use App\Orm\Persistence\State\SerializationStateInterface;
 use App\Utilities\ObjectMap;
-use Doctrine\Common\Collections\ArrayCollection;
 use JsonSerializable;
 
 /**
@@ -35,10 +34,10 @@ class LayoutObject implements JsonSerializable
     protected ObjectMap $hashMap;
 
     /**
-     * @var \Doctrine\Common\Collections\ArrayCollection Reference on list of contents of current AbstractEntity.
+     * @var \App\Orm\Persistence\ContentObjectStorage Reference on list of contents of current AbstractEntity.
      *      instances inside.
      */
-    protected ArrayCollection $contents;
+    protected ContentObjectStorage $contents;
 
     /**
      * @var \App\Orm\Persistence\State\SerializationStateInterface Reference on instance of SerializationStateInterface.
@@ -48,7 +47,7 @@ class LayoutObject implements JsonSerializable
     public function __construct(string $name = null, SerializationStateInterface $state = null)
     {
         $this->name = $name;
-        $this->contents = new ArrayCollection();
+        $this->contents = new ContentObjectStorage();
         $this->state = $state ?? new DefaultState();
         $this->hashMap = new ObjectMap();
     }
@@ -91,17 +90,17 @@ class LayoutObject implements JsonSerializable
     }
 
     /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return \App\Orm\Persistence\ContentObjectStorage
      */
-    public function getContents() : ArrayCollection
+    public function getContents() : ContentObjectStorage
     {
         return $this->contents;
     }
 
     /**
-     * @param \Doctrine\Common\Collections\ArrayCollection $contents
+     * @param \App\Orm\Persistence\ContentObjectStorage $contents
      */
-    public function setContents(ArrayCollection $contents) : void
+    public function setContents(ContentObjectStorage $contents) : void
     {
         $this->contents = $contents;
     }
