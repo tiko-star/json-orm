@@ -96,24 +96,18 @@ class ContentDispatcher
             /** @var \App\Orm\Entity\Hash $hash */
             $hash = $upcoming->current();
 
-            while ($existing->valid()) {
-                $existingHash = $existing->current();
+            if ($existing->contains($hash)) {
+                /** @var \App\Doctrine\Entity\Content $existingContent */
+                $existingContent = $existing[$hash];
+                /** @var \App\Doctrine\Entity\Content $upcomingContent */
+                $upcomingContent = $upcoming->getInfo();
 
-                if ((string) $existingHash === (string) $hash) {
-                    /** @var \App\Doctrine\Entity\Content $existingContent */
-                    $existingContent = $existing->getInfo();
-                    /** @var \App\Doctrine\Entity\Content $upcomingContent */
-                    $upcomingContent = $upcoming->getInfo();
-
-                    if ($existingContent->getContent() !== $upcomingContent->getContent() && !empty($upcomingContent->getContent())) {
-                        $contents->attach($existingHash, $upcoming->getInfo());
-                    }
+                if ($existingContent->getContent() !== $upcomingContent->getContent()
+                    && !empty($upcomingContent->getContent())) {
+                    $contents->attach($upcoming->current(), $upcoming->getInfo());
                 }
-
-                $existing->next();
             }
 
-            $existing->rewind();
             $upcoming->next();
         }
 
@@ -140,27 +134,20 @@ class ContentDispatcher
             $hash = $existing->current();
             $contains = false;
 
-            while ($upcoming->valid()) {
-                $upcomingHash = $upcoming->current();
+            if ($upcoming->contains($hash)) {
+                /** @var \App\Doctrine\Entity\Content $upcomingContent */
+                $upcomingContent = $upcoming[$hash];
 
-                if ((string) $upcomingHash === (string) $hash) {
-                    /** @var \App\Doctrine\Entity\Content $upcomingContent */
-                    $upcomingContent = $upcoming->getInfo();
-
-                    // In case the content is empty treat it asa removed.
-                    if (!empty($upcomingContent->getContent())) {
-                        $contains = true;
-                    }
+                // In case the content is empty treat it asa removed.
+                if (!empty($upcomingContent->getContent())) {
+                    $contains = true;
                 }
-
-                $upcoming->next();
             }
 
             if (!$contains) {
                 $contents->attach($hash, $existing->getInfo());
             }
 
-            $upcoming->rewind();
             $existing->next();
         }
 
