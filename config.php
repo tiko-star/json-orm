@@ -1,11 +1,16 @@
 <?php
 
+use App\Doctrine\Entity\Language;
+use App\Middleware\LanguageDetectionMiddleware;
 use App\Orm\ContentManagement\ContentDispatcher;
 use App\Orm\ContentManagement\ContentPersistenceManager;
 use App\Orm\Definition\DefinitionCompiler;
 use App\Orm\Definition\EntityDefinitionLoader;
 use App\Orm\Definition\EntityDefinitionProvider;
 use App\Orm\Repository\ObjectRepository;
+use App\Services\LanguageDetection\Drivers\HttpHeaderDetectionDriver;
+use App\Services\LanguageDetection\LanguageDetector;
+use DI\Container;
 use Doctrine\Common\Cache\PhpFileCache;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Configuration;
@@ -78,6 +83,21 @@ return [
     LayoutObjectFactory::class => function (ContainerInterface $c) {
         return new LayoutObjectFactory(
             $c->get(EntityDefinitionProvider::class)
+        );
+    },
+
+    LanguageDetectionMiddleware::class => function (Container $c) {
+        /** @var \App\Doctrine\Repository\LanguageRepository $repo */
+        $repo = $c->get(EntityManager::class)->getRepository(Language::class);
+
+        return new LanguageDetectionMiddleware(
+            new LanguageDetector(
+                [
+                    new HttpHeaderDetectionDriver($repo)
+                ],
+                $repo
+            ),
+            $c
         );
     },
 ];

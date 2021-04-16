@@ -3,6 +3,7 @@
 declare(strict_types = 1);
 
 use App\Doctrine\Entity\Language;
+use App\Middleware\LanguageDetectionMiddleware;
 use App\Orm\ContentManagement\ContentDispatcher;
 use App\Orm\ContentManagement\ContentPersistenceManager;
 use App\Orm\Repository\ObjectRepository;
@@ -47,6 +48,8 @@ $app->add(new ContentLengthMiddleware());
 // Add Routing Middleware
 $app->addRoutingMiddleware();
 
+$app->add(LanguageDetectionMiddleware::class);
+
 /**
  * Add Error Handling Middleware
  *
@@ -66,7 +69,7 @@ $app->group('/languages', function (RouteCollectorProxyInterface $proxy) {
         /** @var EntityManager $entityManager */
         $entityManager = $this->get(EntityManager::class);
 
-        /** @var \Doctrine\ORM\EntityRepository $languageRepository */
+        /** @var \App\Doctrine\Repository\LanguageRepository $languageRepository */
         $languageRepository = $entityManager->getRepository(Language::class);
         $languages = $languageRepository->findAll();
 

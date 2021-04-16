@@ -10,7 +10,7 @@ use JsonSerializable;
 /**
  * Class Language
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\App\Doctrine\Repository\LanguageRepository")
  * @ORM\Table(name="languages")
  *
  * @package App\Doctrine\Entity
