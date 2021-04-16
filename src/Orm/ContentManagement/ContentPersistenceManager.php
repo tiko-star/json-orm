@@ -9,8 +9,19 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use App\Orm\Persistence\ContentObjectStorage;
 
+/**
+ * Handles content persistence management.
+ * Insets new content into database.
+ * Updates modified content in database.
+ * Removes removed content from database.
+ *
+ * @package App\Orm\ContentManagement
+ */
 class ContentPersistenceManager
 {
+    /**
+     * @var \Doctrine\ORM\EntityManager Reference on instance of EntityManager.
+     */
     protected EntityManager $entityManager;
 
     public function __construct(EntityManager $entityManager)
@@ -18,6 +29,15 @@ class ContentPersistenceManager
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * Persist content into database.
+     * Execute appropriate SQL operations.
+     *
+     * @param \App\Orm\ContentManagement\DispatchedContent $dispatchedContent
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function persist(DispatchedContent $dispatchedContent) : void
     {
         $this->persistNew($dispatchedContent->getNew());
@@ -25,6 +45,14 @@ class ContentPersistenceManager
         $this->persistRemoved($dispatchedContent->getRemoved());
     }
 
+    /**
+     * Insert new content into database.
+     *
+     * @param \App\Orm\Persistence\ContentObjectStorage $contentObjectStorage
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function persistNew(ContentObjectStorage $contentObjectStorage) : void
     {
         $contentObjectStorage->rewind();
@@ -35,9 +63,16 @@ class ContentPersistenceManager
         }
 
         $this->entityManager->flush();
-
     }
 
+    /**
+     * Update modified content in database.
+     *
+     * @param \App\Orm\Persistence\ContentObjectStorage $contentObjectStorage
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function persistModified(ContentObjectStorage $contentObjectStorage) : void
     {
         $array = new ArrayCollection();
@@ -71,6 +106,14 @@ class ContentPersistenceManager
         $this->entityManager->flush();
     }
 
+    /**
+     * Remove content from database.
+     *
+     * @param \App\Orm\Persistence\ContentObjectStorage $contentObjectStorage
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function persistRemoved(ContentObjectStorage $contentObjectStorage) : void
     {
         $array = new ArrayCollection();
