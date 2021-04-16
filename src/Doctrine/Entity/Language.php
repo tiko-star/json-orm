@@ -41,7 +41,7 @@ class Language implements JsonSerializable
     protected string $name;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", name="is_default")
      *
      * @var bool Whether language is the default or not.
      */

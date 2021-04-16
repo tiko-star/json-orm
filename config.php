@@ -42,7 +42,7 @@ return [
             'dbname'   => 'foo',
         ];
 
-        $cache = new PhpFileCache(__DIR__.'/src/Doctrine/Cache');
+        $cache = new PhpFileCache('doctrine', 0, __DIR__.'/src/Doctrine/Cache');
         $config = new Configuration;
         $config->setMetadataCacheImpl($cache);
         $driverImpl = $config->newDefaultAnnotationDriver(__DIR__.'/src/Doctrine/Entity');

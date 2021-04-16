@@ -2,6 +2,7 @@
 
 declare(strict_types = 1);
 
+use App\Doctrine\Entity\Language;
 use App\Orm\ContentManagement\ContentDispatcher;
 use App\Orm\ContentManagement\ContentPersistenceManager;
 use App\Orm\Repository\ObjectRepository;
@@ -14,6 +15,7 @@ use App\Orm\Factory\LayoutObjectFactory;
 
 use Doctrine\ORM\EntityManager;
 use App\Doctrine\Entity\Content;
+use Slim\Interfaces\RouteCollectorProxyInterface;
 use Slim\Middleware\ContentLengthMiddleware;
 
 require __DIR__.'/vendor/autoload.php';
@@ -58,96 +60,185 @@ $app->addRoutingMiddleware();
 $errorMiddleware = $app->addErrorMiddleware(true, true, true);
 
 // Define app routes
-$app->get('/layout/{filename}', function (Request $request, Response $response, $args) {
-    /** @var ObjectRepository $objectRepository */
-    $objectRepository = $this->get(ObjectRepository::class);
 
-    /** @var \App\Doctrine\Repository\ContentRepository $contentRepository */
-    $contentRepository = $this->get(EntityManager::class)->getRepository(Content::class);
+$app->group('/languages', function (RouteCollectorProxyInterface $proxy) {
+    $proxy->get('', function (Request $request, Response $response) {
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->get(EntityManager::class);
 
-    $layout = $objectRepository->find($args['filename']);
-    $contents = $contentRepository->findByHashes($layout->getHashes());
+        /** @var \Doctrine\ORM\EntityRepository $languageRepository */
+        $languageRepository = $entityManager->getRepository(Language::class);
+        $languages = $languageRepository->findAll();
 
-    $layout->setContents($contents);
+        $response->getBody()->write(json_encode($languages));
 
-    $response->getBody()->write(json_encode($layout));
+        return $response->withHeader('Content-Type', 'application/json');
+    });
 
-    return $response->withHeader('Content-Type', 'application/json');
+    $proxy->post('', function (Request $request, Response $response) {
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->get(EntityManager::class);
+        $content = $request->getParsedBody();
+
+        $language = new Language();
+
+        $language->setName($content['name']);
+        $language->setCode($content['code']);
+        $language->setIsDefault($content['isDefault']);
+
+        $entityManager->persist($language);
+        $entityManager->flush();
+
+        $response->getBody()->write(json_encode($language));
+
+        return $response->withStatus(201)->withHeader('Content-Type', 'application/json');
+    });
+
+    $proxy->patch('/{id}', function (Request $request, Response $response, array $args) {
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->get(EntityManager::class);
+
+        /** @var \Doctrine\ORM\EntityRepository $languageRepository */
+        $languageRepository = $entityManager->getRepository(Language::class);
+
+        /** @var Language $language */
+        $language = $languageRepository->find($args['id']);
+
+        if (null === $language) {
+            $response->getBody()->write(json_encode(['message' => 'Not found!']));
+
+            return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
+        }
+
+        $content = $request->getParsedBody();
+        $language->setName($content['name']);
+        $language->setCode($content['code']);
+        $language->setIsDefault($content['isDefault']);
+
+        $entityManager->flush();
+
+        $response->getBody()->write(json_encode($language));
+
+        return $response->withHeader('Content-Type', 'application/json');
+    });
+
+    $proxy->delete('/{id}', function (Request $request, Response $response, array $args) {
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->get(EntityManager::class);
+
+        /** @var \Doctrine\ORM\EntityRepository $languageRepository */
+        $languageRepository = $entityManager->getRepository(Language::class);
+
+        /** @var Language $language */
+        $language = $languageRepository->find($args['id']);
+
+        if (null === $language) {
+            $response->getBody()->write(json_encode(['message' => 'Not found!']));
+
+            return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
+        }
+
+        $entityManager->remove($language);
+        $entityManager->flush();
+
+        $response->getBody()->write('');
+
+        return $response->withStatus(204)->withHeader('Content-Type', 'application/json');
+    });
 });
 
-$app->post('/layout', function (Request $request, Response $response) {
-    $content = $request->getParsedBody();
+$app->group('/layouts', function (RouteCollectorProxyInterface $proxy) {
+    $proxy->get('/{filename}', function (Request $request, Response $response, $args) {
+        /** @var ObjectRepository $objectRepository */
+        $objectRepository = $this->get(ObjectRepository::class);
 
-    /** @var ContentDispatcher $dispatcher */
-    $dispatcher = $this->get(ContentDispatcher::class);
+        /** @var \App\Doctrine\Repository\ContentRepository $contentRepository */
+        $contentRepository = $this->get(EntityManager::class)->getRepository(Content::class);
 
-    /** @var LayoutObjectFactory $factory */
-    $factory = $this->get(LayoutObjectFactory::class);
-    $layoutObject = $factory->createLayoutObject($content, md5((string) time()));
+        $layout = $objectRepository->find($args['filename']);
+        $contents = $contentRepository->findByHashes($layout->getHashes());
 
-    /** @var \App\Doctrine\Repository\ContentRepository $contentRepository */
-    $contentRepository = $this->get(EntityManager::class)->getRepository(Content::class);
-    // Fetch existing content.
-    $existingContents = $contentRepository->findByHashes($layoutObject->getHashes());
+        $layout->setContents($contents);
 
-    /** @var JsonEntityManager $jsonEntityManager */
-    $jsonEntityManager = $this->get(JsonEntityManager::class);
-    $jsonEntityManager->persist($layoutObject);
+        $response->getBody()->write(json_encode($layout));
 
-    // Fetch upcoming content
-    $upcomingContents = $layoutObject->getContents();
+        return $response->withHeader('Content-Type', 'application/json');
+    });
 
-    $dispatched = $dispatcher->dispatch($upcomingContents, $existingContents);
-    // Persist dispatched content
-    /** @var ContentPersistenceManager $contentPersistenceManager */
-    $contentPersistenceManager = $this->get(ContentPersistenceManager::class);
-    $contentPersistenceManager->persist($dispatched);
-    $layoutObject->setContents($upcomingContents);
+    $proxy->post('', function (Request $request, Response $response) {
+        $content = $request->getParsedBody();
 
-    $response->getBody()->write(json_encode([
-        $layoutObject->getName() => $layoutObject
-    ]));
+        /** @var ContentDispatcher $dispatcher */
+        $dispatcher = $this->get(ContentDispatcher::class);
 
-    return $response->withHeader('Content-Type', 'application/json');
-});
+        /** @var LayoutObjectFactory $factory */
+        $factory = $this->get(LayoutObjectFactory::class);
+        $layoutObject = $factory->createLayoutObject($content, md5((string) time()));
 
-$app->patch('/layout/{hash}', function (Request $request, Response $response, array $args) {
-    /** @var ObjectRepository $objectRepository */
-    $objectRepository = $this->get(ObjectRepository::class);
-    $layoutObject = $objectRepository->find($args['hash']);
+        /** @var \App\Doctrine\Repository\ContentRepository $contentRepository */
+        $contentRepository = $this->get(EntityManager::class)->getRepository(Content::class);
+        // Fetch existing content.
+        $existingContents = $contentRepository->findByHashes($layoutObject->getHashes());
 
-    /** @var \App\Doctrine\Repository\ContentRepository $contentRepository */
-    $contentRepository = $this->get(EntityManager::class)->getRepository(Content::class);
-    // Fetch existing content.
-    $existingContents = $contentRepository->findByHashes($layoutObject->getHashes());
+        /** @var JsonEntityManager $jsonEntityManager */
+        $jsonEntityManager = $this->get(JsonEntityManager::class);
+        $jsonEntityManager->persist($layoutObject);
 
-    $json = $request->getParsedBody();
-    /** @var LayoutObjectFactory $factory */
-    $factory = $this->get(LayoutObjectFactory::class);
-    $layoutObject = $factory->createLayoutObject($json, $args['hash']);
+        // Fetch upcoming content
+        $upcomingContents = $layoutObject->getContents();
 
-    /** @var JsonEntityManager $jsonEntityManager */
-    $jsonEntityManager = $this->get(JsonEntityManager::class);
-    $jsonEntityManager->persist($layoutObject);
+        $dispatched = $dispatcher->dispatch($upcomingContents, $existingContents);
+        // Persist dispatched content
+        /** @var ContentPersistenceManager $contentPersistenceManager */
+        $contentPersistenceManager = $this->get(ContentPersistenceManager::class);
+        $contentPersistenceManager->persist($dispatched);
+        $layoutObject->setContents($upcomingContents);
 
-    // Fetch upcoming content
-    $upcomingContents = $layoutObject->getContents();
+        $response->getBody()->write(json_encode([
+            $layoutObject->getName() => $layoutObject
+        ]));
 
-    /** @var ContentDispatcher $dispatcher */
-    $dispatcher = $this->get(ContentDispatcher::class);
-    $dispatched = $dispatcher->dispatch($upcomingContents, $existingContents);
+        return $response->withHeader('Content-Type', 'application/json');
+    });
 
-    // Persist dispatched content
-    /** @var ContentPersistenceManager $contentPersistenceManager */
-    $contentPersistenceManager = $this->get(ContentPersistenceManager::class);
-    $contentPersistenceManager->persist($dispatched);
-    $layoutObject->setContents($upcomingContents);
+    $proxy->patch('/{hash}', function (Request $request, Response $response, array $args) {
+        /** @var ObjectRepository $objectRepository */
+        $objectRepository = $this->get(ObjectRepository::class);
+        $layoutObject = $objectRepository->find($args['hash']);
 
-    $response->getBody()->write(json_encode([
-        $layoutObject->getName() => $layoutObject
-    ]));
+        /** @var \App\Doctrine\Repository\ContentRepository $contentRepository */
+        $contentRepository = $this->get(EntityManager::class)->getRepository(Content::class);
+        // Fetch existing content.
+        $existingContents = $contentRepository->findByHashes($layoutObject->getHashes());
 
-    return $response->withHeader('Content-Type', 'application/json');
+        $json = $request->getParsedBody();
+        /** @var LayoutObjectFactory $factory */
+        $factory = $this->get(LayoutObjectFactory::class);
+        $layoutObject = $factory->createLayoutObject($json, $args['hash']);
+
+        /** @var JsonEntityManager $jsonEntityManager */
+        $jsonEntityManager = $this->get(JsonEntityManager::class);
+        $jsonEntityManager->persist($layoutObject);
+
+        // Fetch upcoming content
+        $upcomingContents = $layoutObject->getContents();
+
+        /** @var ContentDispatcher $dispatcher */
+        $dispatcher = $this->get(ContentDispatcher::class);
+        $dispatched = $dispatcher->dispatch($upcomingContents, $existingContents);
+
+        // Persist dispatched content
+        /** @var ContentPersistenceManager $contentPersistenceManager */
+        $contentPersistenceManager = $this->get(ContentPersistenceManager::class);
+        $contentPersistenceManager->persist($dispatched);
+        $layoutObject->setContents($upcomingContents);
+
+        $response->getBody()->write(json_encode([
+            $layoutObject->getName() => $layoutObject
+        ]));
+
+        return $response->withHeader('Content-Type', 'application/json');
+    });
 });
 
 // Run app
