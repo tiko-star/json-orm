@@ -88,7 +88,7 @@ class ContentDispatcherTest extends TestCase
 
         $removed = $dispatched->getRemoved();
 
-        $this->assertCount(3, $removed);
+        $this->assertCount(2, $removed);
 
         /** @var Content $content */
         $content = $removed->getInfo();
@@ -103,11 +103,6 @@ class ContentDispatcherTest extends TestCase
         $this->assertEquals('3520f841-08a1-4bc8-a086-b4ef312c63ba', (string) $removed->current());
         // Rewind iterator.
         $removed->next();
-
-        /** @var Content $content */
-        $content = $removed->getInfo();
-        $this->assertEquals(['text' => 'Define your goals!!!'], $content->getContent());
-        $this->assertEquals('c73486d9-9f14-4244-8dae-bcef7e78e4ac', (string) $removed->current());
     }
 
     protected function createContentDispatcher() : ContentDispatcher
@@ -168,13 +163,6 @@ class ContentDispatcherTest extends TestCase
         $upcoming->attach(new Hash('b4dd37ac-7df2-44c1-b97d-0f0062846796'), $content5);
         $upcoming->attach(new Hash('eff06715-8d5f-4c98-b614-4bb375e32375'), $content6);
 
-        // Attach content which is empty and is going to be removed.
-        $content7 = new Content();
-        $content7->setHash('c73486d9-9f14-4244-8dae-bcef7e78e4ac');
-        $content7->setContent([]);
-
-        $upcoming->attach(new Hash('c73486d9-9f14-4244-8dae-bcef7e78e4ac'), $content7);
-
         return $upcoming;
     }
 
@@ -217,13 +205,6 @@ class ContentDispatcherTest extends TestCase
 
         $existing->attach(new Hash('dee5fa8a-f9c4-4a9e-af71-5170486f2ef9'), $content5);
         $existing->attach(new Hash('3520f841-08a1-4bc8-a086-b4ef312c63ba'), $content6);
-
-        // Attach content which is going to be empty and be removed later on.
-        $content7 = new Content();
-        $content7->setHash('c73486d9-9f14-4244-8dae-bcef7e78e4ac');
-        $content7->setContent(['text' => 'Define your goals!!!']);
-
-        $existing->attach(new Hash('c73486d9-9f14-4244-8dae-bcef7e78e4ac'), $content7);
 
         return $existing;
     }

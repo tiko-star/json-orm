@@ -24,6 +24,17 @@ class ContentObjectStorageTest extends TestCase
         $this->assertTrue($storage->contains(new Hash('dfcba963-b14e-41c1-b8c8-33cb0509f0a4')));
     }
 
+    public function testAttach_WithSameHashes_OverridesExisting() : void
+    {
+        $storage = $this->createObjectStorage();
+
+        $storage->attach(new Hash('dfcba963-b14e-41c1-b8c8-33cb0509f0a4'), 'HELLO');
+        $storage->attach(new Hash('dfcba963-b14e-41c1-b8c8-33cb0509f0a4'), 'BYE');
+
+        $this->assertCount(1, $storage);
+        $this->assertEquals('BYE', $storage[new Hash('dfcba963-b14e-41c1-b8c8-33cb0509f0a4')]);
+    }
+
     protected function createObjectStorage() : ContentObjectStorage
     {
         return new ContentObjectStorage();

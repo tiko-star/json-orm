@@ -1,12 +1,17 @@
 <?php
 
+use App\Doctrine\Entity\Content;
 use App\Doctrine\Entity\Language;
 use App\Middleware\LanguageDetectionMiddleware;
 use App\Orm\ContentManagement\ContentDispatcher;
 use App\Orm\ContentManagement\ContentPersistenceManager;
+use App\Orm\ContentManagement\ContentProvider;
 use App\Orm\Definition\DefinitionCompiler;
 use App\Orm\Definition\EntityDefinitionLoader;
 use App\Orm\Definition\EntityDefinitionProvider;
+use App\Orm\EntityManager\EntityManager as JsonEntityManager;
+use App\Orm\Factory\LayoutObjectFactory;
+use App\Orm\Persistence\JsonDocumentManager;
 use App\Orm\Repository\ObjectRepository;
 use App\Services\LanguageDetection\Drivers\HttpHeaderDetectionDriver;
 use App\Services\LanguageDetection\LanguageDetector;
@@ -14,9 +19,6 @@ use DI\Container;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 use Psr\Container\ContainerInterface;
-use App\Orm\Persistence\JsonDocumentManager;
-use App\Orm\EntityManager\EntityManager as JsonEntityManager;
-use App\Orm\Factory\LayoutObjectFactory;
 use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
 use Symfony\Component\Finder\Finder;
 
@@ -101,5 +103,12 @@ return [
             $c,
             $repo
         );
+    },
+
+    ContentProvider::class => function (Container $c) {
+        /** @var \App\Doctrine\Repository\ContentRepository $repo */
+        $repo = $c->get(EntityManager::class)->getRepository(Content::class);
+
+        return new ContentProvider($repo, $c->get('app-language'));
     },
 ];

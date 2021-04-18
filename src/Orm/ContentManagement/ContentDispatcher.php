@@ -102,8 +102,7 @@ class ContentDispatcher
                 /** @var \App\Doctrine\Entity\Content $upcomingContent */
                 $upcomingContent = $upcoming->getInfo();
 
-                if ($existingContent->getContent() !== $upcomingContent->getContent()
-                    && !empty($upcomingContent->getContent())) {
+                if ($existingContent->getContent() !== $upcomingContent->getContent()) {
                     $contents->attach($upcoming->current(), $upcoming->getInfo());
                 }
             }
@@ -132,19 +131,8 @@ class ContentDispatcher
         while ($existing->valid()) {
             /** @var \App\Orm\Entity\Hash $hash */
             $hash = $existing->current();
-            $contains = false;
 
-            if ($upcoming->contains($hash)) {
-                /** @var \App\Doctrine\Entity\Content $upcomingContent */
-                $upcomingContent = $upcoming[$hash];
-
-                // In case the content is empty treat it asa removed.
-                if (!empty($upcomingContent->getContent())) {
-                    $contains = true;
-                }
-            }
-
-            if (!$contains) {
+            if (!$upcoming->contains($hash)) {
                 $contents->attach($hash, $existing->getInfo());
             }
 

@@ -10,12 +10,12 @@ use App\Orm\Repository\ObjectRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
+use App\Orm\ContentManagement\ContentProvider;
 
 use App\Orm\EntityManager\EntityManager as JsonEntityManager;
 use App\Orm\Factory\LayoutObjectFactory;
 
 use Doctrine\ORM\EntityManager;
-use App\Doctrine\Entity\Content;
 use Slim\Interfaces\RouteCollectorProxyInterface;
 use Slim\Middleware\ContentLengthMiddleware;
 
@@ -152,15 +152,14 @@ $app->group('/languages', function (RouteCollectorProxyInterface $proxy) {
 
 $app->group('/layouts', function (RouteCollectorProxyInterface $proxy) {
     $proxy->get('/{filename}', function (Request $request, Response $response, $args) {
+        /** @var ContentProvider $contentProvider */
+        $contentProvider = $this->get(ContentProvider::class);
+
         /** @var ObjectRepository $objectRepository */
         $objectRepository = $this->get(ObjectRepository::class);
 
-        /** @var \App\Doctrine\Repository\ContentRepository $contentRepository */
-        $contentRepository = $this->get(EntityManager::class)->getRepository(Content::class);
-
         $layout = $objectRepository->find($args['filename']);
-        $contents = $contentRepository->findByHashes($layout->getHashes());
-
+        $contents = $contentProvider->findByHashes($layout->getHashes());
         $layout->setContents($contents);
 
         $response->getBody()->write(json_encode($layout));
@@ -178,10 +177,10 @@ $app->group('/layouts', function (RouteCollectorProxyInterface $proxy) {
         $factory = $this->get(LayoutObjectFactory::class);
         $layoutObject = $factory->createLayoutObject($content, md5((string) time()));
 
-        /** @var \App\Doctrine\Repository\ContentRepository $contentRepository */
-        $contentRepository = $this->get(EntityManager::class)->getRepository(Content::class);
+        /** @var ContentProvider $contentProvider */
+        $contentProvider = $this->get(ContentProvider::class);
         // Fetch existing content.
-        $existingContents = $contentRepository->findByHashes($layoutObject->getHashes());
+        $existingContents = $contentProvider->findByHashes($layoutObject->getHashes());
 
         /** @var JsonEntityManager $jsonEntityManager */
         $jsonEntityManager = $this->get(JsonEntityManager::class);
@@ -209,10 +208,10 @@ $app->group('/layouts', function (RouteCollectorProxyInterface $proxy) {
         $objectRepository = $this->get(ObjectRepository::class);
         $layoutObject = $objectRepository->find($args['hash']);
 
-        /** @var \App\Doctrine\Repository\ContentRepository $contentRepository */
-        $contentRepository = $this->get(EntityManager::class)->getRepository(Content::class);
+        /** @var ContentProvider $contentProvider */
+        $contentProvider = $this->get(ContentProvider::class);
         // Fetch existing content.
-        $existingContents = $contentRepository->findByHashes($layoutObject->getHashes());
+        $existingContents = $contentProvider->findByHashes($layoutObject->getHashes());
 
         $json = $request->getParsedBody();
         /** @var LayoutObjectFactory $factory */
