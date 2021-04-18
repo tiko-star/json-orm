@@ -5,9 +5,12 @@ declare(strict_types = 1);
 namespace App\Orm\ContentManagement;
 
 use App\Doctrine\Entity\Content;
+use App\Doctrine\Entity\Language;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use App\Orm\Persistence\ContentObjectStorage;
+
+use function count;
 
 /**
  * Handles content persistence management.
@@ -24,9 +27,15 @@ class ContentPersistenceManager
      */
     protected EntityManager $entityManager;
 
-    public function __construct(EntityManager $entityManager)
+    protected Language $currentLanguage;
+
+    protected Language $defaultLanguage;
+
+    public function __construct(EntityManager $entityManager, Language $currentLanguage, Language $defaultLanguage)
     {
         $this->entityManager = $entityManager;
+        $this->currentLanguage = $currentLanguage;
+        $this->defaultLanguage = $defaultLanguage;
     }
 
     /**
@@ -40,9 +49,17 @@ class ContentPersistenceManager
      */
     public function persist(DispatchedContent $dispatchedContent) : void
     {
-        $this->persistNew($dispatchedContent->getNew());
-        $this->persistModified($dispatchedContent->getModified());
-        $this->persistRemoved($dispatchedContent->getRemoved());
+        if (count($dispatchedContent->getNew())) {
+            $this->persistNew($dispatchedContent->getNew());
+        }
+
+        if (count($dispatchedContent->getModified())) {
+            $this->persistModified($dispatchedContent->getModified());
+        }
+
+        if (count($dispatchedContent->getRemoved())) {
+            $this->persistRemoved($dispatchedContent->getRemoved());
+        }
     }
 
     /**
@@ -58,7 +75,15 @@ class ContentPersistenceManager
         $contentObjectStorage->rewind();
 
         while ($contentObjectStorage->valid()) {
-            $this->entityManager->persist($contentObjectStorage->getInfo());
+            /** @var Content $content */
+            $content = $contentObjectStorage->getInfo();
+            $content->setLanguageId($this->currentLanguage->getId());
+
+            $fallback = clone $content;
+            $fallback->setLanguageId(null);
+
+            $this->entityManager->persist($content);
+            $this->entityManager->persist($fallback);
             $contentObjectStorage->next();
         }
 
@@ -85,22 +110,39 @@ class ContentPersistenceManager
 
         /** @var \App\Doctrine\Repository\ContentRepository $repository */
         $repository = $this->entityManager->getRepository(Content::class);
-        $existing = $repository->findByHashes($array->getKeys());
+        $existing = $repository->findByHashesAndLanguage(
+            $array->getKeys(),
+            $this->currentLanguage,
+            $this->currentLanguage->isDefault()
+        );
 
-        while ($existing->valid()) {
-            /** @var Content $existingContent */
-            $existingContent = $existing->getInfo();
-            /** @var \App\Orm\Entity\Hash $hash */
-            $hash = $existing->current();
+        /** @var Content $upcomingContent */
+        foreach ($array as $hash => $upcomingContent) {
+            /** @var Content|null $existingContent */
+            $existingContent = $existing->filter(function (Content $content) use ($hash) {
+                return $content->getHash() === $hash
+                    && $content->getLanguageId() === $this->currentLanguage->getId();
+            })->first();
 
-            /** @var Content $upcomingContent */
-            $upcomingContent = $array->get((string) $hash);
+            if ($this->currentLanguage->isDefault()) {
+                /** @var Content $fallbackContent */
+                $fallbackContent = $existing->filter(function (Content $content) use ($hash) {
+                    return $content->getHash() === $hash
+                        && null === $content->getLanguageId();
+                })->first();
 
-            if (null !== $upcomingContent) {
-                $existingContent->setContent($upcomingContent->getContent());
+                $fallbackContent->setContent($upcomingContent->getContent());
             }
 
-            $existing->next();
+            if ($existingContent) {
+                $existingContent->setContent($upcomingContent->getContent());
+            } else {
+                $content = new Content();
+                $content->setHash($hash);
+                $content->setContent($upcomingContent->getContent());
+                $content->setLanguageId($this->currentLanguage->getId());
+                $this->entityManager->persist($content);
+            }
         }
 
         $this->entityManager->flush();

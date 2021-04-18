@@ -24,7 +24,7 @@ class Content implements JsonSerializable
      *
      * @var int
      */
-    protected int $id;
+    protected ?int $id = null;
 
     /**
      * @ORM\Column(type="string")
@@ -41,12 +41,10 @@ class Content implements JsonSerializable
     protected array $content;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\App\Doctrine\Entity\Language")
-     * @ORM\JoinColumn(name="language_id", referencedColumnName="id")
-     *
-     * @var \App\Doctrine\Entity\Language|null
+     * @ORM\Column(type="integer", name="language_id", nullable=true)
+     * @var int|null
      */
-    protected ?Language $language = null;
+    protected ?int $languageId;
 
     /**
      * @return int
@@ -96,20 +94,14 @@ class Content implements JsonSerializable
         $this->content = $content;
     }
 
-    /**
-     * @return \App\Doctrine\Entity\Language|null
-     */
-    public function getLanguage() : ?Language
+    public function getLanguageId() : ?int
     {
-        return $this->language;
+        return $this->languageId;
     }
 
-    /**
-     * @param \App\Doctrine\Entity\Language|null $language
-     */
-    public function setLanguage(?Language $language) : void
+    public function setLanguageId(?int $languageId) : void
     {
-        $this->language = $language;
+        $this->languageId = $languageId;
     }
 
     public function jsonSerialize() : array
