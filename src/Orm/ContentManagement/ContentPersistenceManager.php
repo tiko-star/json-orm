@@ -168,14 +168,11 @@ class ContentPersistenceManager
 
         /** @var \App\Doctrine\Repository\ContentRepository $repository */
         $repository = $this->entityManager->getRepository(Content::class);
-        $existing = $repository->findByHashes($array->getKeys());
+        $existing = $repository->findAllByHashes($array->getKeys());
 
-        while ($existing->valid()) {
-            /** @var Content $existingContent */
-            $existingContent = $existing->getInfo();
-
-            $this->entityManager->remove($existingContent);
-            $existing->next();
+        /** @var Content $content */
+        foreach ($existing as $content) {
+            $this->entityManager->remove($content);
         }
 
         $this->entityManager->flush();

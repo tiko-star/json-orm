@@ -31,6 +31,17 @@ class ContentRepository extends EntityRepository
         return $storage;
     }
 
+    public function findAllByHashes(array $hashes) : ArrayCollection
+    {
+        $contents = $this->createQueryBuilder('c')
+            ->where('c.hash IN (:hashes)')
+            ->setParameter('hashes', $hashes)
+            ->getQuery()
+            ->getResult();
+
+        return new ArrayCollection($contents);
+    }
+
     public function findByHashesAndLanguage(array $hashes, Language $language, bool $includeFallback = false) : ArrayCollection
     {
         $builder = $this->createQueryBuilder('c')
