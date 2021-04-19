@@ -62,8 +62,7 @@ return [
     ContentPersistenceManager::class => function (ContainerInterface $c) {
         return new ContentPersistenceManager(
             $c->get(EntityManager::class),
-            $c->get('app-language'),
-            $c->get('app-default-language')
+            $c->get('app-language')
         );
     },
 

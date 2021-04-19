@@ -10,7 +10,14 @@ use Doctrine\ORM\EntityRepository;
 
 class ContentRepository extends EntityRepository
 {
-    public function findAllByHashes(array $hashes) : ArrayCollection
+    /**
+     * Find contents by given hashes.
+     *
+     * @param array $hashes List of entity hashes.
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function findByHashes(array $hashes) : ArrayCollection
     {
         $contents = $this->createQueryBuilder('c')
             ->where('c.hash IN (:hashes)')
@@ -21,6 +28,15 @@ class ContentRepository extends EntityRepository
         return new ArrayCollection($contents);
     }
 
+    /**
+     * Find contents by given hashes and given language.
+     *
+     * @param array                         $hashes List of entity hashes.
+     * @param \App\Doctrine\Entity\Language $language Instance of particular language to search for.
+     * @param bool                          $includeFallback If is set to true also retrieve fallback contents too.
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
     public function findByHashesAndLanguage(array $hashes, Language $language, bool $includeFallback = false) : ArrayCollection
     {
         $builder = $this->createQueryBuilder('c')

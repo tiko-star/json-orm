@@ -9,10 +9,23 @@ use App\Doctrine\Repository\ContentRepository;
 use App\Orm\Entity\Hash;
 use App\Orm\Persistence\ContentObjectStorage;
 
+/**
+ * Provides methods for content retrieval.
+ * During retrieval process based on the language fetches an appropriate content.
+ *
+ * @package App\Orm\ContentManagement
+ */
 class ContentProvider
 {
+    /**
+     * @var \App\Doctrine\Repository\ContentRepository Reference on instance of ContentRepository.
+     */
     protected ContentRepository $repository;
 
+    /**
+     * @var \App\Doctrine\Entity\Language Reference on instance of the Language
+     *                                    the application is bootstrapped with.
+     */
     protected Language $currentLanguage;
 
     public function __construct(ContentRepository $repository, Language $currentLanguage)

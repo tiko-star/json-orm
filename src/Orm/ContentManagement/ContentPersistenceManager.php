@@ -27,15 +27,16 @@ class ContentPersistenceManager
      */
     protected EntityManager $entityManager;
 
+    /**
+     * @var \App\Doctrine\Entity\Language Reference on instance of the Language
+     *                                    the application is bootstrapped with.
+     */
     protected Language $currentLanguage;
 
-    protected Language $defaultLanguage;
-
-    public function __construct(EntityManager $entityManager, Language $currentLanguage, Language $defaultLanguage)
+    public function __construct(EntityManager $entityManager, Language $currentLanguage)
     {
         $this->entityManager = $entityManager;
         $this->currentLanguage = $currentLanguage;
-        $this->defaultLanguage = $defaultLanguage;
     }
 
     /**
@@ -168,7 +169,7 @@ class ContentPersistenceManager
 
         /** @var \App\Doctrine\Repository\ContentRepository $repository */
         $repository = $this->entityManager->getRepository(Content::class);
-        $existing = $repository->findAllByHashes($array->getKeys());
+        $existing = $repository->findByHashes($array->getKeys());
 
         /** @var Content $content */
         foreach ($existing as $content) {
