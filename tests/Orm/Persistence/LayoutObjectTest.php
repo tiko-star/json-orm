@@ -12,6 +12,8 @@ use App\Orm\Entity\Widget;
 use App\Orm\Factory\LayoutObjectFactory;
 use App\Orm\Persistence\LayoutObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Cache\CacheItemInterface;
+use Symfony\Component\Cache\Adapter\AbstractAdapter;
 use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
 use Symfony\Component\Finder\Finder;
 
@@ -84,7 +86,6 @@ JSON;
      * @throws \App\Orm\Exception\InvalidEntityHashException
      * @throws \App\Orm\Exception\InvalidEntityTypeException
      * @throws \App\Orm\Exception\MissingEntityTypeIdentifierException
-     * @throws \Symfony\Component\Cache\Exception\CacheException
      */
     protected function createLayoutObject(array $document) : LayoutObject
     {
@@ -92,10 +93,22 @@ JSON;
             new EntityDefinitionProvider(
                 __DIR__.'/../Definition/definitions',
                 new EntityDefinitionLoader(new Finder(), new DefinitionCompiler()),
-                new PhpFilesAdapter('definitions', 1)
+                $this->createCacheMock()
             )
         );
 
         return $factory->createLayoutObject($document);
+    }
+
+    protected function createCacheMock() : AbstractAdapter
+    {
+        $item = $this->createStub(CacheItemInterface::class);
+        $item->method('isHit')->willReturn(false);
+
+        $cache = $this->createStub(PhpFilesAdapter::class);
+        $cache->method('getItem')->willReturn($item);
+        $cache->method('save')->willReturn(false);
+
+        return $cache;
     }
 }

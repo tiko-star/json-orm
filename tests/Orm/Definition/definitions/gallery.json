@@ -2,6 +2,7 @@
   "name": "gallery",
   "type": "WIDGET",
   "containsChildren": true,
+  "containsValidation": true,
   "properties": [
     {
       "name": "title",

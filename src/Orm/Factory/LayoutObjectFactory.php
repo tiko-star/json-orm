@@ -8,6 +8,7 @@ use App\Orm\Definition\EntityDefinition;
 use App\Orm\Definition\EntityDefinitionProvider;
 use App\Orm\Definition\Exception\DefinitionException;
 use App\Orm\Entity\AbstractEntity;
+use App\Orm\Entity\Decorators\ValidationAwareEntityDecorator;
 use App\Orm\Entity\Grid;
 use App\Orm\Entity\Hash;
 use App\Orm\Entity\Widget;
@@ -247,6 +248,10 @@ class LayoutObjectFactory
         // Decorate Entity with additional functionalities.
         if ($definition->containsChildren()) {
             $entity = new ContainerEntityDecorator($entity);
+        }
+
+        if ($definition->containsValidation()) {
+            $entity = new ValidationAwareEntityDecorator($entity);
         }
 
         $entity->setDefinition($definition);

@@ -22,6 +22,7 @@ abstract class DefinitionAssertions extends TestCase
         $this->assertFalse($definition->isWidgetItem());
         $this->assertFalse($definition->isGrid());
         $this->assertFalse($definition->containsChildren());
+        $this->assertFalse($definition->containsValidation());
         $this->assertCount(2, $definition->getPropertyDefinitionList());
 
         $propertyDefinitionList = $definition->getPropertyDefinitionList();
@@ -42,6 +43,7 @@ abstract class DefinitionAssertions extends TestCase
         $this->assertFalse($definition->isWidgetItem());
         $this->assertFalse($definition->isGrid());
         $this->assertFalse($definition->containsChildren());
+        $this->assertFalse($definition->containsValidation());
         $this->assertCount(1, $definition->getPropertyDefinitionList());
 
         $propertyDefinitionList = $definition->getPropertyDefinitionList();
@@ -58,6 +60,7 @@ abstract class DefinitionAssertions extends TestCase
         $this->assertFalse($definition->isWidgetItem());
         $this->assertFalse($definition->isGrid());
         $this->assertTrue($definition->containsChildren());
+        $this->assertTrue($definition->containsValidation());
         $this->assertCount(3, $definition->getPropertyDefinitionList());
 
         $propertyDefinitionList = $definition->getPropertyDefinitionList();
@@ -82,6 +85,7 @@ abstract class DefinitionAssertions extends TestCase
         $this->assertTrue($definition->isWidgetItem());
         $this->assertFalse($definition->isGrid());
         $this->assertFalse($definition->containsChildren());
+        $this->assertFalse($definition->containsValidation());
         $this->assertCount(1, $definition->getPropertyDefinitionList());
 
         $propertyDefinitionList = $definition->getPropertyDefinitionList();

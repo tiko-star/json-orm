@@ -45,17 +45,23 @@ class EntityDefinition
     protected bool $containsChildren;
 
     /**
+     * @var bool Define whether an Entity can contain data validation ruleset or not.
+     */
+    protected bool $containsValidation;
+
+    /**
      * @var \App\Orm\Definition\PropertyDefinition[] List of PropertyDefinition instances.
      */
     protected array $propertyDefinitionList;
 
-    public function __construct(string $name, bool $isWidget, bool $isWidgetItem, bool $isGrid, bool $containsChildren, array $propertyDefinitionList)
+    public function __construct(string $name, bool $isWidget, bool $isWidgetItem, bool $isGrid, bool $containsChildren, bool $containsValidation, array $propertyDefinitionList)
     {
         $this->name = $name;
         $this->isWidget = $isWidget;
         $this->isWidgetItem = $isWidgetItem;
         $this->isGrid = $isGrid;
         $this->containsChildren = $containsChildren;
+        $this->containsValidation = $containsValidation;
         $this->propertyDefinitionList = $propertyDefinitionList;
     }
 
@@ -92,19 +98,19 @@ class EntityDefinition
     }
 
     /**
-     * @param bool $isGrid
-     */
-    public function setIsGrid(bool $isGrid) : void
-    {
-        $this->isGrid = $isGrid;
-    }
-
-    /**
      * @return bool
      */
     public function containsChildren() : bool
     {
         return $this->containsChildren || $this->isGrid();
+    }
+
+    /**
+     * @return bool
+     */
+    public function containsValidation() : bool
+    {
+        return $this->containsValidation;
     }
 
     /**

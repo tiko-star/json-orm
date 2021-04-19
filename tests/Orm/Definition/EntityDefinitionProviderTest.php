@@ -98,7 +98,7 @@ class EntityDefinitionProviderTest extends DefinitionAssertions
         $item
             ->expects($this->once())
             ->method('get')
-            ->willReturn(new EntityDefinition('button', true, false, false, false, []));
+            ->willReturn(new EntityDefinition('button', true, false, false, false, false, []));
 
         // Set up the expectation for the getItem() method
         // to be called only once and with the string 'button' as its parameter.

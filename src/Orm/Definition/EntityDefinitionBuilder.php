@@ -32,6 +32,11 @@ class EntityDefinitionBuilder
     protected bool $containsChildren = false;
 
     /**
+     * @var bool Define whether an Entity can contain data validation ruleset or not.
+     */
+    protected bool $containsValidation = false;
+
+    /**
      * @var array List of definitions of Entity properties.
      */
     protected array $propertyDefinitions = [];
@@ -77,9 +82,9 @@ class EntityDefinitionBuilder
     }
 
     /**
-     * Enable for an Entity to be able to contain child Entities.
+     * Enable for an Entity ability to contain child Entities.
      *
-     * @return $this
+     * @return \App\Orm\Definition\EntityDefinitionBuilder
      */
     public function enableChildrenSupport() : EntityDefinitionBuilder
     {
@@ -89,13 +94,37 @@ class EntityDefinitionBuilder
     }
 
     /**
-     * Disable for an Entity to be able to contain child Entities.
+     * Disable for an Entity ability to contain child Entities.
      *
-     * @return $this
+     * @return \App\Orm\Definition\EntityDefinitionBuilder
      */
     public function disableChildrenSupport() : EntityDefinitionBuilder
     {
         $this->containsChildren = false;
+
+        return $this;
+    }
+
+    /**
+     * Enable for an Entity ability to contain data validation ruleset.
+     *
+     * @return \App\Orm\Definition\EntityDefinitionBuilder
+     */
+    public function enableValidationSupport() : EntityDefinitionBuilder
+    {
+        $this->containsValidation = true;
+
+        return $this;
+    }
+
+    /**
+     * Disable for an Entity ability to contain data validation ruleset.
+     *
+     * @return \App\Orm\Definition\EntityDefinitionBuilder
+     */
+    public function disableValidationSupport() : EntityDefinitionBuilder
+    {
+        $this->containsValidation = false;
 
         return $this;
     }
@@ -156,6 +185,7 @@ class EntityDefinitionBuilder
             $isWidgetItem,
             $isGrid,
             $this->containsChildren,
+            $this->containsValidation,
             $this->getPropertyDefinitions()
         );
     }

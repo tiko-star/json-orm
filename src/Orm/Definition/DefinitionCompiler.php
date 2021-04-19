@@ -56,6 +56,7 @@ class DefinitionCompiler
         $name = $this->fetchPropertyFromDefinitionData('name', $definitionData);
         $type = $this->fetchPropertyFromDefinitionData('type', $definitionData);
         $containsChildren = $this->fetchPropertyFromDefinitionData('containsChildren', $definitionData);
+        $containsValidation = $this->fetchPropertyFromDefinitionData('containsValidation', $definitionData, false);
         $properties = $this->fetchPropertyFromDefinitionData('properties', $definitionData, false);
 
         $definitionBuilder = $this->createEntityDefinitionBuilder();
@@ -65,6 +66,10 @@ class DefinitionCompiler
 
         if ($containsChildren) {
             $definitionBuilder->enableChildrenSupport();
+        }
+
+        if ($containsValidation) {
+            $definitionBuilder->enableValidationSupport();
         }
 
         // If there are property definitions also compile them.

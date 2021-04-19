@@ -142,6 +142,7 @@ class LayoutObjectFactoryTest extends TestCase
                 ->setName('button')
                 ->setType(EntityDefinition::ENTITY_TYPE_WIDGET)
                 ->disableChildrenSupport()
+                ->disableValidationSupport()
                 ->getEntityDefinition()
         );
 
@@ -157,6 +158,7 @@ class LayoutObjectFactoryTest extends TestCase
                 ->setName('column')
                 ->setType(EntityDefinition::ENTITY_TYPE_GRID[2])
                 ->enableChildrenSupport()
+                ->disableValidationSupport()
                 ->getEntityDefinition()
         );
 
@@ -172,6 +174,7 @@ class LayoutObjectFactoryTest extends TestCase
                 ->setName('row')
                 ->setType(EntityDefinition::ENTITY_TYPE_GRID[1])
                 ->enableChildrenSupport()
+                ->disableValidationSupport()
                 ->getEntityDefinition()
         );
 
@@ -187,6 +190,7 @@ class LayoutObjectFactoryTest extends TestCase
                 ->setName('block')
                 ->setType(EntityDefinition::ENTITY_TYPE_GRID[0])
                 ->enableChildrenSupport()
+                ->disableValidationSupport()
                 ->getEntityDefinition()
         );
 
@@ -280,6 +284,7 @@ class LayoutObjectFactoryTest extends TestCase
                 ->setName('button')
                 ->setType(EntityDefinition::ENTITY_TYPE_WIDGET)
                 ->disableChildrenSupport()
+                ->disableValidationSupport()
                 ->getEntityDefinition()
         );
 
@@ -292,6 +297,7 @@ class LayoutObjectFactoryTest extends TestCase
                 ->setName('button')
                 ->setType(EntityDefinition::ENTITY_TYPE_WIDGET)
                 ->disableChildrenSupport()
+                ->disableValidationSupport()
                 ->getEntityDefinition()
         );
 
@@ -307,6 +313,7 @@ class LayoutObjectFactoryTest extends TestCase
                 ->setName('column')
                 ->setType(EntityDefinition::ENTITY_TYPE_GRID[2])
                 ->enableChildrenSupport()
+                ->disableValidationSupport()
                 ->getEntityDefinition()
         );
 
@@ -322,6 +329,7 @@ class LayoutObjectFactoryTest extends TestCase
                 ->setName('row')
                 ->setType(EntityDefinition::ENTITY_TYPE_GRID[1])
                 ->enableChildrenSupport()
+                ->disableValidationSupport()
                 ->getEntityDefinition()
         );
 
@@ -337,6 +345,7 @@ class LayoutObjectFactoryTest extends TestCase
                 ->setName('block')
                 ->setType(EntityDefinition::ENTITY_TYPE_GRID[0])
                 ->enableChildrenSupport()
+                ->disableValidationSupport()
                 ->getEntityDefinition()
         );
 
@@ -349,6 +358,7 @@ class LayoutObjectFactoryTest extends TestCase
                 ->setName('button')
                 ->setType(EntityDefinition::ENTITY_TYPE_WIDGET)
                 ->disableChildrenSupport()
+                ->disableValidationSupport()
                 ->getEntityDefinition()
         );
 
@@ -361,6 +371,7 @@ class LayoutObjectFactoryTest extends TestCase
                 ->setName('button')
                 ->setType(EntityDefinition::ENTITY_TYPE_WIDGET)
                 ->disableChildrenSupport()
+                ->disableValidationSupport()
                 ->getEntityDefinition()
         );
 
@@ -376,6 +387,7 @@ class LayoutObjectFactoryTest extends TestCase
                 ->setName('column')
                 ->setType(EntityDefinition::ENTITY_TYPE_GRID[2])
                 ->enableChildrenSupport()
+                ->disableValidationSupport()
                 ->getEntityDefinition()
         );
 
@@ -391,6 +403,7 @@ class LayoutObjectFactoryTest extends TestCase
                 ->setName('row')
                 ->setType(EntityDefinition::ENTITY_TYPE_GRID[1])
                 ->enableChildrenSupport()
+                ->disableValidationSupport()
                 ->getEntityDefinition()
         );
 
@@ -406,6 +419,7 @@ class LayoutObjectFactoryTest extends TestCase
                 ->setName('block')
                 ->setType(EntityDefinition::ENTITY_TYPE_GRID[0])
                 ->enableChildrenSupport()
+                ->disableValidationSupport()
                 ->getEntityDefinition()
         );
 
