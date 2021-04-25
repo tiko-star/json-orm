@@ -11,6 +11,13 @@ use Symfony\Component\Uid\Uuid;
 
 class PersistingState implements SerializationStateInterface
 {
+    /**
+     * Specify data which should be serialized to JSON.
+     *
+     * @param \App\Orm\Entity\AbstractEntity $entity
+     *
+     * @return array
+     */
     public function serialize(AbstractEntity $entity) : array
     {
         $definition = $entity->getDefinition();

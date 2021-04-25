@@ -142,9 +142,8 @@ class LayoutObjectFactory
 
         $entity->setHash(new Hash($hash));
         // The hash has already been set.
-        unset($data['hash']);
         // We will set children during recursive iterations.
-        unset($data['children']);
+        unset($data['hash'], $data['children']);
 
         foreach ($data as $property => $value) {
             $this->propertyAccessor->setValue($entity, $property, $value);
@@ -245,6 +244,9 @@ class LayoutObjectFactory
             );
         }
 
+        // Once we have instantiated the entity we immediately set the appropriate definition for later usages.
+        $entity->setDefinition($definition);
+
         // Decorate Entity with additional functionalities.
         if ($definition->containsChildren()) {
             $entity = new ContainerEntityDecorator($entity);
@@ -253,8 +255,6 @@ class LayoutObjectFactory
         if ($definition->containsValidation()) {
             $entity = new ValidationAwareEntityDecorator($entity);
         }
-
-        $entity->setDefinition($definition);
 
         return $entity;
     }

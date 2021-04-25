@@ -7,8 +7,20 @@ namespace App\Orm\Persistence\State;
 use App\Doctrine\Entity\Content;
 use App\Orm\Entity\AbstractEntity;
 
+/**
+ * Implements serialization for AbstractEntity when the entity is in fetched state.
+ *
+ * @package App\Orm\Persistence\State
+ */
 class FetchedState implements SerializationStateInterface
 {
+    /**
+     * Specify data which should be serialized to JSON.
+     *
+     * @param \App\Orm\Entity\AbstractEntity $entity
+     *
+     * @return array
+     */
     public function serialize(AbstractEntity $entity) : array
     {
         $definition = $entity->getDefinition();
@@ -51,18 +63,13 @@ class FetchedState implements SerializationStateInterface
     protected function findEntityContent(AbstractEntity $entity) : ?Content
     {
         $contents = $entity->getRoot()->getReference()->getContents();
+        $hash = $entity->getHash();
 
-        $contents->rewind();
+        if ($contents->contains($hash)) {
+            /** @var Content $content */
+            $content = $contents[$hash];
 
-        while ($contents->valid()) {
-            /** @var \App\Orm\Entity\Hash $hash */
-            $hash = $contents->current();
-
-            if ((string) $hash === (string) $entity->getHash()) {
-                return $contents->getInfo();
-            }
-
-            $contents->next();
+            return $content;
         }
 
         return null;
