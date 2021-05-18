@@ -1,0 +1,12 @@
+{
+  "name": "countdown",
+  "type": "WIDGET",
+  "containsChildren": false,
+  "properties": [
+    {
+      "name": "count",
+      "type": "INT",
+      "isTranslatable": true
+    }
+  ]
+}

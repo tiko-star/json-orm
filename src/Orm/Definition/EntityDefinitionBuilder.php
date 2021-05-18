@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Orm\Definition;
 
 use App\Orm\Definition\Exception\DefinitionCompilationException;
+use Doctrine\Common\Collections\ArrayCollection;
 
 use function sprintf;
 use function in_array;
@@ -37,9 +38,14 @@ class EntityDefinitionBuilder
     protected bool $containsValidation = false;
 
     /**
-     * @var array List of definitions of Entity properties.
+     * @var \Doctrine\Common\Collections\ArrayCollection List of definitions of Entity properties.
      */
-    protected array $propertyDefinitions = [];
+    protected ArrayCollection $propertyDefinitions;
+
+    public function __construct()
+    {
+        $this->propertyDefinitions = new ArrayCollection();
+    }
 
     /**
      * @return string
@@ -130,9 +136,9 @@ class EntityDefinitionBuilder
     }
 
     /**
-     * @return \App\Orm\Definition\PropertyDefinition[]
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getPropertyDefinitions() : array
+    public function getPropertyDefinitions() : ArrayCollection
     {
         return $this->propertyDefinitions;
     }

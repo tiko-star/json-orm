@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace App\Orm\Definition;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Object Oriented representation of the Entity definitions.
  *
@@ -50,11 +52,11 @@ class EntityDefinition
     protected bool $containsValidation;
 
     /**
-     * @var \App\Orm\Definition\PropertyDefinition[] List of PropertyDefinition instances.
+     * @var \Doctrine\Common\Collections\ArrayCollection List of PropertyDefinition instances.
      */
-    protected array $propertyDefinitionList;
+    protected ArrayCollection $propertyDefinitionList;
 
-    public function __construct(string $name, bool $isWidget, bool $isWidgetItem, bool $isGrid, bool $containsChildren, bool $containsValidation, array $propertyDefinitionList)
+    public function __construct(string $name, bool $isWidget, bool $isWidgetItem, bool $isGrid, bool $containsChildren, bool $containsValidation, ArrayCollection $propertyDefinitionList)
     {
         $this->name = $name;
         $this->isWidget = $isWidget;
@@ -114,9 +116,9 @@ class EntityDefinition
     }
 
     /**
-     * @return \App\Orm\Definition\PropertyDefinition[]
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getPropertyDefinitionList() : array
+    public function getPropertyDefinitionList() : ArrayCollection
     {
         return $this->propertyDefinitionList;
     }

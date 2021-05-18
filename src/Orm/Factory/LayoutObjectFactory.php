@@ -107,7 +107,8 @@ class LayoutObjectFactory
             $layoutObject->getHashMap()->set((string) $entity->getHash(), $entity);
 
             if (($children = $this->propertyAccessor->getValue($item, '[children]'))
-                && $entity instanceof ContainsChildrenInterface) {
+                && $entity->getDefinition()->containsChildren()) {
+                /** @var ContainsChildrenInterface $entity */
                 $children = $this->hydrate($children, $layoutObject);
 
                 $entity->setChildren($children);

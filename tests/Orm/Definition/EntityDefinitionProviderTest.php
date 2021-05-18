@@ -9,6 +9,7 @@ use App\Orm\Definition\EntityDefinition;
 use App\Orm\Definition\EntityDefinitionLoader;
 use App\Orm\Definition\EntityDefinitionProvider;
 use App\Orm\Definition\Exception\DefinitionNotFoundException;
+use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Cache\Adapter\AbstractAdapter;
@@ -98,7 +99,7 @@ class EntityDefinitionProviderTest extends DefinitionAssertions
         $item
             ->expects($this->once())
             ->method('get')
-            ->willReturn(new EntityDefinition('button', true, false, false, false, false, []));
+            ->willReturn(new EntityDefinition('button', true, false, false, false, false, new ArrayCollection()));
 
         // Set up the expectation for the getItem() method
         // to be called only once and with the string 'button' as its parameter.
