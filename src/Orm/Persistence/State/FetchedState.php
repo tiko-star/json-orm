@@ -6,13 +6,16 @@ namespace App\Orm\Persistence\State;
 
 use App\Doctrine\Entity\Content;
 use App\Orm\Entity\AbstractEntity;
+use App\Orm\Persistence\State\Exception\FailedToFetchException;
+use App\Orm\Persistence\State\Exception\StateException;
+use Respect\Validation\Exceptions\ValidationException;
 
 /**
  * Implements serialization for AbstractEntity when the entity is in fetched state.
  *
  * @package App\Orm\Persistence\State
  */
-class FetchedState implements SerializationStateInterface
+class FetchedState extends AbstractPropsValidationAwareState implements SerializationStateInterface
 {
     /**
      * Specify data which should be serialized to JSON.
@@ -20,6 +23,7 @@ class FetchedState implements SerializationStateInterface
      * @param \App\Orm\Entity\AbstractEntity $entity
      *
      * @return array
+     * @throws \App\Orm\Persistence\State\Exception\StateException
      */
     public function serialize(AbstractEntity $entity) : array
     {
@@ -39,7 +43,11 @@ class FetchedState implements SerializationStateInterface
         $content = $this->findEntityContent($entity);
 
         if (null !== $content && !empty($content->getContent())) {
-            $data['params']['props'] = $entity->initializeContent($content);
+            $props = $entity->initializeContent($content);
+
+            // Validate props before assignment.
+            $this->validate($definition->getPropertyDefinitionList(), $props);
+            $data['params']['props'] = $props;
         }
 
         /** @var \App\Orm\Entity\Contracts\ContainsChildrenInterface $entity */
@@ -73,5 +81,18 @@ class FetchedState implements SerializationStateInterface
         }
 
         return null;
+    }
+
+    /**
+     * Create appropriate exception instance which should be thrown in case of validation failure.
+     * Class names should be instances of \App\Orm\Persistence\State\Exception\StateException.
+     *
+     * @param \Respect\Validation\Exceptions\ValidationException $exception
+     *
+     * @return \App\Orm\Persistence\State\Exception\StateException
+     */
+    protected function createException(ValidationException $exception) : StateException
+    {
+        return new FailedToFetchException($exception->getMessage(), $exception->getCode(), $exception);
     }
 }

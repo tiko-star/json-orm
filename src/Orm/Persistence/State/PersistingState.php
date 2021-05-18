@@ -7,9 +7,12 @@ namespace App\Orm\Persistence\State;
 use App\Doctrine\Entity\Content;
 use App\Orm\Entity\AbstractEntity;
 use App\Orm\Entity\Hash;
+use App\Orm\Persistence\State\Exception\FailedToPersistException;
+use App\Orm\Persistence\State\Exception\StateException;
+use Respect\Validation\Exceptions\ValidationException;
 use Symfony\Component\Uid\Uuid;
 
-class PersistingState implements SerializationStateInterface
+class PersistingState extends AbstractPropsValidationAwareState implements SerializationStateInterface
 {
     /**
      * Specify data which should be serialized to JSON.
@@ -17,6 +20,7 @@ class PersistingState implements SerializationStateInterface
      * @param \App\Orm\Entity\AbstractEntity $entity
      *
      * @return array
+     * @throws \App\Orm\Persistence\State\Exception\StateException
      */
     public function serialize(AbstractEntity $entity) : array
     {
@@ -35,6 +39,9 @@ class PersistingState implements SerializationStateInterface
         $params = $entity->getParams();
 
         if (isset($params['props'])) {
+            // Validate props before persistence.
+            $this->validate($definition->getPropertyDefinitionList(), $params['props']);
+
             $content = new Content();
             $content->setHash((string) $entity->getHash());
             $content->setContent($params['props']);
@@ -68,5 +75,18 @@ class PersistingState implements SerializationStateInterface
         }
 
         return $data;
+    }
+
+    /**
+     * Create appropriate exception instance which should be thrown in case of validation failure.
+     * Class names should be instances of \App\Orm\Persistence\State\Exception\StateException.
+     *
+     * @param \Respect\Validation\Exceptions\ValidationException $exception
+     *
+     * @return \App\Orm\Persistence\State\Exception\StateException
+     */
+    protected function createException(ValidationException $exception) : StateException
+    {
+        return new FailedToPersistException($exception->getMessage(), $exception->getCode(), $exception);
     }
 }
