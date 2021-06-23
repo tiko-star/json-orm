@@ -31,6 +31,16 @@ abstract class AbstractDecorator extends AbstractEntity
     }
 
     /**
+     * Create array representation of the current entity.
+     *
+     * @return array
+     */
+    public function convertToArray() : array
+    {
+        return $this->entity->convertToArray();
+    }
+
+    /**
      * Initialize content data for current entity.
      * This method will only be invoked during JSON serialization process.
      *

@@ -43,6 +43,13 @@ abstract class AbstractEntity implements JsonSerializable
     protected EntityDefinition $definition;
 
     /**
+     * Create array representation of the current entity.
+     *
+     * @return array
+     */
+    abstract public function convertToArray() : array;
+
+    /**
      * Initialize content data for current entity.
      * This method will only be invoked during JSON serialization process.
      *

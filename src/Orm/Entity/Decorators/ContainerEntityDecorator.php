@@ -23,6 +23,22 @@ class ContainerEntityDecorator extends AbstractDecorator implements ContainsChil
     protected ReferenceAwareEntityCollection $children;
 
     /**
+     * Create array representation of the current entity.
+     *
+     * @return array
+     */
+    public function convertToArray() : array
+    {
+        $base = parent::convertToArray();
+
+        foreach ($this->getChildren() as $child) {
+            $base['children'][] = $child->convertToArray();
+        }
+
+        return $base;
+    }
+
+    /**
      * @return \App\Orm\Persistence\ReferenceAwareEntityCollection
      */
     public function getChildren() : ReferenceAwareEntityCollection

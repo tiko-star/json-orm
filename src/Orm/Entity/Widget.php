@@ -18,6 +18,21 @@ class Widget extends AbstractEntity
     protected string $widgetType;
 
     /**
+     * Create array representation of the current entity.
+     *
+     * @return array
+     */
+    public function convertToArray() : array
+    {
+        return [
+            'type'       => $this->getType(),
+            'widgetType' => $this->getWidgetType(),
+            'hash'       => (string) $this->getHash(),
+            'params'     => $this->getParams(),
+        ];
+    }
+
+    /**
      * @return string
      */
     public function getWidgetType() : string

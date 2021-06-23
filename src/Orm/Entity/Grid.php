@@ -11,4 +11,17 @@ namespace App\Orm\Entity;
  */
 class Grid extends AbstractEntity
 {
+    /**
+     * Create array representation of the current entity.
+     *
+     * @return array
+     */
+    public function convertToArray() : array
+    {
+        return [
+            'type'   => $this->getType(),
+            'hash'   => (string) $this->getHash(),
+            'params' => $this->getParams(),
+        ];
+    }
 }
