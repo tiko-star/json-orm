@@ -34,11 +34,9 @@ class FetchedState extends AbstractPropsValidationAwareState implements Serializ
             'hash' => (string) $entity->getHash(),
         ];
 
-        $params = $entity->getParams();
+        $data['params'] = $entity->getParams();
 
-        if (isset($params['css'])) {
-            $data['params']['css'] = $params['css'];
-        }
+        unset($data['params']['props']);
 
         $content = $this->findEntityContent($entity);
 

@@ -1,0 +1,12 @@
+{
+  "type": "form",
+  "containsChildren": true,
+  "containsValidation": true,
+  "properties": [
+    {
+      "name": "successText",
+      "type": "STRING",
+      "isTranslatable": true
+    }
+  ]
+}
