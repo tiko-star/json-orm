@@ -1,6 +1,5 @@
 {
-  "name": "button",
-  "type": "WIDGET",
+  "type": "button",
   "containsChildren": false,
   "properties": [
     {

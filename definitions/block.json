@@ -1,5 +1,4 @@
 {
-  "name": "block",
-  "type": "BLOCK",
+  "type": "block",
   "containsChildren": true
 }

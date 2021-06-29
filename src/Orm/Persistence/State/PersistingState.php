@@ -64,16 +64,6 @@ class PersistingState extends AbstractPropsValidationAwareState implements Seria
             $data['children'] = $entity->getChildren();
         }
 
-        /** @var \App\Orm\Entity\Widget $entity */
-        if ($definition->isWidget()) {
-            $data['widgetType'] = $entity->getWidgetType();
-        }
-
-        /** @var \App\Orm\Entity\WidgetItem $entity */
-        if ($definition->isWidgetItem()) {
-            $data['widgetItemType'] = $entity->getWidgetItemType();
-        }
-
         return $data;
     }
 

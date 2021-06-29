@@ -1,5 +1,4 @@
 {
-  "name": "row",
-  "type": "ROW",
+  "type": "row",
   "containsChildren": true
 }

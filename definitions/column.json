@@ -1,5 +1,4 @@
 {
-  "name": "column",
-  "type": "COLUMN",
+  "type": "column",
   "containsChildren": true
 }

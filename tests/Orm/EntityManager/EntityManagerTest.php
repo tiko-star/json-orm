@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace App\Tests\Orm\EntityManager;
 
 use App\Orm\Definition\DefinitionCompiler;
-use App\Orm\Definition\EntityDefinition;
 use App\Orm\Definition\EntityDefinitionBuilder;
 use App\Orm\Definition\EntityDefinitionLoader;
 use App\Orm\Definition\EntityDefinitionProvider;
@@ -66,9 +65,8 @@ class EntityManagerTest extends TestCase
                                     'hash'     => '482247e6-1006-448f-aae7-102c3517f51e',
                                     'children' => [
                                         [
-                                            'type'       => 'widget',
-                                            'widgetType' => 'button',
-                                            'hash'       => 'd6e4529e-b531-4ada-9f0b-7185b78ff811'
+                                            'type' => 'button',
+                                            'hash' => 'd6e4529e-b531-4ada-9f0b-7185b78ff811'
                                         ]
                                     ]
                                 ]
@@ -111,13 +109,11 @@ class EntityManagerTest extends TestCase
         $builder = new EntityDefinitionBuilder();
 
         $button = $this->createSimpleWidget();
-        $button->setType('widget');
-        $button->setWidgetType('button');
+        $button->setType('button');
         $button->setHash(new Hash('d6e4529e-b531-4ada-9f0b-7185b78ff811'));
         $button->setDefinition(
             $builder
-                ->setName('button')
-                ->setType(EntityDefinition::ENTITY_TYPE_WIDGET)
+                ->setType('button')
                 ->disableChildrenSupport()
                 ->getEntityDefinition()
         );
@@ -131,8 +127,7 @@ class EntityManagerTest extends TestCase
         $column->setChildren($children1);
         $column->setDefinition(
             $builder
-                ->setName('column')
-                ->setType(EntityDefinition::ENTITY_TYPE_GRID[2])
+                ->setType('column')
                 ->enableChildrenSupport()
                 ->getEntityDefinition()
         );
@@ -146,8 +141,7 @@ class EntityManagerTest extends TestCase
         $row->setChildren($children2);
         $row->setDefinition(
             $builder
-                ->setName('row')
-                ->setType(EntityDefinition::ENTITY_TYPE_GRID[1])
+                ->setType('row')
                 ->enableChildrenSupport()
                 ->getEntityDefinition()
         );
@@ -161,8 +155,7 @@ class EntityManagerTest extends TestCase
         $block->setChildren($children3);
         $block->setDefinition(
             $builder
-                ->setName('block')
-                ->setType(EntityDefinition::ENTITY_TYPE_GRID[0])
+                ->setType('block')
                 ->enableChildrenSupport()
                 ->getEntityDefinition()
         );

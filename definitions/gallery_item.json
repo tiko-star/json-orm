@@ -1,6 +1,5 @@
 {
-  "name": "galleryItem",
-  "type": "WIDGET_ITEM",
+  "type": "galleryItem",
   "containsChildren": false,
   "properties": [
     {

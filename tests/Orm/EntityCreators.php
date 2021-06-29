@@ -6,7 +6,6 @@ namespace App\Tests\Orm;
 
 use App\Orm\Entity\AbstractEntity;
 use App\Orm\Entity\Decorators\ContainerEntityDecorator;
-use App\Orm\Entity\Grid;
 use App\Orm\Entity\Widget;
 
 /**
@@ -24,7 +23,7 @@ trait EntityCreators
      */
     protected function createGridEntity() : AbstractEntity
     {
-        return new ContainerEntityDecorator(new Grid());
+        return new ContainerEntityDecorator(new Widget());
     }
 
     /**

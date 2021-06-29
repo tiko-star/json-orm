@@ -7,9 +7,6 @@ namespace App\Orm\Definition;
 use App\Orm\Definition\Exception\DefinitionCompilationException;
 use Doctrine\Common\Collections\ArrayCollection;
 
-use function sprintf;
-use function in_array;
-
 /**
  * Class EntityDefinitionBuilder creates EntityDefinition instances based on the setup.
  *
@@ -18,14 +15,9 @@ use function in_array;
 class EntityDefinitionBuilder
 {
     /**
-     * @var string Name of the Entity.
-     */
-    protected string $name = '';
-
-    /**
      * @var string Type of the Entity.
      */
-    protected string $type = EntityDefinition::ENTITY_TYPE_WIDGET;
+    protected string $type = '';
 
     /**
      * @var bool Define whether an Entity can contain children or not.
@@ -45,26 +37,6 @@ class EntityDefinitionBuilder
     public function __construct()
     {
         $this->propertyDefinitions = new ArrayCollection();
-    }
-
-    /**
-     * @return string
-     */
-    public function getName() : string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return $this
-     */
-    public function setName(string $name) : EntityDefinitionBuilder
-    {
-        $this->name = $name;
-
-        return $this;
     }
 
     /**
@@ -163,33 +135,12 @@ class EntityDefinitionBuilder
      */
     public function getEntityDefinition() : EntityDefinition
     {
-        $isWidget = false;
-        $isWidgetItem = false;
-        $isGrid = false;
-
-        if ($this->type === EntityDefinition::ENTITY_TYPE_WIDGET) {
-            $isWidget = true;
-        }
-
-        if ($this->type === EntityDefinition::ENTITY_TYPE_WIDGET_ITEM) {
-            $isWidgetItem = true;
-        }
-
-        if (in_array($this->type, EntityDefinition::ENTITY_TYPE_GRID)) {
-            $isGrid = true;
-        }
-
-        if (($isWidget || $isWidgetItem || $isGrid) === false) {
-            throw new DefinitionCompilationException(
-                sprintf('Invalid entity type in the definition: [%s]', $this->type)
-            );
+        if (empty($this->getType())) {
+            throw new DefinitionCompilationException('Entity type is not set.');
         }
 
         return new EntityDefinition(
-            $this->getName(),
-            $isWidget,
-            $isWidgetItem,
-            $isGrid,
+            $this->getType(),
             $this->containsChildren,
             $this->containsValidation,
             $this->getPropertyDefinitions()

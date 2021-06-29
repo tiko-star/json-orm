@@ -9,10 +9,8 @@ use App\Orm\Definition\EntityDefinitionProvider;
 use App\Orm\Definition\Exception\DefinitionException;
 use App\Orm\Entity\AbstractEntity;
 use App\Orm\Entity\Decorators\ValidationAwareEntityDecorator;
-use App\Orm\Entity\Grid;
 use App\Orm\Entity\Hash;
 use App\Orm\Entity\Widget;
-use App\Orm\Entity\WidgetItem;
 use App\Orm\Entity\Contracts\ContainsChildrenInterface;
 use App\Orm\Entity\Decorators\ContainerEntityDecorator;
 use App\Orm\Exception\InvalidEntityHashException;
@@ -173,14 +171,6 @@ class LayoutObjectFactory
             throw new MissingEntityTypeIdentifierException('Type identifier is missing');
         }
 
-        if ($widgetType = $this->propertyAccessor->getValue($item, '[widgetType]')) {
-            $type = $widgetType;
-        }
-
-        if ($widgetItemType = $this->propertyAccessor->getValue($item, '[widgetItemType]')) {
-            $type = $widgetItemType;
-        }
-
         if (!is_string($type)) {
             throw new InvalidEntityTypeException(
                 sprintf('Invalid entity type: %s', $type)
@@ -219,31 +209,10 @@ class LayoutObjectFactory
      * @param \App\Orm\Definition\EntityDefinition $definition
      *
      * @return \App\Orm\Entity\AbstractEntity
-     *
-     * @throws \App\Orm\Exception\InvalidEntityTypeException Throw exception if there are any issues
-     *                                                       during object creation.
      */
     protected function createEntityInstanceFromDefinition(EntityDefinition $definition) : AbstractEntity
     {
-        $entity = null;
-
-        if ($definition->isGrid()) {
-            $entity = new Grid();
-        }
-
-        if ($definition->isWidget()) {
-            $entity = new Widget();
-        }
-
-        if ($definition->isWidgetItem()) {
-            $entity = new WidgetItem();
-        }
-
-        if (null === $entity) {
-            throw new InvalidEntityTypeException(
-                sprintf('Invalid entity type: %s', $definition->getName())
-            );
-        }
+        $entity = new Widget();
 
         // Once we have instantiated the entity we immediately set the appropriate definition for later usages.
         $entity->setDefinition($definition);

@@ -53,7 +53,6 @@ class DefinitionCompiler
             );
         }
 
-        $name = $this->fetchPropertyFromDefinitionData('name', $definitionData);
         $type = $this->fetchPropertyFromDefinitionData('type', $definitionData);
         $containsChildren = $this->fetchPropertyFromDefinitionData('containsChildren', $definitionData);
         $containsValidation = $this->fetchPropertyFromDefinitionData('containsValidation', $definitionData, false);
@@ -61,7 +60,6 @@ class DefinitionCompiler
 
         $definitionBuilder = $this->createEntityDefinitionBuilder();
         $definitionBuilder
-            ->setName($name)
             ->setType($type);
 
         if ($containsChildren) {

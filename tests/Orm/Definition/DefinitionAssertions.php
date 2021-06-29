@@ -17,10 +17,7 @@ abstract class DefinitionAssertions extends TestCase
 {
     protected function assertButtonDefinition(EntityDefinition $definition) : void
     {
-        $this->assertEquals('button', $definition->getName());
-        $this->assertTrue($definition->isWidget());
-        $this->assertFalse($definition->isWidgetItem());
-        $this->assertFalse($definition->isGrid());
+        $this->assertEquals('button', $definition->getType());
         $this->assertFalse($definition->containsChildren());
         $this->assertFalse($definition->containsValidation());
         $this->assertCount(2, $definition->getPropertyDefinitionList());
@@ -38,10 +35,7 @@ abstract class DefinitionAssertions extends TestCase
 
     protected function assertTitleDefinition(EntityDefinition $definition) : void
     {
-        $this->assertEquals('title', $definition->getName());
-        $this->assertTrue($definition->isWidget());
-        $this->assertFalse($definition->isWidgetItem());
-        $this->assertFalse($definition->isGrid());
+        $this->assertEquals('title', $definition->getType());
         $this->assertFalse($definition->containsChildren());
         $this->assertFalse($definition->containsValidation());
         $this->assertCount(1, $definition->getPropertyDefinitionList());
@@ -55,10 +49,7 @@ abstract class DefinitionAssertions extends TestCase
 
     protected function assertGalleryDefinition(EntityDefinition $definition) : void
     {
-        $this->assertEquals('gallery', $definition->getName());
-        $this->assertTrue($definition->isWidget());
-        $this->assertFalse($definition->isWidgetItem());
-        $this->assertFalse($definition->isGrid());
+        $this->assertEquals('gallery', $definition->getType());
         $this->assertTrue($definition->containsChildren());
         $this->assertTrue($definition->containsValidation());
         $this->assertCount(3, $definition->getPropertyDefinitionList());
@@ -80,10 +71,7 @@ abstract class DefinitionAssertions extends TestCase
 
     protected function assertGalleryItemDefinition(EntityDefinition $definition) : void
     {
-        $this->assertEquals('galleryItem', $definition->getName());
-        $this->assertFalse($definition->isWidget());
-        $this->assertTrue($definition->isWidgetItem());
-        $this->assertFalse($definition->isGrid());
+        $this->assertEquals('galleryItem', $definition->getType());
         $this->assertFalse($definition->containsChildren());
         $this->assertFalse($definition->containsValidation());
         $this->assertCount(1, $definition->getPropertyDefinitionList());
@@ -97,27 +85,24 @@ abstract class DefinitionAssertions extends TestCase
 
     public function assertBlockDefinition(EntityDefinition $definition) : void
     {
-        $this->assertEquals('block', $definition->getName());
+        $this->assertEquals('block', $definition->getType());
         $this->assertGridDefinition($definition);
     }
 
     public function assertRowDefinition(EntityDefinition $definition) : void
     {
-        $this->assertEquals('row', $definition->getName());
+        $this->assertEquals('row', $definition->getType());
         $this->assertGridDefinition($definition);
     }
 
     public function assertColumnDefinition(EntityDefinition $definition) : void
     {
-        $this->assertEquals('column', $definition->getName());
+        $this->assertEquals('column', $definition->getType());
         $this->assertGridDefinition($definition);
     }
 
     private function assertGridDefinition(EntityDefinition $definition) : void
     {
-        $this->assertFalse($definition->isWidget());
-        $this->assertFalse($definition->isWidgetItem());
-        $this->assertTrue($definition->isGrid());
         $this->assertTrue($definition->containsChildren());
     }
 }

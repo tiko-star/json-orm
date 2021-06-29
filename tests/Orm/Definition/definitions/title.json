@@ -1,6 +1,5 @@
 {
-  "name": "title",
-  "type": "WIDGET",
+  "type": "title",
   "containsChildren": false,
   "properties": [
     {

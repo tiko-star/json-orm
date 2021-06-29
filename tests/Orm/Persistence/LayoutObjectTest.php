@@ -34,20 +34,18 @@ class LayoutObjectTest extends TestCase
                         "hash": "e634280a-918e-11eb-b2a0-ada57c2a135e",
                         "children": [
                             {
-                                "type": "widget",
+                                "type": "button",
                                 "hash": "e6342850-918e-11eb-9bba-ada57c2a135e",
                                 "props": {
                                     "text": "Sign In"
-                                },
-                                "widgetType": "button"
+                                }
                             },
                             {
-                                "type": "widget",
+                                "type": "button",
                                 "hash": "e6342882-918e-11eb-8e4a-ada57c2a135e",
                                 "props": {
                                     "text": "Register"
-                                },
-                                "widgetType": "button"
+                                }
                             }
                         ]
                     }
@@ -67,8 +65,7 @@ JSON;
 
         $this->assertInstanceOf(AbstractEntity::class, $entity);
         $this->assertInstanceOf(Widget::class, $entity);
-        $this->assertEquals('widget', $entity->getType());
-        $this->assertEquals('button', $entity->getWidgetType());
+        $this->assertEquals('button', $entity->getType());
         $this->assertEquals('e6342850-918e-11eb-9bba-ada57c2a135e', (string) $entity->getHash());
     }
 

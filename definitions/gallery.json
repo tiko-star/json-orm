@@ -1,6 +1,5 @@
 {
-  "name": "gallery",
-  "type": "WIDGET",
+  "type": "gallery",
   "containsChildren": true,
   "properties": [
     {

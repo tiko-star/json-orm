@@ -49,7 +49,7 @@ class EntityDefinitionLoader
         foreach ($definitions as $definition) {
             $content = $definition->getContents();
             $entityDefinition = $this->compiler->createDefinitionInstanceFromString($content);
-            $entityDefinitions[$entityDefinition->getName()] = $entityDefinition;
+            $entityDefinitions[$entityDefinition->getType()] = $entityDefinition;
         }
 
         return $entityDefinitions;

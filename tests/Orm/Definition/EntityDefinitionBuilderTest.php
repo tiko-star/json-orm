@@ -15,16 +15,13 @@ class EntityDefinitionBuilderTest extends TestCase
         $builder = $this->createBuilderInstance();
 
         $definition = $builder
-            ->setName('button')
-            ->setType(EntityDefinition::ENTITY_TYPE_WIDGET)
+            ->setType('button')
             ->enableChildrenSupport()
             ->addPropertyDefinition(new PropertyDefinition('text', PropertyDefinition::PROPERTY_TYPE_STRING))
             ->getEntityDefinition();
 
         $this->assertInstanceOf(EntityDefinition::class, $definition);
-        $this->assertEquals('button', $definition->getName());
-        $this->assertTrue($definition->isWidget());
-        $this->assertFalse($definition->isWidgetItem());
+        $this->assertEquals('button', $definition->getType());
         $this->assertTrue($definition->containsChildren());
 
         $propertyDefinitionList = $definition->getPropertyDefinitionList();
@@ -39,16 +36,13 @@ class EntityDefinitionBuilderTest extends TestCase
         $builder = $this->createBuilderInstance();
 
         $definition = $builder
-            ->setName('slide')
-            ->setType(EntityDefinition::ENTITY_TYPE_WIDGET_ITEM)
+            ->setType('slide')
             ->disableChildrenSupport()
             ->addPropertyDefinition(new PropertyDefinition('imageId', PropertyDefinition::PROPERTY_TYPE_INT))
             ->getEntityDefinition();
 
         $this->assertInstanceOf(EntityDefinition::class, $definition);
-        $this->assertEquals('slide', $definition->getName());
-        $this->assertFalse($definition->isWidget());
-        $this->assertTrue($definition->isWidgetItem());
+        $this->assertEquals('slide', $definition->getType());
         $this->assertFalse($definition->containsChildren());
 
         $propertyDefinitionList = $definition->getPropertyDefinitionList();
@@ -63,11 +57,9 @@ class EntityDefinitionBuilderTest extends TestCase
         $builder = $this->createBuilderInstance();
 
         $this->expectException(DefinitionCompilationException::class);
-        $this->expectExceptionMessage('Invalid entity type in the definition: [UNKNOWN]');
+        $this->expectExceptionMessage('Entity type is not set.');
 
         $builder
-            ->setName('button')
-            ->setType('UNKNOWN')
             ->disableChildrenSupport()
             ->getEntityDefinition();
     }

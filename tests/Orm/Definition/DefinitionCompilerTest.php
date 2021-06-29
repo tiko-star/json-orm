@@ -25,12 +25,11 @@ class DefinitionCompilerTest extends TestCase
         $compiler = $this->createCompilerInstance();
 
         $this->expectException(DefinitionCompilationException::class);
-        $this->expectExceptionMessage('Required definition property is missing: name');
+        $this->expectExceptionMessage('Required definition property is missing: type');
 
         // Here name property's definition is missing
         $definition = <<<DEFINITION
 {
-  "type": "WIDGET",
   "containsChildren": false,
   "properties": [
     {

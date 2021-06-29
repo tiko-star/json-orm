@@ -13,33 +13,10 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class EntityDefinition
 {
-    const ENTITY_TYPE_WIDGET = 'WIDGET';
-    const ENTITY_TYPE_WIDGET_ITEM = 'WIDGET_ITEM';
-    const ENTITY_TYPE_GRID = [
-        'BLOCK',
-        'ROW',
-        'COLUMN'
-    ];
-
     /**
-     * @var string Name of the Entity.
+     * @var string Type of the Entity.
      */
-    protected string $name;
-
-    /**
-     * @var bool Define whether an Entity is instance of Widget or not.
-     */
-    protected bool $isWidget;
-
-    /**
-     * @var bool Define whether an Entity is instance of WidgetItem or not.
-     */
-    protected bool $isWidgetItem;
-
-    /**
-     * @var bool Define whether an Entity is instance of Grid representation or not.
-     */
-    protected bool $isGrid;
+    protected string $type;
 
     /**
      * @var bool Define whether an Entity can contain child Entities or not.
@@ -56,12 +33,9 @@ class EntityDefinition
      */
     protected ArrayCollection $propertyDefinitionList;
 
-    public function __construct(string $name, bool $isWidget, bool $isWidgetItem, bool $isGrid, bool $containsChildren, bool $containsValidation, ArrayCollection $propertyDefinitionList)
+    public function __construct(string $type, bool $containsChildren, bool $containsValidation, ArrayCollection $propertyDefinitionList)
     {
-        $this->name = $name;
-        $this->isWidget = $isWidget;
-        $this->isWidgetItem = $isWidgetItem;
-        $this->isGrid = $isGrid;
+        $this->type = $type;
         $this->containsChildren = $containsChildren;
         $this->containsValidation = $containsValidation;
         $this->propertyDefinitionList = $propertyDefinitionList;
@@ -70,33 +44,9 @@ class EntityDefinition
     /**
      * @return string
      */
-    public function getName() : string
+    public function getType() : string
     {
-        return $this->name;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isWidget() : bool
-    {
-        return $this->isWidget;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isWidgetItem() : bool
-    {
-        return $this->isWidgetItem;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isGrid() : bool
-    {
-        return $this->isGrid;
+        return $this->type;
     }
 
     /**
@@ -104,7 +54,7 @@ class EntityDefinition
      */
     public function containsChildren() : bool
     {
-        return $this->containsChildren || $this->isGrid();
+        return $this->containsChildren;
     }
 
     /**

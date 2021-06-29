@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace App\Tests\Orm\Factory;
 
 use App\Orm\Definition\DefinitionCompiler;
-use App\Orm\Definition\EntityDefinition;
 use App\Orm\Definition\EntityDefinitionBuilder;
 use App\Orm\Definition\EntityDefinitionLoader;
 use App\Orm\Definition\EntityDefinitionProvider;
@@ -115,9 +114,8 @@ class LayoutObjectFactoryTest extends TestCase
                                 'hash'     => '482247e6-1006-448f-aae7-102c3517f51e',
                                 'children' => [
                                     [
-                                        'type'       => 'widget',
-                                        'widgetType' => 'button',
-                                        'hash'       => 'd6e4529e-b531-4ada-9f0b-7185b78ff811'
+                                        'type' => 'button',
+                                        'hash' => 'd6e4529e-b531-4ada-9f0b-7185b78ff811'
                                     ]
                                 ]
                             ]
@@ -134,13 +132,11 @@ class LayoutObjectFactoryTest extends TestCase
         $builder = new EntityDefinitionBuilder();
 
         $button = $this->createSimpleWidget();
-        $button->setType('widget');
-        $button->setWidgetType('button');
+        $button->setType('button');
         $button->setHash(new Hash('d6e4529e-b531-4ada-9f0b-7185b78ff811'));
         $button->setDefinition(
             $builder
-                ->setName('button')
-                ->setType(EntityDefinition::ENTITY_TYPE_WIDGET)
+                ->setType('button')
                 ->disableChildrenSupport()
                 ->disableValidationSupport()
                 ->getEntityDefinition()
@@ -155,8 +151,7 @@ class LayoutObjectFactoryTest extends TestCase
         $column->setChildren($children1);
         $column->setDefinition(
             $builder
-                ->setName('column')
-                ->setType(EntityDefinition::ENTITY_TYPE_GRID[2])
+                ->setType('column')
                 ->enableChildrenSupport()
                 ->disableValidationSupport()
                 ->getEntityDefinition()
@@ -171,8 +166,7 @@ class LayoutObjectFactoryTest extends TestCase
         $row->setChildren($children2);
         $row->setDefinition(
             $builder
-                ->setName('row')
-                ->setType(EntityDefinition::ENTITY_TYPE_GRID[1])
+                ->setType('row')
                 ->enableChildrenSupport()
                 ->disableValidationSupport()
                 ->getEntityDefinition()
@@ -187,8 +181,7 @@ class LayoutObjectFactoryTest extends TestCase
         $block->setChildren($children3);
         $block->setDefinition(
             $builder
-                ->setName('block')
-                ->setType(EntityDefinition::ENTITY_TYPE_GRID[0])
+                ->setType('block')
                 ->enableChildrenSupport()
                 ->disableValidationSupport()
                 ->getEntityDefinition()
@@ -224,14 +217,12 @@ class LayoutObjectFactoryTest extends TestCase
                                 'hash'     => '482247e6-1006-448f-aae7-102c3517f51e',
                                 'children' => [
                                     [
-                                        'type'       => 'widget',
-                                        'widgetType' => 'button',
-                                        'hash'       => 'd6e4529e-b531-4ada-9f0b-7185b78ff811'
+                                        'type' => 'button',
+                                        'hash' => 'd6e4529e-b531-4ada-9f0b-7185b78ff811'
                                     ],
                                     [
-                                        'type'       => 'widget',
-                                        'widgetType' => 'button',
-                                        'hash'       => '7d2cba14-c8d2-42d8-a81a-c169f88713c4'
+                                        'type' => 'button',
+                                        'hash' => '7d2cba14-c8d2-42d8-a81a-c169f88713c4'
                                     ]
                                 ]
                             ]
@@ -252,14 +243,12 @@ class LayoutObjectFactoryTest extends TestCase
                                 'hash'     => '2997d70b-57f6-4026-9e75-d0abd919082b',
                                 'children' => [
                                     [
-                                        'type'       => 'widget',
-                                        'widgetType' => 'button',
-                                        'hash'       => 'ac9114cf-b457-4556-8c6c-700e8cd28b6e'
+                                        'type' => 'button',
+                                        'hash' => 'ac9114cf-b457-4556-8c6c-700e8cd28b6e'
                                     ],
                                     [
-                                        'type'       => 'widget',
-                                        'widgetType' => 'button',
-                                        'hash'       => '2a9726a5-3817-4230-ab92-e76592de1983'
+                                        'type' => 'button',
+                                        'hash' => '2a9726a5-3817-4230-ab92-e76592de1983'
                                     ]
                                 ]
                             ]
@@ -276,26 +265,22 @@ class LayoutObjectFactoryTest extends TestCase
         $builder = new EntityDefinitionBuilder();
 
         $button1 = $this->createSimpleWidget();
-        $button1->setType('widget');
-        $button1->setWidgetType('button');
+        $button1->setType('button');
         $button1->setHash(new Hash('d6e4529e-b531-4ada-9f0b-7185b78ff811'));
         $button1->setDefinition(
             $builder
-                ->setName('button')
-                ->setType(EntityDefinition::ENTITY_TYPE_WIDGET)
+                ->setType('button')
                 ->disableChildrenSupport()
                 ->disableValidationSupport()
                 ->getEntityDefinition()
         );
 
         $button2 = $this->createSimpleWidget();
-        $button2->setType('widget');
-        $button2->setWidgetType('button');
+        $button2->setType('button');
         $button2->setHash(new Hash('7d2cba14-c8d2-42d8-a81a-c169f88713c4'));
         $button2->setDefinition(
             $builder
-                ->setName('button')
-                ->setType(EntityDefinition::ENTITY_TYPE_WIDGET)
+                ->setType('button')
                 ->disableChildrenSupport()
                 ->disableValidationSupport()
                 ->getEntityDefinition()
@@ -310,8 +295,7 @@ class LayoutObjectFactoryTest extends TestCase
         $column1->setChildren($children1);
         $column1->setDefinition(
             $builder
-                ->setName('column')
-                ->setType(EntityDefinition::ENTITY_TYPE_GRID[2])
+                ->setType('column')
                 ->enableChildrenSupport()
                 ->disableValidationSupport()
                 ->getEntityDefinition()
@@ -326,8 +310,7 @@ class LayoutObjectFactoryTest extends TestCase
         $row1->setChildren($children2);
         $row1->setDefinition(
             $builder
-                ->setName('row')
-                ->setType(EntityDefinition::ENTITY_TYPE_GRID[1])
+                ->setType('row')
                 ->enableChildrenSupport()
                 ->disableValidationSupport()
                 ->getEntityDefinition()
@@ -342,34 +325,29 @@ class LayoutObjectFactoryTest extends TestCase
         $block1->setChildren($children3);
         $block1->setDefinition(
             $builder
-                ->setName('block')
-                ->setType(EntityDefinition::ENTITY_TYPE_GRID[0])
+                ->setType('block')
                 ->enableChildrenSupport()
                 ->disableValidationSupport()
                 ->getEntityDefinition()
         );
 
         $button3 = $this->createSimpleWidget();
-        $button3->setType('widget');
-        $button3->setWidgetType('button');
+        $button3->setType('button');
         $button3->setHash(new Hash('ac9114cf-b457-4556-8c6c-700e8cd28b6e'));
         $button3->setDefinition(
             $builder
-                ->setName('button')
-                ->setType(EntityDefinition::ENTITY_TYPE_WIDGET)
+                ->setType('button')
                 ->disableChildrenSupport()
                 ->disableValidationSupport()
                 ->getEntityDefinition()
         );
 
         $button4 = $this->createSimpleWidget();
-        $button4->setType('widget');
-        $button4->setWidgetType('button');
+        $button4->setType('button');
         $button4->setHash(new Hash('2a9726a5-3817-4230-ab92-e76592de1983'));
         $button4->setDefinition(
             $builder
-                ->setName('button')
-                ->setType(EntityDefinition::ENTITY_TYPE_WIDGET)
+                ->setType('button')
                 ->disableChildrenSupport()
                 ->disableValidationSupport()
                 ->getEntityDefinition()
@@ -384,8 +362,7 @@ class LayoutObjectFactoryTest extends TestCase
         $column2->setChildren($children4);
         $column2->setDefinition(
             $builder
-                ->setName('column')
-                ->setType(EntityDefinition::ENTITY_TYPE_GRID[2])
+                ->setType('column')
                 ->enableChildrenSupport()
                 ->disableValidationSupport()
                 ->getEntityDefinition()
@@ -400,8 +377,7 @@ class LayoutObjectFactoryTest extends TestCase
         $row2->setChildren($children5);
         $row2->setDefinition(
             $builder
-                ->setName('row')
-                ->setType(EntityDefinition::ENTITY_TYPE_GRID[1])
+                ->setType('row')
                 ->enableChildrenSupport()
                 ->disableValidationSupport()
                 ->getEntityDefinition()
@@ -416,8 +392,7 @@ class LayoutObjectFactoryTest extends TestCase
         $block2->setChildren($children6);
         $block2->setDefinition(
             $builder
-                ->setName('block')
-                ->setType(EntityDefinition::ENTITY_TYPE_GRID[0])
+                ->setType('block')
                 ->enableChildrenSupport()
                 ->disableValidationSupport()
                 ->getEntityDefinition()
