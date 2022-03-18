@@ -194,7 +194,6 @@ $app->group('/layouts', function (RouteCollectorProxyInterface $proxy) {
         /** @var ContentPersistenceManager $contentPersistenceManager */
         $contentPersistenceManager = $this->get(ContentPersistenceManager::class);
         $contentPersistenceManager->persist($dispatched);
-        $layoutObject->setContents($upcomingContents);
 
         $response->getBody()->write(json_encode([
             $layoutObject->getName() => $layoutObject
